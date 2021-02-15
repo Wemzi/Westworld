@@ -1,4 +1,4 @@
-public class Visitor {
+public class Guest {
     public String name;
     public boolean isBoy;
 
