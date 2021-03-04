@@ -54,7 +54,7 @@ public class MainWindow extends JFrame {
 
         //menu
         JMenuBar menuBar = new JMenuBar();
-        JMenu m = new JMenu("Játék");
+        JMenu menu = new JMenu("Játék");
         ButtonGroup group = new ButtonGroup();
 
         JRadioButtonMenuItem easy = new JRadioButtonMenuItem();
@@ -77,20 +77,30 @@ public class MainWindow extends JFrame {
         JMenuItem startNewGameMenuItem = new JMenuItem(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                newGame(group.getSelection().getMnemonic());
+                //newGame(group.getSelection().getMnemonic());
+                newGame(DEFAULT_TABLE_SIZE);
             }
         });
         startNewGameMenuItem.setText("Új játék");
 
+        JMenuItem buildMenuItem = new JMenuItem(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //newGame(group.getSelection().getMnemonic());
+            }
+        });
+        buildMenuItem.setText("Build");
+
         //game
         newGame(DEFAULT_TABLE_SIZE);
 
-        m.add(startNewGameMenuItem);
-        m.addSeparator();
-        m.add(easy);
-        m.add(medium);
-        m.add(hard);
-        menuBar.add(m);
+        menu.add(startNewGameMenuItem);
+        menu.add(buildMenuItem);
+        menu.addSeparator();
+        menu.add(easy);
+        menu.add(medium);
+        menu.add(hard);
+        menuBar.add(menu);
         setJMenuBar(menuBar);
         setLayout(new BorderLayout());
         add(playerPanel,BorderLayout.NORTH);
