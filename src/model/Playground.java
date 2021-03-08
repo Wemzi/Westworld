@@ -21,9 +21,9 @@ Bal felső sarok, jobb alsó sarok
 
 public class Playground {
     /* Adattagok */
-    //private ArrayList<Block> blocks;
-    //private ArrayList<Person> visitors;
-    //private ArrayList<Person> employees;
+    private ArrayList<ArrayList<Block>> blocks;
+    private ArrayList<Person> visitors;
+    private ArrayList<Person> employees;
     private int money;
     private int days;
     private double popularity;
@@ -32,6 +32,7 @@ public class Playground {
     /* Konstruktor */
     Playground() {
         // Adattagok inicializálása és GameEngine beállításai
+        blocks = new ArrayList<>();
     }
 
     /* Metódusok */
