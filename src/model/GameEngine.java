@@ -1,5 +1,8 @@
 package Model;
 
+import Model.Blocks.Block;
+import Model.Blocks.BlockState;
+
 import java.util.Timer;
 
 public class GameEngine {
@@ -21,23 +24,9 @@ public class GameEngine {
 
 
     /* Getterek / Setterek */
-    /* int getBlockState(Block b) {
-        if (b.state == underConstruction) {
-            return 1;
-        }
-        else if (b.state == underRepair) {
-            return 2;
-        }
-        else if (b.state == used) {
-            return 3;
-        }
-        else if(b.state == free) {
-            return 0;
-        }
-        else {
-            return -1;
-        }
-    } */
+     BlockState getBlockState(Block b) {
+        return b.getState();
+    }
 
     int getPlayerMoney()            { return pg.getMoney(); }
     int getPlayerDaysPassedBy()     { return pg.getDays(); }

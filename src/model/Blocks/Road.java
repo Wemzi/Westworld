@@ -1,6 +1,9 @@
-package Model;
+package Model.Blocks;
 
-public class Road extends Block{
+import Model.Blocks.Block;
+import Model.Blocks.BlockState;
+
+public class Road extends Block {
     private boolean hasGarbageCan;
     private boolean isEntrance;
     private int garbage;

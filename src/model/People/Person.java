@@ -1,4 +1,7 @@
-package Model;
+package Model.People;
+
+import Model.Blocks.Block;
+import Model.Coord;
 
 abstract public class Person {
     private Block posBlock;

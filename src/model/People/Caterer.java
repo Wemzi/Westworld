@@ -1,9 +1,12 @@
-package Model;
+package Model.People;
+
+import Model.Blocks.Block;
+import Model.Coord;
 
 public class Caterer extends Employee {
     //SericeArea workPlace;
 
-    public Caterer(Coord startingCoord,Block startingBlock,int salary)
+    public Caterer(Coord startingCoord, Block startingBlock, int salary)
     {
         super(startingCoord,startingBlock,salary);
     }

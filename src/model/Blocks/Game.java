@@ -1,9 +1,9 @@
-package Model;
+package Model.Blocks;
 
-import java.util.ArrayList;
-import java.util.concurrent.ArrayBlockingQueue;
+import Model.Blocks.Block;
+import Model.Blocks.BlockState;
 
-public class Game extends Block{
+public class Game extends Block {
     private int ticketCost;
     //private ArrayBlockingQueue<Person> queue;
     //private ArrayList<Employee> workers;

@@ -1,4 +1,4 @@
-package Model;
+package Model.Blocks;
 
 public abstract class Block {
     private static final int MAX_CONDITION=100;
@@ -7,8 +7,8 @@ public abstract class Block {
     private int buildingCost;
     private int upkeepCost;
     private int condition;
-    /*private Coordi size;
-    private Coordi pos;*/
+    /*private Coordi size; 3 blok szeles es 2 blokk magas
+    private ArrayList<Coordi pos;*/ //bal felso eleme hol van
     private double popularityIncrease;
 
     public Block(int buildingCost, int upkeepCost, double popularityIncrease,BlockState state) {
@@ -16,7 +16,7 @@ public abstract class Block {
         this.upkeepCost = upkeepCost;
         this.popularityIncrease = popularityIncrease;
         this.state = state;
-        condition=MAX_CONDITION;
+        condition=MAX_CONDITION; // :) Brányi
     }
 
     //Methods:
