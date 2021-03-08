@@ -1,5 +1,8 @@
 package View;
 
+import Model.GameEngine;
+import Model.Playground;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -29,7 +32,8 @@ public class MainWindow extends JFrame {
     private static final int DEFAULT_TABLE_SIZE =30;
     private static final int DEFAULT_CELL_SIZE =15;
 
-    //GameModel model;
+    GameEngine engine;
+    Playground pg;
     //JButton buttons[][];
     JPanel[][] panels;
     JLabel[] playerLabels;
@@ -39,6 +43,8 @@ public class MainWindow extends JFrame {
 
     public MainWindow() {
         super("4-es játék");
+        engine = new GameEngine();
+        pg=engine.getPg();
 
         addWindowListener(new WindowAdapter() {
             @Override

@@ -7,7 +7,7 @@ public abstract class Block {
     private int buildingCost;
     private int upkeepCost;
     private int condition;
-    /*private Coordi size; 3 blok szeles es 2 blokk magas
+    /*private Coordi size; 3 blokk szeles es 2 blokk magas
     private ArrayList<Coordi pos;*/ //bal felso eleme hol van
     private double popularityIncrease;
 

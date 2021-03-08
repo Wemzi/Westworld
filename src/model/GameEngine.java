@@ -13,10 +13,14 @@ public class GameEngine {
     /* További adattagok implementálása */
 
     /* Konstruktor */
-    GameEngine() {
+    public GameEngine() {
         pg = new Playground();
         timer = new Timer();
         // Adattagok inicializálása és GameEngine beállításai
+    }
+
+    public Playground getPg() {
+        return pg;
     }
 
     /* Metódusok */
