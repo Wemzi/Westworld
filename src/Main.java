@@ -1,9 +1,9 @@
-import View.MainWindow;
+import View.MainWindow2;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Üdv Westworldben! :)");
-        MainWindow w=new MainWindow();
+        MainWindow2 w=new MainWindow2();
         w.setVisible(true);
     }
 }

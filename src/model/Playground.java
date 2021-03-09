@@ -2,8 +2,11 @@ package Model;
 
 import Model.Blocks.*;
 import Model.People.Person;
+import View.MainWindow2;
 
 import java.util.ArrayList;
+
+import static View.MainWindow2.*;
 
 
 /*
@@ -21,7 +24,7 @@ Bal felső sarok, jobb alsó sarok
 
 public class Playground {
     /* Adattagok */
-    private ArrayList<ArrayList<Block>> blocks;
+    public Block[][] blocks;
     private ArrayList<Person> visitors;
     private ArrayList<Person> employees;
     private int money;
@@ -30,9 +33,9 @@ public class Playground {
     /* További adattagok implementálása */
 
     /* Konstruktor */
-    Playground() {
+    public Playground() {
         // Adattagok inicializálása és GameEngine beállításai
-        blocks = new ArrayList<>();
+        blocks = new Block[NUM_OF_ROWS][NUM_OF_COLS];//Létrehoz egy akkora tömböt, amekkora a UI-on létrejön
     }
 
     /* Metódusok */
