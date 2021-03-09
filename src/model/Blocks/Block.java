@@ -1,6 +1,7 @@
 package Model.Blocks;
 
 import Model.Coord;
+import View.IndexPair;
 
 import java.awt.*;
 
@@ -11,11 +12,11 @@ public abstract class Block {
     private int buildingCost;
     private int upkeepCost;
     private int condition;
-    public final Coord size; //3 blokk szeles es 2 blokk magas
-    public final Coord pos; //bal felso eleme hol van
+    public final IndexPair size; //3 blokk szeles es 2 blokk magas. Ez egy relative kicsi szam!
+    public Coord pos; //bal felso eleme hol van
     private double popularityIncrease;
 
-    public Block(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, Coord size, Coord pos) {
+    public Block(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, IndexPair size, Coord pos) {
         this.buildingCost = buildingCost;
         this.upkeepCost = upkeepCost;
         this.popularityIncrease = popularityIncrease;
@@ -30,7 +31,7 @@ public abstract class Block {
         this.upkeepCost = upkeepCost;
         this.popularityIncrease = popularityIncrease;
         this.state = state;
-        this.size = new Coord(1,1);
+        this.size = new IndexPair(1,1);
         this.pos = new Coord(0,0);
         condition=MAX_CONDITION; // :) Brányi
     }
@@ -58,5 +59,29 @@ public abstract class Block {
         return popularityIncrease;
     }
 
-    public Color getColor(){return Color.red;}
+    public Color getColor(){return Color.red;} //todo implement different colors for different blocks
+
+    public void setState(BlockState state) {
+        this.state = state;
+    }
+
+    public void setBuildingCost(int buildingCost) {
+        this.buildingCost = buildingCost;
+    }
+
+    public void setUpkeepCost(int upkeepCost) {
+        this.upkeepCost = upkeepCost;
+    }
+
+    public void setCondition(int condition) {
+        this.condition = condition;
+    }
+
+    public void setPos(Coord pos) {
+        this.pos = pos;
+    }
+
+    public void setPopularityIncrease(double popularityIncrease) {
+        this.popularityIncrease = popularityIncrease;
+    }
 }
