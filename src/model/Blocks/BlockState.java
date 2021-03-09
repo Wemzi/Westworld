@@ -1,3 +1,3 @@
 package Model.Blocks;
 
-public enum BlockState {UNDER_CONSTRUCTION,UNDER_REPAIR,USED,FREE}
+public enum BlockState {UNDER_CONSTRUCTION,UNDER_REPAIR,USED,FREE,UNDER_PLACEMENT}

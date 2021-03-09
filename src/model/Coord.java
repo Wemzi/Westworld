@@ -1,8 +1,8 @@
 package Model;
 
 public class Coord {
-    int posX;
-    int posY;
+    public int posX;
+    public int posY;
 
     public Coord(int posX, int posY)
     {

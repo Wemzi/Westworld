@@ -1,8 +1,5 @@
 package Model.Blocks;
 
-import Model.Blocks.Block;
-import Model.Blocks.BlockState;
-
 public class ServiceArea extends Block {
     private int menuCost;
     //private ArrayBlockingQueue<Person> queue;

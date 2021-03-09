@@ -2,8 +2,13 @@ package Model;
 
 import Model.Blocks.Block;
 import Model.Blocks.BlockState;
+import Model.Blocks.Game;
+import View.IndexPair;
+import View.MainWindow2;
 
 import java.util.Timer;
+
+import static View.MainWindow2.coordToIndex;
 
 public class GameEngine {
     /* Adattagok */
@@ -17,6 +22,10 @@ public class GameEngine {
         pg = new Playground();
         timer = new Timer();
         // Adattagok inicializálása és GameEngine beállításai
+
+        //kezdo test blokkok hozzaadasa
+        Game g=new Game(new IndexPair(2,2),MainWindow2.indexPairToCoord(2,2));
+        buildBlock(g);
     }
 
     public Playground getPg() {
@@ -26,9 +35,28 @@ public class GameEngine {
     /* Metódusok */
     void setSpeed(int speed) { }
 
+    /**
+     * A paraméterként kapott Blockot beleteszi a playground blokk mátrixába.
+     * Ha a blokk nem 1x1-es akkor belekerül többször is a mátrixba a referenciája.
+     * @param g a megépítendő blokk
+     */
+    public void buildBlock(Block g){
+        /*
+         * todo: jó lenne ha a Block nevet csak 1x1-es dobozkákra használnánk és egy másik osztályt pl GameObject használnánk egy 3x1-es hullámvasútra
+         * Azaz egy GameObject több Block -ból állna
+         * Jelenleg egy 2x2re 4szer hívódik meg a kirajzolás. 4db 2x2es piros negyzet rajzolodik egymasra
+         */
+
+        for (int i = 0; i < g.size.i; i++) {
+            for (int j = 0; j < g.size.j; j++) {
+                pg.blocks[coordToIndex(g.pos.posX)+i][coordToIndex(g.pos.posY)+j]=g;
+            }
+        }
+    }
+
 
     /* Getterek / Setterek */
-     BlockState getBlockState(Block b) {
+    BlockState getBlockState(Block b) {
         return b.getState();
     }
 

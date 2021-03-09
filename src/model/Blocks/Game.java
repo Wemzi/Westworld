@@ -1,7 +1,7 @@
 package Model.Blocks;
 
-import Model.Blocks.Block;
-import Model.Blocks.BlockState;
+import Model.Coord;
+import View.IndexPair;
 
 public class Game extends Block {
     private int ticketCost;
@@ -9,10 +9,16 @@ public class Game extends Block {
     //private ArrayList<Employee> workers;
     private int capacity;
 
-    public Game(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, int ticketCost, int capacity) {
-        super(buildingCost, upkeepCost, popularityIncrease, state);
+    public Game(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, int ticketCost, int capacity, IndexPair size, Coord pos) {
+        super(buildingCost, upkeepCost, popularityIncrease, state, size, pos);
         this.ticketCost = ticketCost;
         this.capacity = capacity;
+    }
+
+    public Game(IndexPair size, Coord pos) {
+        super(0, 0, 0, BlockState.FREE, size, pos);
+        this.ticketCost = 0;
+        this.capacity = 0;
     }
 
     //Methods:
