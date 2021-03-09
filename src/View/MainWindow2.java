@@ -1,7 +1,7 @@
 
 package View;
 
-import Model.Blocks.Block;
+import Model.Blocks.*;
 import Model.Coord;
 import Model.GameEngine;
 
@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 /**
  *
  * @author Gabor
@@ -22,6 +24,10 @@ public class MainWindow2 extends JFrame{
     private final GameField field;
     private final GameEngine engine;
 
+    private boolean isPlaceSelectionMode=false;
+    private MouseListener placementListener;
+
+    //unused
     private final JLabel timerText;
     private int time;
 
@@ -35,15 +41,11 @@ public class MainWindow2 extends JFrame{
             @Override
             public void mouseClicked(MouseEvent e) {
                 //super.mouseClicked(e);
-                System.out.println("Clicked pixel: "+e.getX()+" "+e.getY());
+                //System.out.println("Clicked pixel: "+e.getX()+" "+e.getY());
                 IndexPair d= coordToIndexPair(e.getX(),e.getY());
-                System.out.println("Which is box: "+d.i +" "+d.j);
+                System.out.println("Clicked box: "+d.i +" "+d.j);
                 Block selectedBlock=engine.getPg().blocks[d.i][d.j];
-                if(selectedBlock !=null){
-                    System.out.println("Color of selected block:");
-                    System.out.println(selectedBlock.getColor());
-                    System.out.println("--------------------------------------------");
-                }
+                onBlockClick(selectedBlock);
 
             }
         });
@@ -51,41 +53,36 @@ public class MainWindow2 extends JFrame{
         //menu items
         JMenuBar menuBar = new JMenuBar();
         JMenu menuGame = new JMenu("Game");
-        JMenu newGameMenu=new JMenu("New game");
+        JMenu buildMenu=new JMenu("Build");
 
-        JMenuItem small=new JMenuItem("Small");
-        JMenuItem medium=new JMenuItem("Medium");
-        JMenuItem large=new JMenuItem("Large");
+        createMenuItems(buildMenu);
+        /*
+        JMenuItem buildGameMenuItem=new JMenuItem("Game");
+        JMenuItem buildServiceAreaMenuItem=new JMenuItem("service");
+        JMenuItem buildRoadMenuItem=new JMenuItem("road");
+        JMenuItem buildDecorationMenuItem=new JMenuItem("decor");
+        JMenuItem buildFreePlaceMenuItem=new JMenuItem("free");
 
-        small.addActionListener(new AbstractAction("New Game") {
+        buildGameMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                startGame();
-                //new Thread(() -> {startGame(null,null);}).start();
-
-            }
-        });
-        medium.addActionListener(new AbstractAction("New Game") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                startGame();
-            }
-        });
-        large.addActionListener(new AbstractAction("New Game") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                startGame();
+                System.out.println("Build game");
             }
         });
 
-        newGameMenu.add(small);
-        newGameMenu.add(medium);
-        newGameMenu.add(large);
 
-        JMenuItem menuHighScores = new JMenuItem(new AbstractAction("Highscores") {
+        buildMenu.add(buildGameMenuItem);
+        buildMenu.add(medium);
+        buildMenu.add(large);
+*/
+        JMenuItem menuHighScores = new JMenuItem(new AbstractAction("Demolish") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        JMenuItem menuManagement = new JMenuItem(new AbstractAction("Management") {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -101,8 +98,9 @@ public class MainWindow2 extends JFrame{
 
         //final initialization moves
         //menu
-        menuGame.add(newGameMenu);
+        menuGame.add(buildMenu);
         menuGame.add(menuHighScores);
+        menuGame.add(menuManagement);
         menuGame.addSeparator();
         menuGame.add(menuGameExit);
         menuBar.add(menuGame);
@@ -155,18 +153,129 @@ public class MainWindow2 extends JFrame{
 
     }
 
-    /*
-    private void showEndScreen(){
-        Player winner=currentPlayer;
-        winner.points++;
-        database.saveToDatabase(winner);
-        //System.out.println("loser:"+getOtherPlayer(currentPlayer));
-        //System.out.println("winner:"+winner);
-        int dialogResult = JOptionPane.showConfirmDialog(null,"The winner is "+winner.name +"!\nCongratulations!\nDo you want to start a new game?", "End", JOptionPane.YES_NO_OPTION);
-        if (dialogResult == JOptionPane.YES_OPTION) {
-            startGame(p1,p2);
+    private void onBlockClick(Block b){//Ezt modositsd ha valamit ki akarsz irni a blokkrol arrol a blokkrol, amire eppen rakattintottak
+        if(b !=null){
+            System.out.println("--------------------------------------------");
+            System.out.println("Color of selected block:");
+            System.out.println(b.getColor());
+            System.out.println("--------------------------------------------");
+        }else{
+            System.out.println("Block is null");
         }
-    }*/
+    }
+
+    private void createMenuItems(JMenu buildMenu){
+
+        //-----------Egy menu elem kezdete ------------
+        JMenuItem gameMenuItem=new JMenuItem("Game");
+        buildMenu.add(gameMenuItem);
+        gameMenuItem.addActionListener(new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Game g=new Game(new IndexPair(1,1),MainWindow2.indexPairToCoord(-1,-1));//direkt invalid hely, még nem tudjuk hova kerul
+                    g.setState(BlockState.UNDER_PLACEMENT);//elhelyezes alatt //todo egy konstruktor ami ezt es a pos-t -1-1re alapbol beallitja
+                    startPlaceSelectionMode(g);
+                }
+        });
+        //------------ vege ---------------
+
+        //Az alabbit copy pasteld, ha tobbfele menutitem kell
+        //-----------Egy menu elem kezdete ------------
+        JMenuItem serviceMenuItem=new JMenuItem("Service");
+        buildMenu.add(serviceMenuItem);
+        serviceMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Block block=new ServiceArea(100,5,1,BlockState.UNDER_PLACEMENT,100,20);//direkt invalid hely, még nem tudjuk hova kerul
+                startPlaceSelectionMode(block);
+            }
+        });
+        //------------ vege ---------------
+
+        //-----------Egy menu elem kezdete ------------
+        JMenuItem roadMenuItem=new JMenuItem("Road");
+        buildMenu.add(roadMenuItem);
+        roadMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Block block=new Road(100,5,0,BlockState.UNDER_PLACEMENT,false,false,0);
+                startPlaceSelectionMode(block);
+            }
+        });
+        //------------ vege ---------------
+
+        //-----------Egy menu elem kezdete ------------
+        JMenuItem decorMenuItem=new JMenuItem("Decoration");
+        buildMenu.add(decorMenuItem);
+        decorMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Block block=new Decoration(100,1,5,BlockState.UNDER_PLACEMENT);
+                startPlaceSelectionMode(block);
+            }
+        });
+        //------------ vege ---------------
+    }
+
+    private boolean buildBlock(Block b){
+        engine.buildBlock(b);
+        field.repaint();
+        return true;//todo Ellenorzes, hogy lerakhato-e
+    }
+
+    private void stopPlaceSelectionMode(){
+        if(!isPlaceSelectionMode){
+            System.err.println("Place selection mode is already inactive");
+        }else{
+            isPlaceSelectionMode=false;
+            field.removeMouseListener(placementListener);
+        }
+    }
+
+
+    private boolean startPlaceSelectionMode(Block toBuild){
+        if(isPlaceSelectionMode){
+            System.err.println("Already in place selection mode");
+            return false;
+        }else{
+            isPlaceSelectionMode=true;
+            System.out.println("Select a place");
+            placementListener = new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+
+                    Coord clickedHere=new Coord(e.getX(),e.getY());
+                    toBuild.pos=indexPairToCoord(coordToIndexPair(clickedHere));//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
+                    buildBlock(toBuild);
+                    System.out.println("------- Block placed-----------");
+                    stopPlaceSelectionMode();
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            };
+
+            field.addMouseListener(placementListener);
+        }
+        return true;
+    }
 
 
     //Conversions
@@ -190,6 +299,19 @@ public class MainWindow2 extends JFrame{
     public static Coord indexPairToCoord(int i, int j){
         return new Coord(i*BOX_SIZE,j*BOX_SIZE);
     }
+    public static int indexToCoord (int index){return index*BOX_SIZE;}
 
+    /*
+    private void showEndScreen(){
+        Player winner=currentPlayer;
+        winner.points++;
+        database.saveToDatabase(winner);
+        //System.out.println("loser:"+getOtherPlayer(currentPlayer));
+        //System.out.println("winner:"+winner);
+        int dialogResult = JOptionPane.showConfirmDialog(null,"The winner is "+winner.name +"!\nCongratulations!\nDo you want to start a new game?", "End", JOptionPane.YES_NO_OPTION);
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            startGame(p1,p2);
+        }
+    }*/
 
 }

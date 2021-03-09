@@ -1,20 +1,12 @@
 package View;
 
 import Model.Blocks.Block;
-import Model.Blocks.Game;
-import Model.Coord;
 import Model.GameEngine;
-import Model.Playground;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
-import static View.MainWindow2.BOX_SIZE;
+import static View.MainWindow2.indexToCoord;
 
 /**
  *
@@ -52,7 +44,7 @@ public class GameField extends JPanel {
             for(Block b : row){
                 if(b!=null){
                     gr.setColor(b.getColor());
-                    gr.fillRect(b.pos.posX,b.pos.posY,b.size.posX,b.size.posY);
+                    gr.fillRect(b.pos.posX,b.pos.posY,indexToCoord(b.size.i),indexToCoord(b.size.j));
                 }
 
             }
