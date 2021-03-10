@@ -12,4 +12,9 @@ public class IndexPair{
         this.i = i;
         this.j = j;
     }
+
+    public void setIndexPair(int i, int j) {
+        this.i = i;
+        this.j = j;
+    }
 }

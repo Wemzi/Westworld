@@ -2,21 +2,15 @@ package Model;
 
 import Model.Blocks.*;
 import Model.People.Person;
-import View.MainWindow2;
 
-import java.util.ArrayList;
+import View.IndexPair;
+
+import java.awt.*;
 
 import static View.MainWindow2.*;
 
 
 /*
-Mátrixot használjunk az ArrayListek helyett, sőt, ahol lehet, kerüljük a gyűjtemények,
-osztályok használatát, mert jelentősen felgyorsíthatjuk
-a program futását. Érdemes lehet még külön Thread-eket használni pl a Timereknek,
-mert ha esetleg számításígényesebb dolgot végzünk közben, az megállíthatja a Timerünket.
-Egy JPanel-t kéne használnunk, és ebben kellene az összes játékosokkal
-
-
 Blokkok tudják magukról, hogy mekkorák, illetve tudjanak visszaadni egy színt, amit szükséges kirajzolni
 Bal felső sarok, jobb alsó sarok
 
@@ -25,8 +19,8 @@ Bal felső sarok, jobb alsó sarok
 public class Playground {
     /* Adattagok */
     public Block[][] blocks;
-    private ArrayList<Person> visitors;
-    private ArrayList<Person> employees;
+    private Person[] visitors;
+    private Person[] employees;
     private int money;
     private int days;
     private double popularity;
@@ -36,9 +30,27 @@ public class Playground {
     public Playground() {
         // Adattagok inicializálása és GameEngine beállításai
         blocks = new Block[NUM_OF_ROWS][NUM_OF_COLS];//Létrehoz egy akkora tömböt, amekkora a UI-on létrejön
+
+        money = 0;
+        days = 0;
+        popularity = 0;
+    }
+    public Playground(int num_of_rows, int num_of_cols, int money, int days, int popularity) {
+        blocks = new Block[num_of_rows][num_of_cols];
+        this.money = money;
+        this.days = days;
+        this.popularity = popularity;
     }
 
     /* Metódusok */
+    void buildBlock(IndexPair pos, IndexPair size, Block block) {
+        for(int i = 0; i < size.i; i++) {
+            for(int j = 0; j < size.j; j++) {
+                blocks[pos.i+i][pos.j+j] = block;
+            }
+        }
+    }
+
     void startDay()         { }
     void endDay()           { }
     void update()           { }
@@ -49,6 +61,10 @@ public class Playground {
     public int getMoney()                           { return money; }
     public int getDays()                            { return days; }
     public double getPopularity()                   { return popularity; }
+
+    public BlockState getBlockState(Block block)    { return block.getState(); }
+    public Color getColor(Block block)              { return block.getColor(); }
+    public Block[][] getBlocks()                    { return blocks; }
 
     public void setMoney(int money)                 { this.money = money; }
     public void setDays(int days)                   { this.days = days; }
