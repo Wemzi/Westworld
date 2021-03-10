@@ -65,6 +65,7 @@ public class Playground {
     public BlockState getBlockState(Block block)    { return block.getState(); }
     public Color getColor(Block block)              { return block.getColor(); }
     public Block[][] getBlocks()                    { return blocks; }
+    public Block getBlockByPos(IndexPair pos)       { return blocks[pos.i][pos.j]; }
 
     public void setMoney(int money)                 { this.money = money; }
     public void setDays(int days)                   { this.days = days; }

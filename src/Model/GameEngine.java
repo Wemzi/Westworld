@@ -7,6 +7,7 @@ import View.IndexPair;
 import View.MainWindow2;
 
 import java.util.Timer;
+import java.util.TimerTask;
 
 import static View.MainWindow2.coordToIndex;
 
@@ -22,17 +23,27 @@ public class GameEngine {
         timer = new Timer();
         // Adattagok inicializálása és GameEngine beállításai
 
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                pg.setMoney(pg.getMoney()+10);
+                System.out.println("10 mp eltelt! Játékos pénze megnövekedett 10-zel!");
+            }
+        }, 1000, 10000);
+
         //kezdo test blokkok hozzaadasa
         Game g=new Game(new IndexPair(2,2),MainWindow2.indexPairToCoord(2,2));
         buildBlock(g);
     }
+
 
     public Playground getPg() {
         return pg;
     }
 
     /* Metódusok */
-    void setSpeed(int speed) { }
+    void setTimerOff() { timer.cancel(); System.out.println("Timer leállítva!"); }
+    void setTimerSpeed(int speedMs) { }
 
     /**
      * A paraméterként kapott Blockot beleteszi a playground blokk mátrixába.
