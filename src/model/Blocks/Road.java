@@ -1,5 +1,7 @@
 package Model.Blocks;
 
+import java.awt.*;
+
 public class Road extends Block {
     private boolean hasGarbageCan;
     private boolean isEntrance;
@@ -35,5 +37,12 @@ public class Road extends Block {
 
     public void setGarbage(int garbage) {
         this.garbage = garbage;
+    }
+
+
+
+    @Override
+    public Color getColor() {
+        return Color.gray;
     }
 }

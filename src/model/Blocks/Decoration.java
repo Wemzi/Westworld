@@ -1,7 +1,14 @@
 package Model.Blocks;
 
+import java.awt.*;
+
 public class Decoration  extends Block {
     public Decoration(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state) {
         super(buildingCost, upkeepCost, popularityIncrease, state);
+    }
+
+    @Override
+    public Color getColor() {
+        return Color.green;
     }
 }
