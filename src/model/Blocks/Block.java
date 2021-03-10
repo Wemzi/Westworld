@@ -59,7 +59,7 @@ public abstract class Block {
         return popularityIncrease;
     }
 
-    public Color getColor(){return Color.red;} //todo implement different colors for different blocks
+    abstract public Color getColor();
 
     public void setState(BlockState state) {
         this.state = state;
