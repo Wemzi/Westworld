@@ -23,7 +23,10 @@ public class ServiceArea extends Block {
     }
 
     public void addWorker(Operator o){workers.add(o);}
-    public void addVisitor(Visitor v){queue.add(v);}
+    public void addVisitor(Visitor v){
+        if( this.getState() == BlockState.FREE ) queue.add(v);
+        else throw new RuntimeException("Visitor tried to get into queue, but state of Service Area wasn't 'FREE' ");
+        }
 
     @Override
     public Color getColor() {
@@ -38,5 +41,15 @@ public class ServiceArea extends Block {
 
     public int getCapacity() {
         return capacity;
+    }
+
+    @Override
+    public String toString() {
+        return "ServiceArea{" +
+                "menuCost=" + menuCost +
+                ", queue=" + queue +
+                ", workers=" + workers +
+                ", capacity=" + capacity +
+                " " + super.toString();
     }
 }

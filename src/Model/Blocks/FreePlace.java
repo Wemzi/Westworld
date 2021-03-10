@@ -11,4 +11,9 @@ public class FreePlace extends Block {
     public Color getColor() {
         return Color.white;
     }
+
+    @Override
+    public String toString() {
+        return "FreePlace{}" + super.toString();
+    }
 }

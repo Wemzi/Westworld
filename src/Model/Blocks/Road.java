@@ -45,4 +45,13 @@ public class Road extends Block {
     public Color getColor() {
         return Color.gray;
     }
+
+    @Override
+    public String toString() {
+        return "Road{" +
+                "hasGarbageCan=" + hasGarbageCan +
+                ", isEntrance=" + isEntrance +
+                ", garbage=" + garbage +
+                " " + super.toString();
+    }
 }

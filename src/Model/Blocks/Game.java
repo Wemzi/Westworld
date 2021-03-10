@@ -7,6 +7,8 @@ import java.awt.*;
 import java.sql.Time;
 import java.util.ArrayList;
 import Model.People.*;
+
+import java.util.Timer;
 import java.util.concurrent.ArrayBlockingQueue;
 
 
@@ -38,9 +40,17 @@ public class Game extends Block {
     }
 
     public void addWorker(Operator o){workers.add(o);}
-    public void addVisitor(Visitor v){queue.add(v);}
+    public void addVisitor(Visitor v){
+        if( this.getState() == BlockState.FREE ) queue.add(v);
+        else throw new RuntimeException("Visitor tried to get into queue, but state of Game wasn't 'FREE' ");
+    }
     public void run(){
         queue.clear();
+        this.setState(BlockState.USED);
+        // TODO: Start Cooldown?
+        System.out.println("Game is running...");
+        this.setCondition(this.getCondition()-2);
+        this.setState(BlockState.FREE);
     }
 
 
@@ -50,5 +60,16 @@ public class Game extends Block {
 
     public int getCapacity() {
         return capacity;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "ticketCost=" + ticketCost +
+                ", queue=" + queue +
+                ", workers=" + workers +
+                ", capacity=" + capacity +
+                ", cooldownTime=" + cooldownTime +
+                '}' + super.toString();
     }
 }

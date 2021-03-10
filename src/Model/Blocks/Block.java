@@ -84,4 +84,16 @@ public abstract class Block {
     public void setPopularityIncrease(double popularityIncrease) {
         this.popularityIncrease = popularityIncrease;
     }
+
+        public String toString() {
+        return "" +
+                "state=" + state +
+                ", buildingCost=" + buildingCost +
+                ", upkeepCost=" + upkeepCost +
+                ", condition=" + condition +
+                ", size=" + size +
+                ", pos=" + pos +
+                ", popularityIncrease=" + popularityIncrease +
+                '}';
+    }
 }

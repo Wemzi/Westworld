@@ -11,4 +11,9 @@ public class Decoration  extends Block {
     public Color getColor() {
         return Color.green;
     }
+
+    @Override
+    public String toString() {
+        return  "Decoration{}" + super.toString();
+    }
 }
