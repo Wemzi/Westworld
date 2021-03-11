@@ -3,10 +3,11 @@ package Model.People;
 import Model.Blocks.Block;
 import Model.Coord;
 
+import java.awt.*;
+
 abstract public class Person {
     private Block posBlock;
     private Coord posCoord;
-
     protected Person(Coord startingCoord,Block startingBlock)
     {
         posCoord = startingCoord;
@@ -25,6 +26,8 @@ abstract public class Person {
     {
         posCoord = that;
     }
+
+     protected Color getColor(){return Color.white;};
 
 
 }

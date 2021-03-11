@@ -4,6 +4,8 @@ import Model.Blocks.Block;
 import Model.Blocks.Game;
 import Model.Coord;
 
+import java.awt.*;
+
 public class Operator extends Employee {
 
     public Operator(Coord startingCoord, Block startingBlock, int salary)
@@ -17,4 +19,7 @@ public class Operator extends Employee {
         // TODO: this should be handled in the playground?
         this.setIsBusy(false);
     }
+
+    @Override
+    protected Color getColor(){return Color.cyan;};
 }
