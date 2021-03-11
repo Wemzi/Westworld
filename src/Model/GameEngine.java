@@ -33,8 +33,8 @@ public class GameEngine {
         }, 1000, 10000);
 
         //kezdo test blokkok hozzaadasa
-        Game g=new Game(new IndexPair(2,3),MainWindow2.indexPairToCoord(2,2));
-        buildBlock(g);
+        //Game g=new Game( new IndexPair(2,3),MainWindow2.indexPairToCoord(2,2));
+        //buildBlock(g);
     }
 
 

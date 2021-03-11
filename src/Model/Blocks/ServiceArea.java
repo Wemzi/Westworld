@@ -1,8 +1,10 @@
 package Model.Blocks;
 
+import Model.Coord;
 import Model.People.Employee;
 import Model.People.Operator;
 import Model.People.Visitor;
+import View.IndexPair;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -20,6 +22,34 @@ public class ServiceArea extends Block {
         this.capacity = capacity;
         workers = new ArrayList<>();
         queue = new ArrayBlockingQueue<>(capacity);
+    }
+
+    public ServiceArea(ServiceType type, Coord pos) {
+        if(type==ServiceType.BUFFET)
+        {
+            buildingCost = 100;
+            upkeepCost = 10;
+            popularityIncrease = 1.0;
+            state = BlockState.UNDER_CONSTRUCTION;
+            this.menuCost = 15;
+            this.capacity = 50;
+            this.size=new IndexPair(1,1);
+            workers = new ArrayList<>();
+            queue = new ArrayBlockingQueue<>(capacity);
+        }
+        if(type==ServiceType.TOILET)
+        {
+            buildingCost = 75;
+            upkeepCost = 10;
+            popularityIncrease = 1.0;
+            state = BlockState.UNDER_CONSTRUCTION;
+            this.menuCost = 3;
+            this.capacity = 25;
+            this.size=new IndexPair(1,1);
+            workers = new ArrayList<>();
+            queue = new ArrayBlockingQueue<>(this.capacity);
+        }
+
     }
 
     public void addWorker(Operator o){workers.add(o);}
