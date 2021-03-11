@@ -6,6 +6,8 @@ import Model.Blocks.Road;
 import Model.Blocks.ServiceArea;
 import Model.Coord;
 
+import java.awt.*;
+
 public class Visitor extends Person {
     private int happiness;
     private int hunger;
@@ -34,4 +36,6 @@ public class Visitor extends Person {
         //there.garbage
         return there;
     }
+    @Override
+    protected Color getColor(){return Color.pink;};
 }

@@ -3,6 +3,8 @@ package Model.People;
 import Model.Blocks.Block;
 import Model.Coord;
 
+import java.awt.*;
+
 public class Cleaner extends Employee {
 
     public Cleaner(Coord startingCoord, Block startingBlock, int salary)
@@ -16,5 +18,8 @@ public class Cleaner extends Employee {
         //b.garbage = 0;
         // TODO: this should be handled in the playground?
         this.setIsBusy(false);
+
     }
+    @Override
+    protected Color getColor(){return Color.MAGENTA;};
 }

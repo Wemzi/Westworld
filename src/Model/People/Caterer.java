@@ -3,6 +3,8 @@ package Model.People;
 import Model.Blocks.Block;
 import Model.Coord;
 
+import java.awt.*;
+
 public class Caterer extends Employee {
     //SericeArea workPlace;
 
@@ -18,4 +20,7 @@ public class Caterer extends Employee {
         // TODO: this should be handled in the playground?
         this.setIsBusy(false);
     }
+
+    @Override
+    protected Color getColor(){return Color.gray;};
 }
