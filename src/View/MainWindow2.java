@@ -20,6 +20,7 @@ public class MainWindow2 extends JFrame{
     public static final int BOX_SIZE=20;//hany pixel szeles legyen egy elem a matrixban
     public static final int NUM_OF_ROWS=25;//sorok szama
     public static final int NUM_OF_COLS=25;//oszlopok szama
+    public static final int FPS=20;
 
     private final GameField field;
     private final GameEngine engine;
@@ -27,14 +28,29 @@ public class MainWindow2 extends JFrame{
     private boolean isPlaceSelectionMode=false;
     private MouseListener placementListener;
 
+    private final Timer timer;
+
     //unused
     private final JLabel timerText;
+    private final JLabel moneyLabel;
+    private final JLabel popularityLabel;
     private int time;
 
 
     public MainWindow2() {
+
         engine=new GameEngine();
         field=new GameField(engine);
+        timer=new Timer(1000/FPS, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                moneyLabel.setText("Money: $"+Integer.toString(engine.getPg().getMoney()));
+                popularityLabel.setText("Popularity: "+Double.toString(engine.getPg().getPopularity()));
+                timerText.setText(engine.getDate());
+
+                //field.repaint();
+            }
+        });
 
         //handle click event
         field.addMouseListener(new MouseAdapter() {
@@ -50,12 +66,20 @@ public class MainWindow2 extends JFrame{
             }
         });
 
+        //labels
+        moneyLabel=new JLabel("Money: $0");
+        //l1.setForeground(Color.green);
+        popularityLabel=new JLabel("Popularity: 0");
+
         //menu items
         JMenuBar menuBar = new JMenuBar();
-        JMenu menuGame = new JMenu("Game");
+        JMenu menuGame = new JMenu("Other");
         JMenu buildMenu=new JMenu("Build");
 
-        createMenuItems(buildMenu);
+        //createMenuItems(buildMenu);
+        createMenuItems(menuBar);
+
+
         /*
         JMenuItem buildGameMenuItem=new JMenuItem("Game");
         JMenuItem buildServiceAreaMenuItem=new JMenuItem("service");
@@ -75,14 +99,14 @@ public class MainWindow2 extends JFrame{
         buildMenu.add(medium);
         buildMenu.add(large);
 */
-        JMenuItem menuHighScores = new JMenuItem(new AbstractAction("Demolish") {
+        JMenuItem demolishMenuItem = new JMenuItem(new AbstractAction("Demolish") {
             @Override
             public void actionPerformed(ActionEvent e) {
 
             }
         });
 
-        JMenuItem menuManagement = new JMenuItem(new AbstractAction("Management") {
+        JMenuItem managementMenuItem = new JMenuItem(new AbstractAction("Management") {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -98,12 +122,14 @@ public class MainWindow2 extends JFrame{
 
         //final initialization moves
         //menu
-        menuGame.add(buildMenu);
-        menuGame.add(menuHighScores);
-        menuGame.add(menuManagement);
+
+        menuGame.add(demolishMenuItem);
+        menuGame.add(managementMenuItem);
         menuGame.addSeparator();
         menuGame.add(menuGameExit);
+
         menuBar.add(menuGame);
+        //menuBar.add(buildMenu);
         setJMenuBar(menuBar);
 
         //window
@@ -129,16 +155,12 @@ public class MainWindow2 extends JFrame{
 
 
         JPanel playersPanel=new JPanel();
-        JLabel l1=new JLabel("Money: $0");
-        //l1.setForeground(Color.green);
-        JLabel l2=new JLabel("Popularity: 0");
-        //l2.setForeground(p2.color);
-        playersPanel.add(l1);
-        playersPanel.add(l2);
+        playersPanel.add(moneyLabel);
+        playersPanel.add(popularityLabel);
         this.add(playersPanel,BorderLayout.NORTH);
         pack();
 
-
+        timer.start();
         //gameloop
         //animationTimer.restart();
         //System.out.println("Timer started");
@@ -164,7 +186,8 @@ public class MainWindow2 extends JFrame{
         }
     }
 
-    private void createMenuItems(JMenu buildMenu){
+
+    private void createMenuItems(JMenuBar buildMenu){
 
         //-----------Egy menu elem kezdete ------------
         JMenuItem gameMenuItem=new JMenuItem("Game");
@@ -240,7 +263,7 @@ public class MainWindow2 extends JFrame{
         }else{
             isPlaceSelectionMode=true;
             System.out.println("Select a place");
-            placementListener = new MouseListener() {
+            placementListener = new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
 
@@ -251,25 +274,6 @@ public class MainWindow2 extends JFrame{
                     stopPlaceSelectionMode();
                 }
 
-                @Override
-                public void mousePressed(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-
-                }
             };
 
             field.addMouseListener(placementListener);
