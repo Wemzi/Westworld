@@ -45,6 +45,8 @@ public class GameField extends JPanel {
                 if(b!=null){
                     gr.setColor(b.getColor());
                     gr.fillRect(b.pos.posX,b.pos.posY,indexToCoord(b.size.i),indexToCoord(b.size.j));
+                    gr.setColor(Color.BLACK);
+                    gr.drawRect(b.pos.posX,b.pos.posY,indexToCoord(b.size.i),indexToCoord(b.size.j));
                 }
 
             }

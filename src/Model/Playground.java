@@ -1,13 +1,14 @@
 package Model;
 
-import Model.Blocks.*;
+import Model.Blocks.Block;
+import Model.Blocks.BlockState;
 import Model.People.Person;
-
 import View.IndexPair;
 
 import java.awt.*;
 
-import static View.MainWindow2.*;
+import static View.MainWindow2.NUM_OF_COLS;
+import static View.MainWindow2.NUM_OF_ROWS;
 
 
 /*
@@ -42,14 +43,16 @@ public class Playground {
         this.popularity = popularity;
     }
 
+
     /* Metódusok */
-    void buildBlock(IndexPair pos, IndexPair size, Block block) {
+    /* Ez nem jo
+    void buildBlock(IndexPair pos, IndexPair size, Block block) {// a blokk tudja magarol, hogy hol kezdodik es mekkora, ahogy az engineben van az s
         for(int i = 0; i < size.i; i++) {
             for(int j = 0; j < size.j; j++) {
                 blocks[pos.i+i][pos.j+j] = block;
             }
         }
-    }
+    }*/
 
     void startDay()         { }
     void endDay()           { }
