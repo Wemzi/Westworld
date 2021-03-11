@@ -46,7 +46,7 @@ public class MainWindow2 extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 moneyLabel.setText("Money: $"+Integer.toString(engine.getPg().getMoney()));
                 popularityLabel.setText("Popularity: "+Double.toString(engine.getPg().getPopularity()));
-                timerText.setText(engine.getDate());
+                timerText.setText(engine.getPg().dateToString());
 
                 //field.repaint();
             }

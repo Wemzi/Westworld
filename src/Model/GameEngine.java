@@ -26,11 +26,25 @@ public class GameEngine {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                pg.setMoney(pg.getMoney()+10);
-                pg.setDays(pg.getDays()+1);
-                System.out.println("10 mp eltelt! Játékos pénze megnövekedett 10-zel!");
+                pg.setSeconds(pg.getSeconds()+1);
+                if(pg.getSeconds() >= 60) {
+                    pg.setSeconds(0);
+                    pg.setMinutes(pg.getMinutes()+1);
+                }
+                if(pg.getSeconds() >= 60 && pg.getMinutes() >= 60) {
+                    pg.setSeconds(0);
+                    pg.setMinutes(0);
+                    pg.setHours(pg.getHours()+1);
+                }
+                if(pg.getSeconds() >= 60 && pg.getMinutes() >= 60 && pg.getHours() >= 20) {
+                    pg.setSeconds(0);
+                    pg.setMinutes(0);
+                    pg.setHours(8);
+                    pg.setDays(pg.getDays()+1);
+                }
+                //Viewban lekérni
             }
-        }, 1000, 10000);
+        }, 1000, 1000);
 
         //kezdo test blokkok hozzaadasa
         Game g=new Game(new IndexPair(2,3),MainWindow2.indexPairToCoord(2,2));
@@ -38,22 +52,30 @@ public class GameEngine {
     }
 
 
-    public Playground getPg() {
-        return pg;
-    }
-
-    public String getDate(){return Integer.toString(pg.getDays());} //todo valami datumra hasonlito formatumot csinalni belole
+    public Playground getPg() { return pg; }
 
     /* Metódusok */
     void setTimerOff() { timer.cancel(); System.out.println("Timer leállítva!"); }
     void setTimerSpeed(int speedMs) { }
 
-    public void buildBlock(Block g){
-        for (int i = 0; i < g.size.i; i++) {
-            for (int j = 0; j < g.size.j; j++) {
-                pg.blocks[coordToIndex(g.pos.posX)+i][coordToIndex(g.pos.posY)+j]=g;
+    /**
+     * Metódus segítségével meg lehet építeni egy adott blockot.
+     * Ha első építkezés sikeres, akkor berakjuk 1x az objektumot a listába, majd, ha a block nagyobb, mint...
+     * ... 1x1, akkor for ciklussal megépítjük az összes többi blockot és behelyezzük a mátrixba.
+     * @param block amit meg szeretnénk építeni
+     * @return  true: Ha PG metódus true-t adott vissza és végigmegy a ciklus
+     *          false: Ha PG metódus false-t adott vissza
+     */
+    public boolean buildBlock(Block block) {
+        if(!(pg.buildBlock(block, coordToIndex(block.pos.posX), coordToIndex(block.pos.posY)))) return false;
+        pg.getBuildedObjectList().add(block); System.out.println("BuiledObjectList-be bekerült a megépítendő block");
+
+        for (int i = 1; i < block.size.i; i++) {
+            for (int j = 1; j < block.size.j; j++) {
+                return pg.buildBlock(block, coordToIndex(block.pos.posX)+i, coordToIndex(block.pos.posY)+j);
             }
         }
+        return true;
     }
 
 
