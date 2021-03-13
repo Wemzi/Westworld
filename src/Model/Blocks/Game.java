@@ -18,6 +18,7 @@ public class Game extends Block {
     private ArrayList<Employee> workers;
     private int capacity;
     private int cooldownTime; // TODO: Building time should be 5 times cooldowntime
+    public GameType type;
 
     public Game(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, int ticketCost, int capacity, Position size, Position pos, int cooldownTime) {
         super(buildingCost, upkeepCost, popularityIncrease, state, size, pos);
@@ -36,6 +37,7 @@ public class Game extends Block {
     // Implemented preset types of games
     public Game(GameType type,Position pos) {
         Game ret;
+        this.type = type;
         if (type == GameType.DODGEM) {
             this.buildingCost = 300;
             this.upkeepCost = 50;
@@ -124,6 +126,7 @@ public class Game extends Block {
     @Override
     public String toString() {
         return "Game{" +
+                "Type=" + type +
                 "ticketCost=" + ticketCost +
                 ", queue=" + queue +
                 ", workers=" + workers +
