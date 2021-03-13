@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -36,6 +38,7 @@ public class MainWindow2 extends JFrame{
     private final JLabel timerText;
     private final JLabel moneyLabel;
     private final JLabel popularityLabel;
+    private final JLabel visitorsLabel;
 
 
     public MainWindow2() {
@@ -45,8 +48,9 @@ public class MainWindow2 extends JFrame{
         timer=new Timer(1000/FPS, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                moneyLabel.setText("Money: $"+Integer.toString(engine.getPg().getMoney()));
-                popularityLabel.setText("Popularity: "+Double.toString(engine.getPg().getPopularity()));
+                moneyLabel.setText("Money: $"+engine.getPg().getMoney());
+                popularityLabel.setText("Popularity: "+engine.getPg().getPopularity());
+                visitorsLabel.setText("Visitors: "+0);
                 timerText.setText(engine.getPg().dateToString());
 
                 //field.repaint();
@@ -69,16 +73,14 @@ public class MainWindow2 extends JFrame{
 
         //labels
         moneyLabel=new JLabel("Money: $0");
-        //l1.setForeground(Color.green);
         popularityLabel=new JLabel("Popularity: 0");
+        visitorsLabel=new JLabel("Visitors: 0");
 
         //menu items
         JMenuBar menuBar = new JMenuBar();
         JMenu menuGame = new JMenu("Other");
-        JMenu buildMenu=new JMenu("Build");
 
-        //createMenuItems(buildMenu);
-        createMenuItems(menuBar);
+        createMenus(menuBar);
 
 
         /*
@@ -100,12 +102,7 @@ public class MainWindow2 extends JFrame{
         buildMenu.add(medium);
         buildMenu.add(large);
 */
-        JMenuItem demolishMenuItem = new JMenuItem(new AbstractAction("Demolish") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-            }
-        });
 
         JMenuItem managementMenuItem = new JMenuItem(new AbstractAction("Management") {
             @Override
@@ -124,18 +121,16 @@ public class MainWindow2 extends JFrame{
         //final initialization moves
         //menu
 
-        menuGame.add(demolishMenuItem);
         menuGame.add(managementMenuItem);
         menuGame.addSeparator();
         menuGame.add(menuGameExit);
 
         menuBar.add(menuGame);
-        //menuBar.add(buildMenu);
         setJMenuBar(menuBar);
 
         //window
         setLayout(new BorderLayout());
-        timerText=new JLabel("2021.20.21");
+        timerText=new JLabel("Date");
         add(timerText);
         setTitle("WestWorld");
         pack();
@@ -157,6 +152,7 @@ public class MainWindow2 extends JFrame{
         JPanel playersPanel=new JPanel();
         playersPanel.add(moneyLabel);
         playersPanel.add(popularityLabel);
+        playersPanel.add(visitorsLabel);
         this.add(playersPanel,BorderLayout.NORTH);
         pack();
 
@@ -178,42 +174,55 @@ public class MainWindow2 extends JFrame{
     private void onBlockClick(Block b){//Ezt modositsd ha valamit ki akarsz irni a blokkrol arrol a blokkrol, amire eppen rakattintottak
         if(b !=null){
             System.out.println("--------------------------------------------");
-            System.out.println("Color of selected block:");
-            System.out.println(b.getColor());
+            System.out.println("Selected block:");
+            System.out.println(b.toString());
             System.out.println("--------------------------------------------");
         }else{
             System.out.println("Block is null");
         }
     }
 
-
-    private void createMenuItems(JMenuBar buildMenu){
-
-        //-----------Egy menu elem kezdete ------------
-        JMenuItem gameMenuItem=new JMenuItem("Game");
-        buildMenu.add(gameMenuItem);
-        gameMenuItem.addActionListener(new AbstractAction() {
+    private void createGameMenuItems(JMenu menu){
+        ArrayList<GameType> possibleBlocks=new ArrayList<>( Arrays.asList(GameType.values()));
+        for(GameType type : possibleBlocks){
+            JMenuItem gameMenuItem=new JMenuItem(type.toString());
+            menu.add(gameMenuItem);
+            gameMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Game g=new Game(new Position(1,1,false),new Position(-1,-1,true));//direkt invalid hely, még nem tudjuk hova kerul
+                    Game g=new Game(type,new Position(-1,-1,true));
+                    //Game g=new Game(new Position(1,1,false),new Position(-1,-1,true));//direkt invalid hely, még nem tudjuk hova kerul
                     g.setState(BlockState.UNDER_PLACEMENT);//elhelyezes alatt
                     startPlaceSelectionMode(g);
                 }
-        });
-        //------------ vege ---------------
+            });
+        }
+    }
 
-        //Az alabbit copy pasteld, ha tobbfele menutitem kell
-        //-----------Egy menu elem kezdete ------------
-        JMenuItem serviceMenuItem=new JMenuItem("Service");
-        buildMenu.add(serviceMenuItem);
-        serviceMenuItem.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Block block=new ServiceArea(100,5,1,BlockState.UNDER_PLACEMENT,100,20);//direkt invalid hely, még nem tudjuk hova kerul
-                startPlaceSelectionMode(block);
-            }
-        });
-        //------------ vege ---------------
+    private void createServiceMenuItems(JMenu menu){
+        ArrayList<ServiceType> possibleBlocks=new ArrayList<>( Arrays.asList(ServiceType.values()));
+        for(ServiceType type : possibleBlocks){
+            JMenuItem gameMenuItem=new JMenuItem(type.toString());
+            menu.add(gameMenuItem);
+            gameMenuItem.addActionListener(new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    ServiceArea g=new ServiceArea(type,new Position(-1,-1,true));
+                    startPlaceSelectionMode(g);
+                }
+            });
+        }
+    }
+
+
+    private void createMenus(JMenuBar buildMenu){
+        JMenu buildGameMenu=new JMenu("Game");
+        createGameMenuItems(buildGameMenu);
+        buildMenu.add(buildGameMenu);
+
+        JMenu buildServiceMenu=new JMenu("Service");
+        createServiceMenuItems(buildServiceMenu);
+        buildMenu.add(buildServiceMenu);
 
         //-----------Egy menu elem kezdete ------------
         JMenuItem roadMenuItem=new JMenuItem("Road");
@@ -238,12 +247,32 @@ public class MainWindow2 extends JFrame{
             }
         });
         //------------ vege ---------------
+
+        //-----------Egy menu elem kezdete ------------
+        JMenuItem demolishMenuItem=new JMenuItem("Demolish");
+        buildMenu.add(demolishMenuItem);
+        demolishMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Block block=new FreePlace(0,0,0,BlockState.UNDER_PLACEMENT);
+                startPlaceSelectionMode(block);
+            }
+        });
+        //------------ vege ---------------
     }
 
     private boolean buildBlock(Block b){
-        engine.buildBlock(b);
-        field.repaint();
-        return true;//todo Ellenorzes, hogy lerakhato-e
+        if(b instanceof FreePlace) {
+            engine.demolish((FreePlace) b);
+            return true;
+        }
+        boolean l=engine.buildBlock(b);
+        if(l){
+            field.repaint();
+        }else{
+            System.out.println("Foglalt!");
+        }
+        return l;
     }
 
     private void stopPlaceSelectionMode(){

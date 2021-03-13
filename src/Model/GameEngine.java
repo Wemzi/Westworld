@@ -2,7 +2,7 @@ package Model;
 
 import Model.Blocks.Block;
 import Model.Blocks.BlockState;
-import Model.Blocks.Game;
+import Model.Blocks.FreePlace;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,8 +48,8 @@ public class GameEngine {
         }, 1000, 1000);
 
         //kezdo test blokkok hozzaadasa
-        Game g=new Game( new Position(2,3,false),new Position(2,2,false));
-        buildBlock(g);
+        //Game g=new Game( new Position(2,3,false),new Position(2,2,false));
+        //buildBlock(g);
     }
 
 
@@ -67,7 +67,7 @@ public class GameEngine {
      * @return  true: Ha PG metódus true-t adott vissza és végigmegy a ciklus
      *          false: Ha PG metódus false-t adott vissza
      */
-    public boolean buildBlock(Block block) {
+    public boolean buildBlock(Block block) {//todo 1x1nél nagyobbra nem mukodik jol az ellenorzes, siman beleépít a nagyobb blokk egyik kockájába
         if(!(pg.buildBlock(block,block.pos.getX_asIndex(), block.pos.getY_asIndex()))) return false;
         pg.getBuildedObjectList().add(block); System.out.println("BuiledObjectList-be bekerült a megépítendő block");
 
@@ -77,6 +77,10 @@ public class GameEngine {
             }
         }
         return true;
+    }
+
+    public void demolish(FreePlace b){//todo implement
+        //b.pos helyre berakni ezt a free place
     }
 
 
