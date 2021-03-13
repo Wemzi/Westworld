@@ -1,12 +1,12 @@
 package Model.People;
 
 import Model.Blocks.Block;
-import Model.Coord;
+import Model.Position;
 
 abstract public class Employee extends Person {
     private Boolean isBusy;
     private int salary;
-    protected Employee(Coord startingCoord, Block startingBlock, int salary)
+    protected Employee(Position startingCoord, Block startingBlock, int salary)
     {
         super(startingCoord,startingBlock);
         this.salary = salary;

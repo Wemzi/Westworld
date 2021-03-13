@@ -6,8 +6,6 @@ import Model.GameEngine;
 import javax.swing.*;
 import java.awt.*;
 
-import static View.MainWindow2.indexToCoord;
-
 /**
  *
  * @author Gabor
@@ -44,9 +42,9 @@ public class GameField extends JPanel {
             for(Block b : row){
                 if(b!=null){
                     gr.setColor(b.getColor());
-                    gr.fillRect(b.pos.posX,b.pos.posY,indexToCoord(b.size.i),indexToCoord(b.size.j));
+                    gr.fillRect(b.pos.getX_asPixel(),b.pos.getY_asPixel(),b.size.getX_asPixel(),b.size.getY_asPixel());
                     gr.setColor(Color.BLACK);
-                    gr.drawRect(b.pos.posX,b.pos.posY,indexToCoord(b.size.i),indexToCoord(b.size.j));
+                    gr.drawRect(b.pos.getX_asPixel(),b.pos.getY_asPixel(),b.size.getX_asPixel(),b.size.getY_asPixel());
                 }
 
             }
