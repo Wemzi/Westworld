@@ -21,6 +21,8 @@ public class Visitor extends Person {
     public void playGame(Game that)
     {
         // TODO: this should be done by the playground, or the player? I think its the playground
+        playfulness -= 50;
+        happiness += 20;
     }
     public void eat(ServiceArea where)
     {
@@ -36,6 +38,19 @@ public class Visitor extends Person {
         //there.garbage
         return there;
     }
+
+    public int getHappiness() {
+        return happiness;
+    }
+
+    public int getHunger() {
+        return hunger;
+    }
+
+    public int getPlayfulness() {
+        return playfulness;
+    }
+
     @Override
     protected Color getColor(){return Color.pink;};
 }

@@ -16,6 +16,7 @@ public class ServiceArea extends Block {
     private ArrayList<Employee> workers;
     private int capacity;
 
+    // TODO: service area-ba is kéne valami kis cooldown, hogy a sorban állásnak legyen értelme, és ne daráljuk le őket egyből.
     public ServiceArea(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, int menuCost, int capacity) {
         super(buildingCost, upkeepCost, popularityIncrease, state);
         this.menuCost = menuCost;

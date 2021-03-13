@@ -16,6 +16,8 @@ import java.awt.event.MouseListener;
  *
  * @author Gabor
  */
+ // TODO: Ki tudjuk választani a játékok közül, hogy melyiket akarjuk megépíteni.
+    // TODO: Service area
 public class MainWindow2 extends JFrame{
     public static final int BOX_SIZE=20;//hany pixel szeles legyen egy elem a matrixban
     public static final int NUM_OF_ROWS=25;//sorok szama
