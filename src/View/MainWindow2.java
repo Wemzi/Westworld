@@ -295,8 +295,10 @@ public class MainWindow2 extends JFrame{
             placementListener = new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                }
 
-                    //Coord clickedHere=new Coord(e.getX(),e.getY());
+                @Override
+                public void mousePressed(MouseEvent e) {
                     Position clickedHere=new Position(e.getX(),e.getY(),true);
                     //toBuild.pos=indexPairToCoord(coordToIndexPair(clickedHere));//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
                     toBuild.pos=new Position(clickedHere.getX_asIndex(),clickedHere.getY_asIndex(),false);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
@@ -304,7 +306,6 @@ public class MainWindow2 extends JFrame{
                     System.out.println("------- Block placed-----------");
                     stopPlaceSelectionMode();
                 }
-
             };
 
             field.addMouseListener(placementListener);
