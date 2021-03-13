@@ -1,14 +1,14 @@
 package Model.People;
 
 import Model.Blocks.Block;
-import Model.Coord;
+import Model.Position;
 
 import java.awt.*;
 
 abstract public class Person {
     private Block posBlock;
-    private Coord posCoord;
-    protected Person(Coord startingCoord,Block startingBlock)
+    private Position posCoord;
+    protected Person(Position startingCoord, Block startingBlock)
     {
         posCoord = startingCoord;
         posBlock = startingBlock;
@@ -21,8 +21,8 @@ abstract public class Person {
     }
 
     public Block getPosition() {return posBlock;}
-    public Coord getCoord() {return posCoord;}
-    public void setPosition(Coord that)
+    public Position getCoord() {return posCoord;}
+    public void setPosition(Position that)
     {
         posCoord = that;
     }

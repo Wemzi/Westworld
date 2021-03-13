@@ -4,7 +4,7 @@ import Model.Blocks.Block;
 import Model.Blocks.Game;
 import Model.Blocks.Road;
 import Model.Blocks.ServiceArea;
-import Model.Coord;
+import Model.Position;
 
 import java.awt.*;
 
@@ -13,7 +13,7 @@ public class Visitor extends Person {
     private int hunger;
     private int playfulness;
 
-    public Visitor(Coord startingCoord, Block startingBlock)
+    public Visitor(Position startingCoord, Block startingBlock)
     {
         super(startingCoord,startingBlock);
     }

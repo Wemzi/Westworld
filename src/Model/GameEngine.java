@@ -3,13 +3,10 @@ package Model;
 import Model.Blocks.Block;
 import Model.Blocks.BlockState;
 import Model.Blocks.Game;
-import View.IndexPair;
-import View.MainWindow2;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static View.MainWindow2.coordToIndex;
 
 public class GameEngine {
     /* Adattagok */
@@ -47,8 +44,8 @@ public class GameEngine {
         }, 1000, 1000);
 
         //kezdo test blokkok hozzaadasa
-        //Game g=new Game( new IndexPair(2,3),MainWindow2.indexPairToCoord(2,2));
-        //buildBlock(g);
+        Game g=new Game( new Position(2,3,false),new Position(2,2,false));
+        buildBlock(g);
     }
 
 
@@ -67,12 +64,12 @@ public class GameEngine {
      *          false: Ha PG metódus false-t adott vissza
      */
     public boolean buildBlock(Block block) {
-        if(!(pg.buildBlock(block, coordToIndex(block.pos.posX), coordToIndex(block.pos.posY)))) return false;
+        if(!(pg.buildBlock(block,block.pos.getX_asIndex(), block.pos.getY_asIndex()))) return false;
         pg.getBuildedObjectList().add(block); System.out.println("BuiledObjectList-be bekerült a megépítendő block");
 
-        for (int i = 1; i < block.size.i; i++) {
-            for (int j = 1; j < block.size.j; j++) {
-                return pg.buildBlock(block, coordToIndex(block.pos.posX)+i, coordToIndex(block.pos.posY)+j);
+        for (int i = 1; i < block.size.getX_asIndex(); i++) {
+            for (int j = 1; j < block.size.getY_asIndex(); j++) {
+                return pg.buildBlock(block, block.pos.getX_asIndex()+i, block.pos.getY_asIndex()+j);
             }
         }
         return true;

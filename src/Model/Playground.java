@@ -3,7 +3,6 @@ package Model;
 import Model.Blocks.Block;
 import Model.Blocks.BlockState;
 import Model.People.Person;
-import View.IndexPair;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -81,7 +80,7 @@ public class Playground {
     public BlockState getBlockState(Block block)    { return block.getState(); }
     public Color getColor(Block block)              { return block.getColor(); }
     public Block[][] getBlocks()                    { return blocks; }
-    public Block getBlockByPos(IndexPair pos)       { return blocks[pos.i][pos.j]; }
+    public Block getBlockByPos(Position pos)       { return blocks[pos.getX_asIndex()][pos.getY_asIndex()]; }
     public ArrayList<Block> getBuildedObjectList()  { return buildedObjects; }
 
     public void setMoney(int money)                 { this.money = money; }

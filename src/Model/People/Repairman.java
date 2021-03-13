@@ -2,13 +2,13 @@ package Model.People;
 
 import Model.Blocks.Block;
 import Model.Blocks.Game;
-import Model.Coord;
+import Model.Position;
 
 import java.awt.*;
 
 public class Repairman extends Employee {
 
-    public Repairman(Coord startingCoord, Block startingBlock, int salary)
+    public Repairman(Position startingCoord, Block startingBlock, int salary)
     {
         super(startingCoord,startingBlock,salary);
     }

@@ -2,8 +2,8 @@
 package View;
 
 import Model.Blocks.*;
-import Model.Coord;
 import Model.GameEngine;
+import Model.Position;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +34,6 @@ public class MainWindow2 extends JFrame{
     private final JLabel timerText;
     private final JLabel moneyLabel;
     private final JLabel popularityLabel;
-    private int time;
 
 
     public MainWindow2() {
@@ -58,9 +57,9 @@ public class MainWindow2 extends JFrame{
             public void mouseClicked(MouseEvent e) {
                 //super.mouseClicked(e);
                 //System.out.println("Clicked pixel: "+e.getX()+" "+e.getY());
-                IndexPair d= coordToIndexPair(e.getX(),e.getY());
-                System.out.println("Clicked box: "+d.i +" "+d.j);
-                Block selectedBlock=engine.getPg().blocks[d.i][d.j];
+                Position d= new Position(e.getX(),e.getY(),true);
+                System.out.println("Clicked box: "+d.getX_asIndex() +" "+d.getY_asIndex());
+                Block selectedBlock=engine.getPg().blocks[d.getX_asIndex()][d.getY_asIndex()];
                 onBlockClick(selectedBlock);
 
             }
@@ -135,7 +134,6 @@ public class MainWindow2 extends JFrame{
         //window
         setLayout(new BorderLayout());
         timerText=new JLabel("2021.20.21");
-        time=0;
         add(timerText);
         setTitle("WestWorld");
         pack();
@@ -195,8 +193,8 @@ public class MainWindow2 extends JFrame{
         gameMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Game g=new Game(new IndexPair(1,1),MainWindow2.indexPairToCoord(-1,-1));//direkt invalid hely, még nem tudjuk hova kerul
-                    g.setState(BlockState.UNDER_PLACEMENT);//elhelyezes alatt //todo egy konstruktor ami ezt es a pos-t -1-1re alapbol beallitja
+                    Game g=new Game(new Position(1,1,false),new Position(-1,-1,true));//direkt invalid hely, még nem tudjuk hova kerul
+                    g.setState(BlockState.UNDER_PLACEMENT);//elhelyezes alatt
                     startPlaceSelectionMode(g);
                 }
         });
@@ -267,8 +265,10 @@ public class MainWindow2 extends JFrame{
                 @Override
                 public void mouseClicked(MouseEvent e) {
 
-                    Coord clickedHere=new Coord(e.getX(),e.getY());
-                    toBuild.pos=indexPairToCoord(coordToIndexPair(clickedHere));//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
+                    //Coord clickedHere=new Coord(e.getX(),e.getY());
+                    Position clickedHere=new Position(e.getX(),e.getY(),true);
+                    //toBuild.pos=indexPairToCoord(coordToIndexPair(clickedHere));//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
+                    toBuild.pos=new Position(clickedHere.getX_asIndex(),clickedHere.getY_asIndex(),false);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
                     buildBlock(toBuild);
                     System.out.println("------- Block placed-----------");
                     stopPlaceSelectionMode();
@@ -280,42 +280,5 @@ public class MainWindow2 extends JFrame{
         }
         return true;
     }
-
-
-    //Conversions
-    public static IndexPair coordToIndexPair(int x, int y){
-        int i=x/BOX_SIZE;
-        int j=y/BOX_SIZE;
-        return new IndexPair(i,j);
-    }
-    public static IndexPair coordToIndexPair(Coord c){
-        int i=c.posX/BOX_SIZE;
-        int j=c.posY/BOX_SIZE;
-        return new IndexPair(i,j);
-    }
-    public static int coordToIndex(int coord){return coord/BOX_SIZE;}
-
-    public static Coord indexPairToCoord(IndexPair pair){
-        int i=pair.i *BOX_SIZE;
-        int j=pair.j *BOX_SIZE;
-        return new Coord(i,j);
-    }
-    public static Coord indexPairToCoord(int i, int j){
-        return new Coord(i*BOX_SIZE,j*BOX_SIZE);
-    }
-    public static int indexToCoord (int index){return index*BOX_SIZE;}
-
-    /*
-    private void showEndScreen(){
-        Player winner=currentPlayer;
-        winner.points++;
-        database.saveToDatabase(winner);
-        //System.out.println("loser:"+getOtherPlayer(currentPlayer));
-        //System.out.println("winner:"+winner);
-        int dialogResult = JOptionPane.showConfirmDialog(null,"The winner is "+winner.name +"!\nCongratulations!\nDo you want to start a new game?", "End", JOptionPane.YES_NO_OPTION);
-        if (dialogResult == JOptionPane.YES_OPTION) {
-            startGame(p1,p2);
-        }
-    }*/
 
 }

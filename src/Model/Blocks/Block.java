@@ -1,7 +1,6 @@
 package Model.Blocks;
 
-import Model.Coord;
-import View.IndexPair;
+import Model.Position;
 
 import java.awt.*;
 
@@ -12,8 +11,9 @@ public abstract class Block {
     protected int buildingCost;
     protected int upkeepCost;
     protected int condition;
-    public IndexPair size; //3 blokk szeles es 2 blokk magas. Ez egy relative kicsi szam!
-    public Coord pos; //bal felso eleme hol van
+    public Position size; //3 blokk szeles es 2 blokk magas. Ez egy relative kicsi szam!
+    //public Coord pos; //bal felso eleme hol van
+    public  Position pos;
     protected double popularityIncrease;
     public Block()
     {
@@ -21,11 +21,11 @@ public abstract class Block {
         buildingCost=0;
         upkeepCost=0;
         condition=100;
-        size=new IndexPair(1,1);
+        size=new Position(1,1,false);
         popularityIncrease = 0;
     }
 
-    public Block(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, IndexPair size, Coord pos) {
+    public Block(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, Position size, Position pos) {
         this.buildingCost = buildingCost;
         this.upkeepCost = upkeepCost;
         this.popularityIncrease = popularityIncrease;
@@ -40,8 +40,8 @@ public abstract class Block {
         this.upkeepCost = upkeepCost;
         this.popularityIncrease = popularityIncrease;
         this.state = state;
-        this.size = new IndexPair(1,1);
-        this.pos = new Coord(0,0);
+        this.size = new Position(1,1,false);
+        this.pos = new Position(0,0,true);
         condition=MAX_CONDITION;
     }
 
@@ -86,7 +86,7 @@ public abstract class Block {
         this.condition = condition;
     }
 
-    public void setPos(Coord pos) {
+    public void setPos(Position pos) {
         this.pos = pos;
     }
 

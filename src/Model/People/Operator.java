@@ -2,13 +2,13 @@ package Model.People;
 
 import Model.Blocks.Block;
 import Model.Blocks.Game;
-import Model.Coord;
+import Model.Position;
 
 import java.awt.*;
 
 public class Operator extends Employee {
 
-    public Operator(Coord startingCoord, Block startingBlock, int salary)
+    public Operator(Position startingCoord, Block startingBlock, int salary)
     {
         super(startingCoord,startingBlock,salary);
     }
