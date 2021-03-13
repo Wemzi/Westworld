@@ -63,6 +63,15 @@ public class Playground {
         return true;
     }
 
+    /**
+     *
+     * @return A kapott megepitheto e (Vagy valamelyik resze foglalt teruletre esne)
+     */
+    public boolean isBuildable(Block block){
+        //todo implement
+        return true;
+    }
+
     void startDay()         { }
     void endDay()           { }
     void update()           { }

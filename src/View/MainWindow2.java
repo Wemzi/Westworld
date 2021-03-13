@@ -53,7 +53,7 @@ public class MainWindow2 extends JFrame{
                 visitorsLabel.setText("Visitors: "+0);
                 timerText.setText(engine.getPg().dateToString());
 
-                //field.repaint();
+                field.repaint();
             }
         });
 
@@ -281,6 +281,7 @@ public class MainWindow2 extends JFrame{
         }else{
             isPlaceSelectionMode=false;
             field.removeMouseListener(placementListener);
+            field.disableMouseFollowing();
         }
     }
 
@@ -291,6 +292,7 @@ public class MainWindow2 extends JFrame{
             return false;
         }else{
             isPlaceSelectionMode=true;
+            field.enableMouseFollowing(toBuild);
             System.out.println("Select a place");
             placementListener = new MouseAdapter() {
                 @Override
@@ -299,12 +301,18 @@ public class MainWindow2 extends JFrame{
 
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    Position clickedHere=new Position(e.getX(),e.getY(),true);
-                    //toBuild.pos=indexPairToCoord(coordToIndexPair(clickedHere));//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
-                    toBuild.pos=new Position(clickedHere.getX_asIndex(),clickedHere.getY_asIndex(),false);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
-                    buildBlock(toBuild);
-                    System.out.println("------- Block placed-----------");
-                    stopPlaceSelectionMode();
+                    if(MouseEvent.BUTTON1==e.getButton()){//Left-click
+                        Position clickedHere=new Position(e.getX(),e.getY(),true);
+                        //toBuild.pos=new Position(clickedHere.getX_asIndex(),clickedHere.getY_asIndex(),false);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
+                        toBuild.pos=Position.useMagicGravity(clickedHere);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
+                        buildBlock(toBuild);
+                        //System.out.println("Block placed");
+                        stopPlaceSelectionMode();
+                    }else if(MouseEvent.BUTTON3==e.getButton()){//right-click
+                        System.out.println("Cancelled with mouse right click");
+                        stopPlaceSelectionMode();
+                    }
+
                 }
             };
 

@@ -25,6 +25,11 @@ public abstract class Block {
         popularityIncrease = 0;
     }
 
+    public Block(Position p){
+        this();
+        pos=p;
+    }
+
     public Block(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, Position size, Position pos) {
         this.buildingCost = buildingCost;
         this.upkeepCost = upkeepCost;

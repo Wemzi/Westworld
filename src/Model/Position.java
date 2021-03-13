@@ -12,8 +12,6 @@ public final class Position {
 
     /**
      *
-     * @param x
-     * @param y
      * @deprecated Add meg 3. parméterben, hogy pixelben méred-e
      */
     @Deprecated
@@ -46,6 +44,10 @@ public final class Position {
 
     public int getY_asPixel() {
         return y;
+    }
+
+    public static Position useMagicGravity(Position from){
+        return new Position(indexToPixel(pixelToIndex(from.x)) , indexToPixel(pixelToIndex(from.y)),true);
     }
 
     //Conversions
