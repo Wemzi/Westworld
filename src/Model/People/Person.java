@@ -6,6 +6,7 @@ import Model.Coord;
 import java.awt.*;
 
 abstract public class Person {
+    // TODO: delete Block position & only calculate position by pixels
     private Block posBlock;
     private Coord posCoord;
     protected Person(Coord startingCoord,Block startingBlock)

@@ -15,8 +15,12 @@ public class GameEngine {
     /* Adattagok */
     private Timer timer;
     private Playground pg;
-
-
+    // TODO: Ki kellene találni, hogyan fogunk végigiterálni a Person-ökön, és meghívni a megfelelő metódusaikat
+    // TODO: -||- A blokkokkal, cél a szimuláció elindítása.
+    // TODO: A person-öket mozgatni kéne, annak függvényében, mire vágynak. (playfulness, hunger). Elég ha teleportálnak.
+    // TODO: Kéne kezdőpénz, és le kell vonni az összeget, amikor építünk valamit. Legyen nagyon sok pénzünk kezdetben.
+    // TODO: Jó lenne letesztelni a játékok run() metódusát, hogy működik-e a cooldown
+    // TODO: Töltsük fel a pályát FreePlace-ekkel a játék kezdetekor
     /* Konstruktor */
     public GameEngine() {
         pg = new Playground();
