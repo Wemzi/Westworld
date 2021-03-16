@@ -13,9 +13,12 @@ public class Visitor extends Person {
     private int hunger;
     private int playfulness;
 
-    public Visitor(Position startingCoord, Block startingBlock)
+    public Visitor(Position startingPos)
     {
-        super(startingCoord,startingBlock);
+        super(startingPos);
+        happiness = 50;
+        hunger = 0;
+        playfulness = 50;
     }
 
     public void playGame(Game that)
@@ -23,11 +26,13 @@ public class Visitor extends Person {
         // TODO: this should be done by the playground, or the player? I think its the playground
         playfulness -= 50;
         happiness += 20;
+        hunger += 15;
     }
     public void eat(ServiceArea where)
     {
         // TODO: this should be done by the playground, or the player? I think its the playground
         hunger = 0;
+        happiness += 5 ;
         playfulness += 30;
         //throwGarbage(posBlock);
     }
@@ -43,9 +48,7 @@ public class Visitor extends Person {
         return happiness;
     }
 
-    public int getHunger() {
-        return hunger;
-    }
+    public int getHunger() { return hunger; }
 
     public int getPlayfulness() {
         return playfulness;

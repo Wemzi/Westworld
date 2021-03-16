@@ -7,9 +7,9 @@ import java.awt.*;
 
 public class Cleaner extends Employee {
 
-    public Cleaner(Position startingCoord, Block startingBlock, int salary)
+    public Cleaner(Position startingPos, int salary)
     {
-        super(startingCoord,startingBlock,salary);
+        super(startingPos,salary);
     }
 
     public void clean(Block b )

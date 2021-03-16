@@ -53,6 +53,12 @@ public abstract class Block {
     //Methods:
     public void showInfoPanel(){}
 
+    public Position getPos() {
+        return pos;
+    }
+
+    public Position getSize(){return size;}
+
     public BlockState getState() {
         return state;
     }

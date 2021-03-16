@@ -8,9 +8,9 @@ import java.awt.*;
 
 public class Repairman extends Employee {
 
-    public Repairman(Position startingCoord, Block startingBlock, int salary)
+    public Repairman(Position startingPos, int salary)
     {
-        super(startingCoord,startingBlock,salary);
+        super(startingPos,salary);
     }
 
     public void repair(Game g ) {
