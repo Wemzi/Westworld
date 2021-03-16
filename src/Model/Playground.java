@@ -40,6 +40,7 @@ public class Playground {
             for(int j = 0; j < NUM_OF_COLS; j++)
             {
                 blocks[i][j] = new FreePlace(0,0,0,BlockState.FREE);
+                blocks[i][j].pos = new Position(i,j,false);
             }
         }
         money = 0;
