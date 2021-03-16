@@ -2,6 +2,7 @@ package Model;
 
 import Model.Blocks.Block;
 import Model.Blocks.BlockState;
+import Model.Blocks.FreePlace;
 import Model.People.Person;
 
 import java.awt.*;
@@ -34,6 +35,13 @@ public class Playground {
         blocks = new Block[NUM_OF_ROWS][NUM_OF_COLS];//Létrehoz egy akkora tömböt, amekkora a UI-on létrejön
         buildedObjects = new ArrayList<>();
 
+        for(int i = 0; i < NUM_OF_ROWS; i++)
+        {
+            for(int j = 0; j < NUM_OF_COLS; j++)
+            {
+                blocks[i][j] = new FreePlace(0,0,0,BlockState.FREE);
+            }
+        }
         money = 0;
         days = 1; hours = 8; minutes = 0; seconds = 0;
         popularity = 0;
@@ -58,7 +66,7 @@ public class Playground {
      *          true: Ha adott blockon nincs még semmi építve
      */
     public boolean buildBlock(Block block, int posX, int posY) {
-        if(blocks[posX][posY] != null) return false;
+        if(!(blocks[posX][posY] instanceof FreePlace)) return false;
         blocks[posX][posY] = block;
         return true;
     }

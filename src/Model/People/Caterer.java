@@ -8,9 +8,9 @@ import java.awt.*;
 public class Caterer extends Employee {
     //SericeArea workPlace;
 
-    public Caterer(Position startingCoord, Block startingBlock, int salary)
+    public Caterer(Position startingPos, int salary)
     {
-        super(startingCoord,startingBlock,salary);
+        super(startingPos,salary);
     }
 
     public void serve(Visitor v )

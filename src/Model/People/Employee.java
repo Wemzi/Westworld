@@ -6,9 +6,9 @@ import Model.Position;
 abstract public class Employee extends Person {
     private Boolean isBusy;
     private int salary;
-    protected Employee(Position startingCoord, Block startingBlock, int salary)
+    protected Employee(Position startingPos ,int salary)
     {
-        super(startingCoord,startingBlock);
+        super(startingPos);
         this.salary = salary;
         isBusy = false;
 

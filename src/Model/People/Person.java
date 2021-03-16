@@ -7,25 +7,20 @@ import java.awt.*;
 
 abstract public class Person {
     // TODO: delete Block position & only calculate position by pixels
-    private Block posBlock;
-    private Position posCoord;
-    protected Person(Position startingCoord, Block startingBlock)
+    private Position pos;
+    protected Person(Position startingCoord)
     {
-        posCoord = startingCoord;
-        posBlock = startingBlock;
-
+        pos= startingCoord;
     }
 
     private void moveTo(Block to)
     {
-        posBlock = to;
+        pos = to.getPos();
     }
-
-    public Block getPosition() {return posBlock;}
-    public Position getCoord() {return posCoord;}
+    public Position getPosition() {return pos;}
     public void setPosition(Position that)
     {
-        posCoord = that;
+        pos= that;
     }
 
      protected Color getColor(){return Color.white;};

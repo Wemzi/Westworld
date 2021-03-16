@@ -69,18 +69,25 @@ public class GameEngine {
      */
     public boolean buildBlock(Block block) {//todo 1x1nél nagyobbra nem mukodik jol az ellenorzes, siman beleépít a nagyobb blokk egyik kockájába
         if(!(pg.buildBlock(block,block.pos.getX_asIndex(), block.pos.getY_asIndex()))) return false;
-        pg.getBuildedObjectList().add(block); System.out.println("BuiledObjectList-be bekerült a megépítendő block");
+        pg.getBuildedObjectList().add(block); System.out.println("BuildedObjectList-be bekerült a megépítendő block");
 
+        boolean retVal = true;
         for (int i = 1; i < block.size.getX_asIndex(); i++) {
             for (int j = 1; j < block.size.getY_asIndex(); j++) {
-                return pg.buildBlock(block, block.pos.getX_asIndex()+i, block.pos.getY_asIndex()+j);
+                // itt az előzőnek nem volt értelme, az első iterációnál returnölt a függvény
+                retVal = retVal && pg.buildBlock(block, block.pos.getX_asIndex()+i, block.pos.getY_asIndex()+j);
             }
         }
-        return true;
+        return retVal;
     }
 
-    public void demolish(FreePlace b){//todo implement
-        //b.pos helyre berakni ezt a free place
+    public void demolish(Block b){//todo implement
+        Position prevBlockSize = b.size;
+        Position prevBlockPos = b.pos;
+        Block insertable = new FreePlace(0,0,0,BlockState.FREE);
+        insertable.pos = prevBlockPos;
+        insertable.size = prevBlockSize;
+        pg.buildBlock(insertable,insertable.getSize().getX_asIndex(),insertable.getSize().getY_asIndex());
     }
 
 

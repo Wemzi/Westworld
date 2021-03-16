@@ -8,9 +8,9 @@ import java.awt.*;
 
 public class Operator extends Employee {
 
-    public Operator(Position startingCoord, Block startingBlock, int salary)
+    public Operator(Position startingPos, int salary)
     {
-        super(startingCoord,startingBlock,salary);
+        super(startingPos,salary);
     }
 
     public void operate(Game g )
