@@ -27,7 +27,7 @@ public class GameEngine {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                int minutesPerSecond = 1;
+                int minutesPerSecond = setTimerSpeed(10);
 
                 pg.setMinutes(pg.getMinutes() + minutesPerSecond);
                 if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
@@ -134,6 +134,7 @@ public class GameEngine {
 
 
     void setTimerOff() { timer.cancel(); System.out.println("Timer leállítva!"); }
-    void setTimerSpeed(int speedMs) { }
+
+    public static int setTimerSpeed(int minutesPerSecond) { return minutesPerSecond; }
 
 }
