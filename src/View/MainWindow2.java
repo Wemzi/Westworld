@@ -305,6 +305,10 @@ public class MainWindow2 extends JFrame{
                         Position clickedHere=new Position(e.getX(),e.getY(),true);
                         //toBuild.pos=new Position(clickedHere.getX_asIndex(),clickedHere.getY_asIndex(),false);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
                         toBuild.pos=Position.useMagicGravity(clickedHere);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
+                        if(toBuild instanceof FreePlace){
+                            toBuild.size= engine.getPg().blocks[toBuild.pos.getX_asIndex()][toBuild.pos.getY_asIndex()].getSize();
+                            toBuild.pos=engine.getPg().blocks[toBuild.pos.getX_asIndex()][toBuild.pos.getY_asIndex()].getPos();
+                        }
                         buildBlock(toBuild);
                         //System.out.println("Block placed");
                         stopPlaceSelectionMode();
