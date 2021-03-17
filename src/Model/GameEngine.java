@@ -79,9 +79,10 @@ public class GameEngine {
         int demolishUntilX = posFromX + b.getSize().getX_asIndex();
         int demolishUntilY = posFromY + b.getSize().getY_asIndex();
 
-        Block freeplaceBlock = new FreePlace(0,0,0,BlockState.FREE);
         for(int x=posFromX; x<demolishUntilX; ++x) {
             for(int y=posFromY; y<demolishUntilY; ++y) {
+                Block freeplaceBlock = new FreePlace(0,0,0,BlockState.FREE);
+                freeplaceBlock.setPos(new Position(x,y,false));
                 pg.demolishBlock(freeplaceBlock, x, y);
             }
         }
