@@ -4,6 +4,7 @@ import Model.Blocks.Block;
 import Model.Blocks.BlockState;
 import Model.Blocks.FreePlace;
 import Model.People.Person;
+import Model.People.Visitor;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,39 +13,37 @@ import static View.MainWindow2.NUM_OF_COLS;
 import static View.MainWindow2.NUM_OF_ROWS;
 
 
-/*
-Blokkok tudják magukról, hogy mekkorák, illetve tudjanak visszaadni egy színt, amit szükséges kirajzolni
-Bal felső sarok, jobb alsó sarok
-
- */
-
 public class Playground {
+    private static int MAX_VISITOR = 10;
+    private static int MAX_EMPLOYEES = 5;
     /* Adattagok */
     public Block[][] blocks;
     private ArrayList<Block> buildedObjects;
-    private Person[] visitors;
+    private Visitor[] visitors;
     private Person[] employees;
     private int money;
-    private int days, hours, minutes, seconds;
+    private int days, hours, minutes;
     private double popularity;
-    /* További adattagok implementálása */
 
     /* Konstruktor */
     public Playground() {
-        // Adattagok inicializálása és GameEngine beállításai
-        blocks = new Block[NUM_OF_ROWS][NUM_OF_COLS];//Létrehoz egy akkora tömböt, amekkora a UI-on létrejön
+        blocks = new Block[NUM_OF_ROWS][NUM_OF_COLS];
+        visitors = new Visitor[MAX_VISITOR];
+        employees = new Person[MAX_EMPLOYEES];
         buildedObjects = new ArrayList<>();
 
-        for(int i = 0; i < NUM_OF_ROWS; i++)
-        {
-            for(int j = 0; j < NUM_OF_COLS; j++)
-            {
+        for(int i = 0; i < NUM_OF_ROWS; i++) {
+            for(int j = 0; j < NUM_OF_COLS; j++) {
                 blocks[i][j] = new FreePlace(0,0,0,BlockState.FREE);
                 blocks[i][j].pos = new Position(i,j,false);
             }
         }
-        money = 0;
-        days = 1; hours = 8; minutes = 0; seconds = 0;
+        for(int i=0; i<MAX_VISITOR; ++i) {
+            visitors[i] = new Visitor(new Position(0,0, false));
+        }
+
+        money = 100_000;
+        days = 1; hours = 8; minutes = 0;
         popularity = 0;
     }
     public Playground(int num_of_rows, int num_of_cols, int money, int days, int popularity) {
@@ -71,13 +70,29 @@ public class Playground {
         blocks[posX][posY] = block;
         return true;
     }
+    public void demolishBlock(Block block, int posX, int posY) {
+        blocks[posX][posY] = block;
+    }
 
     /**
-     *
-     * @return A kapott megepitheto e (Vagy valamelyik resze foglalt teruletre esne)
+     * Megkapjuk a blockot, annak a pozíció és size alapján kiszámítjuk mettől meddig tart, majd végigmegyünk
+     * a blockokon, ha valahol nem freeplace van visszatérünk false-szal
+     * @param block Megépítendő block
+     * @return  False egyből, ha már az első helyen nem freeplace van
+     *          False literálisan, ha valamelyik helyen nem freeplace van
+     *          True ha az összesen helyen freeplace van
      */
     public boolean isBuildable(Block block){
-        //todo implement
+        if(!(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof FreePlace)) return false;
+
+        int blockFromX = block.getPos().getX_asIndex();
+        int blockFromY = block.getPos().getY_asIndex();
+        int blockMaxX = blockFromX + block.getSize().getX_asIndex();
+        int blockMaxY = blockFromY + block.getSize().getY_asIndex();
+
+        for(int x=blockFromX; x<blockMaxX; ++x)
+            for(int y=blockFromY; y<blockMaxY; ++y)
+                if(!(blocks[x][y] instanceof FreePlace)) return false;
         return true;
     }
 
@@ -91,7 +106,6 @@ public class Playground {
     public int getMoney()                           { return money; }
     public int getHours()                           { return hours; }
     public int getMinutes()                         { return minutes; }
-    public int getSeconds()                         { return seconds; }
     public int getDays()                            { return days; }
     public double getPopularity()                   { return popularity; }
 
@@ -100,18 +114,23 @@ public class Playground {
     public Block[][] getBlocks()                    { return blocks; }
     public Block getBlockByPos(Position pos)       { return blocks[pos.getX_asIndex()][pos.getY_asIndex()]; }
     public ArrayList<Block> getBuildedObjectList()  { return buildedObjects; }
+    public ArrayList<Block> getBuildedObjects() { return buildedObjects; }
+    public Visitor[] getVisitors() { return visitors; }
+    public Person[] getEmployees() { return employees; }
+
 
     public void setMoney(int money)                 { this.money = money; }
     public void setDays(int days)                   { this.days = days; }
     public void setHours(int hours)                 { this.hours = hours; }
     public void setMinutes(int minutes)             { this.minutes = minutes; }
-    public void setSeconds(int seconds)             { this.seconds = seconds; }
     public void setPopularity(double popularity)    { this.popularity = popularity; }
+    public void setBuildedObjects(ArrayList<Block> buildedObjects) { this.buildedObjects = buildedObjects; }
+    public void setVisitors(Visitor[] visitors) { this.visitors = visitors; }
+    public void setEmployees(Person[] employees) { this.employees = employees; }
 
     public String dateToString() {
         return  " Day: " + this.days +
                 " Hour: " + this.hours +
-                " Minutes: " + this.minutes +
-                " Seconds: " + this.seconds;
+                " Minutes: " + this.minutes;
     }
 }
