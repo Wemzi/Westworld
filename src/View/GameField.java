@@ -11,7 +11,7 @@ import java.awt.*;
  *
  * @author Gabor
  */
-public class GameField extends JPanel {
+public class GameField extends JPanel {//todo serviceArea throws exceptions
     private final GameEngine engine;
 
     private boolean mouseFollowing=false;

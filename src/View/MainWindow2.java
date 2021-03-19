@@ -21,9 +21,9 @@ import java.util.Arrays;
  // TODO: Ki tudjuk választani a játékok közül, hogy melyiket akarjuk megépíteni.
     // TODO: Service area
 public class MainWindow2 extends JFrame{
-    public static final int BOX_SIZE=20;//hany pixel szeles legyen egy elem a matrixban
+    public static final int BOX_SIZE=50;//hany pixel szeles legyen egy elem a matrixban
     public static final int NUM_OF_ROWS=25;//sorok szama
-    public static final int NUM_OF_COLS=25;//oszlopok szama
+    public static final int NUM_OF_COLS=15;//oszlopok szama
     public static final int FPS=20;
 
     private final GameField field;
