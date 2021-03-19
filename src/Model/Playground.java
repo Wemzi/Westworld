@@ -27,13 +27,13 @@ public class Playground {
 
     /* Konstruktor */
     public Playground() {
-        blocks = new Block[NUM_OF_ROWS][NUM_OF_COLS];
+        blocks = new Block[NUM_OF_COLS][NUM_OF_ROWS];
         visitors = new Visitor[MAX_VISITOR];
         employees = new Person[MAX_EMPLOYEES];
         buildedObjects = new ArrayList<>();
 
-        for(int i = 0; i < NUM_OF_ROWS; i++) {
-            for(int j = 0; j < NUM_OF_COLS; j++) {
+        for(int i = 0; i < NUM_OF_COLS; i++) {
+            for(int j = 0; j < NUM_OF_ROWS; j++) {
                 blocks[i][j] = new FreePlace(0,0,0,BlockState.FREE);
                 blocks[i][j].pos = new Position(i,j,false);
             }
