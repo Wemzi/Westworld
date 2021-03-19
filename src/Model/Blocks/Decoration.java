@@ -7,6 +7,8 @@ public class Decoration  extends Block {
         super(buildingCost, upkeepCost, popularityIncrease, state);
     }
 
+    // TODO: Make different types of decorations
+
     @Override
     public Color getColor() {
         return Color.green;

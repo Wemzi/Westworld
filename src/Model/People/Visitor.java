@@ -12,6 +12,10 @@ public class Visitor extends Person {
     private int happiness;
     private int hunger;
     private int playfulness;
+        // TODO: add a new value that defines how long are they staying. make it changeable.
+        // TODO: cyclical waiting at a game for example
+        // TODO: change playfulness and hunger in time
+        // TODO: they shouldnt interrupt their actions
 
     public Visitor(Position startingPos)
     {
@@ -36,6 +40,8 @@ public class Visitor extends Person {
         playfulness += 30;
         //throwGarbage(posBlock);
     }
+
+        // TODO: they should be here for a fixed time and when they leave then the happiness should be changing the popularity of the pg
 
     public Road throwGarbage(Road there)
     {

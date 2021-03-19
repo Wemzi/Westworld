@@ -20,6 +20,7 @@ public class Game extends Block {
     private int cooldownTime; // TODO: Building time should be 5 times cooldowntime
     public GameType type;
 
+
     public Game(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, int ticketCost, int capacity, Position size, Position pos, int cooldownTime) {
         super(buildingCost, upkeepCost, popularityIncrease, state, size, pos);
         this.ticketCost = ticketCost;
@@ -33,7 +34,7 @@ public class Game extends Block {
         this.ticketCost = 0;
         this.capacity = 0;
     }
-
+    // TODO:: change cooldowntimes to minutes (/60)
     // Implemented preset types of games
     public Game(GameType type,Position pos) {
         Game ret;
@@ -108,12 +109,12 @@ public class Game extends Block {
         queue.clear();
         this.setState(BlockState.USED);
         System.out.println("Game is running...");
-        CountDown cd = new CountDown();
-        cd.run(this.cooldownTime);
+
         this.setCondition(this.getCondition()-2);
         this.setState(BlockState.FREE);
     }
-
+    // TODO: create a "RoundHasPassed" method that checks condition, state, queue, and if everything is okay, then run the game
+    // TODO: also do it when a block has been built, do some sort of countdown ( -- a variable )
 
     public int getTicketCost() {
         return ticketCost;

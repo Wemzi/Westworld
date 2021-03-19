@@ -9,10 +9,12 @@ public abstract class Block {
 
     protected BlockState state;
     protected int buildingCost;
+    private int buildingTime;
     protected int upkeepCost;
     protected int condition;
     public Position size; //3 blokk szeles es 2 blokk magas. Ez egy relative kicsi szam!
     //public Coord pos; //bal felso eleme hol van
+    // TODO equals method, and also need a hashcode for it
     public  Position pos;
     protected double popularityIncrease;
     public Block()
