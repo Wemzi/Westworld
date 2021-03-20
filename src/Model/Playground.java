@@ -3,8 +3,7 @@ package Model;
 import Model.Blocks.Block;
 import Model.Blocks.BlockState;
 import Model.Blocks.FreePlace;
-import Model.People.Person;
-import Model.People.Visitor;
+import Model.People.*;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,6 +11,8 @@ import java.util.ArrayList;
 import static View.MainWindow2.NUM_OF_COLS;
 import static View.MainWindow2.NUM_OF_ROWS;
 
+//TODO: Visitor happiness, befolyásolja a Popularity-t, amikor elmegy a parkból a visitor
+//TODO: Visitor teleportáljon a játékokhoz
 
 public class Playground {
     private static int MAX_VISITOR = 10;
@@ -19,18 +20,27 @@ public class Playground {
     /* Adattagok */
     public Block[][] blocks;
     private ArrayList<Block> buildedObjects;
-    private Visitor[] visitors;
-    private Person[] employees;
+
+    private ArrayList<Visitor> visitors;
+
+    private ArrayList<Caterer> cateres;
+    private ArrayList<Cleaner> cleaners;
+    private ArrayList<Operator> operators;
+    private ArrayList<Repairman> repairmen;
+
     private int money;
     private int days, hours, minutes;
     private double popularity;
 
     /* Konstruktor */
     public Playground() {
-        blocks = new Block[NUM_OF_COLS][NUM_OF_ROWS];
-        visitors = new Visitor[MAX_VISITOR];
-        employees = new Person[MAX_EMPLOYEES];
-        buildedObjects = new ArrayList<>();
+        blocks              = new Block[NUM_OF_COLS][NUM_OF_ROWS];
+        buildedObjects      = new ArrayList<>();
+        visitors            = new ArrayList<>();
+        cateres             = new ArrayList<>();
+        cleaners            = new ArrayList<>();
+        operators           = new ArrayList<>();
+        repairmen           = new ArrayList<>();
 
         for(int i = 0; i < NUM_OF_COLS; i++) {
             for(int j = 0; j < NUM_OF_ROWS; j++) {
@@ -38,22 +48,11 @@ public class Playground {
                 blocks[i][j].pos = new Position(i,j,false);
             }
         }
-        for(int i=0; i<MAX_VISITOR; ++i) {
-            visitors[i] = new Visitor(new Position(0,0, false));
-        }
 
         money = 100_000;
         days = 1; hours = 8; minutes = 0;
         popularity = 0;
     }
-    public Playground(int num_of_rows, int num_of_cols, int money, int days, int popularity) {
-        blocks = new Block[num_of_rows][num_of_cols];
-        buildedObjects = new ArrayList<>();
-        this.money = money;
-        this.days = days;
-        this.popularity = popularity;
-    }
-
 
     /* Metódusok */
 
@@ -96,11 +95,28 @@ public class Playground {
         return true;
     }
 
-    void startDay()         { }
-    void endDay()           { }
-    void update()           { }
-    void updatePersons()    { }
-    void updateBlocks()     { }
+    public boolean hire(Employee e) {
+        int salary = e.getSalary();
+        if(money < salary) return false;
+
+        if(e instanceof Caterer) {
+            cateres.add(new Caterer(new Position(0, 0, false), salary));
+            return true;
+        } else if(e instanceof Cleaner) {
+            cleaners.add(new Cleaner(new Position(0,0,false), salary));
+            return true;
+        }
+        else if(e instanceof Operator) {
+            operators.add(new Operator(new Position(0,0,false), salary));
+            return true;
+        }
+        else if(e instanceof Repairman) {
+            repairmen.add(new Repairman(new Position(0,0,false), salary));
+            return true;
+        }
+        else return false;
+    }
+
 
     /* Getterek / Setterek */
     public int getMoney()                           { return money; }
@@ -112,12 +128,13 @@ public class Playground {
     public BlockState getBlockState(Block block)    { return block.getState(); }
     public Color getColor(Block block)              { return block.getColor(); }
     public Block[][] getBlocks()                    { return blocks; }
-    public Block getBlockByPos(Position pos)       { return blocks[pos.getX_asIndex()][pos.getY_asIndex()]; }
     public ArrayList<Block> getBuildedObjectList()  { return buildedObjects; }
-    public ArrayList<Block> getBuildedObjects() { return buildedObjects; }
-    public Visitor[] getVisitors() { return visitors; }
-    public Person[] getEmployees() { return employees; }
 
+    public ArrayList<Visitor> getVisitors()         { return visitors; }
+    public ArrayList<Caterer> getCateres()          { return cateres; }
+    public ArrayList<Cleaner> getCleaners()         { return cleaners; }
+    public ArrayList<Operator> getOperators()       { return operators; }
+    public ArrayList<Repairman> getRepairmen()      { return repairmen; }
 
     public void setMoney(int money)                 { this.money = money; }
     public void setDays(int days)                   { this.days = days; }
@@ -125,8 +142,6 @@ public class Playground {
     public void setMinutes(int minutes)             { this.minutes = minutes; }
     public void setPopularity(double popularity)    { this.popularity = popularity; }
     public void setBuildedObjects(ArrayList<Block> buildedObjects) { this.buildedObjects = buildedObjects; }
-    public void setVisitors(Visitor[] visitors) { this.visitors = visitors; }
-    public void setEmployees(Person[] employees) { this.employees = employees; }
 
     public String dateToString() {
         return  " Day: " + this.days +

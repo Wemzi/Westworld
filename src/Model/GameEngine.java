@@ -13,12 +13,9 @@ public class GameEngine {
     /* Adattagok */
     private Timer timer;
     private Playground pg;
-    // TODO: Ki kellene találni, hogyan fogunk végigiterálni a Person-ökön, és meghívni a megfelelő metódusaikat
-    // TODO: -||- A blokkokkal, cél a szimuláció elindítása. OK
-    // TODO: A person-öket mozgatni kéne, annak függvényében, mire vágynak. (playfulness, hunger). Elég ha teleportálnak.
-    // TODO: Kéne kezdőpénz, és le kell vonni az összeget, amikor építünk valamit. Legyen nagyon sok pénzünk kezdetben. OK
-    // TODO: Jó lenne letesztelni a játékok run() metódusát, hogy működik-e a cooldown
-    // TODO: Töltsük fel a pályát FreePlace-ekkel a játék kezdetekor OK
+
+    //TODO: Timer egy függvény legyen!
+    //TODO: Demolish esetén a buildedObject listből is kikerüljön!
     /* Konstruktor */
     public GameEngine() {
         pg = new Playground();
@@ -30,6 +27,8 @@ public class GameEngine {
                 int minutesPerSecond = setTimerSpeed(10);
 
                 pg.setMinutes(pg.getMinutes() + minutesPerSecond);
+
+
                 if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
                     pg.setMinutes(0);
                     pg.setHours(pg.getHours()+1);
@@ -86,9 +85,7 @@ public class GameEngine {
                 pg.demolishBlock(freeplaceBlock, x, y);
             }
         }
-        pg.setMoney(pg.getMoney()+(b.getBuildingCost()/2));
     }
-
     /**
      * Metódus lecsökkenti a játékos pénzét a nap végén upkeep costnyival
      * Minden block a nap végén veszít 1 conditiont
