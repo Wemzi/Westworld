@@ -11,7 +11,7 @@ import java.awt.*;
  *
  * @author Gabor
  */
-public class GameField extends JPanel {
+public class GameField extends JPanel {//todo serviceArea throws exceptions
     private final GameEngine engine;
 
     private boolean mouseFollowing=false;
@@ -53,7 +53,7 @@ public class GameField extends JPanel {
             Point p = getMousePosition();
             if(p!=null){
                 Position where=Position.useMagicGravity(new Position(p.x,p.y,true));
-
+                toBuild.pos=where;
                 /*
                 Block b=engine.getPg().blocks[where.getX_asIndex()][where.getX_asIndex()];
                 if(b == null){b=new FreePlace(where);}
