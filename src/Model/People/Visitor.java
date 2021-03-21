@@ -12,7 +12,8 @@ public class Visitor extends Person {
     private int happiness;
     private int hunger;
     private int playfulness;
-        // TODO: add a new value that defines how long are they staying. make it changeable.
+    private int stayingTime;
+// TODO: add a new value that defines how long are they staying. make it changeable.
         // TODO: cyclical waiting at a game for example
         // TODO: change playfulness and hunger in time
         // TODO: they shouldnt interrupt their actions
@@ -23,25 +24,24 @@ public class Visitor extends Person {
         happiness = 50;
         hunger = 0;
         playfulness = 50;
+        stayingTime = 300;
     }
 
     public void playGame(Game that)
     {
-        // TODO: this should be done by the playground, or the player? I think its the playground
         playfulness -= 50;
         happiness += 20;
         hunger += 15;
+        currentActivityLength = that.getCooldownTime();
     }
     public void eat(ServiceArea where)
     {
-        // TODO: this should be done by the playground, or the player? I think its the playground
         hunger = 0;
         happiness += 5 ;
         playfulness += 30;
+        currentActivityLength = where.getCooldownTime();
         //throwGarbage(posBlock);
     }
-
-        // TODO: they should be here for a fixed time and when they leave then the happiness should be changing the popularity of the pg
 
     public Road throwGarbage(Road there)
     {
@@ -60,6 +60,43 @@ public class Visitor extends Person {
         return playfulness;
     }
 
-    @Override
-    protected Color getColor(){return Color.pink;};
+    public void setStayingTime(int stayingTime) {
+        this.stayingTime = stayingTime;
+    }
+
+    public int getStayingTime() { return stayingTime; }
+
+
+        @Override
+    protected Color getColor(){return Color.pink;}
+
+    public void roundHasPassed(){
+        this.hunger += 1;
+        if(hunger < 50)
+        {
+            this.playfulness +=2;
+        }
+        if(this.currentActivityLength == 0)
+        {
+            happiness-- ;
+        }
+        else
+        {
+            currentActivityLength --;
+        }
+
+        if(stayingTime == 0)
+        {
+            // TODO: leave the playground
+        }
+        else
+        {
+            stayingTime--;
+        }
+        return;
+    }
+
+    public int getCurrentActivityLength() {
+        return currentActivityLength;
+    }
 }

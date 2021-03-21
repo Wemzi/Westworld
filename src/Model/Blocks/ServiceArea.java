@@ -14,6 +14,12 @@ public class ServiceArea extends Block {
     private ArrayBlockingQueue<Visitor> queue;
     private ArrayList<Employee> workers;
     private int capacity;
+    private int cooldownTime;
+
+    public int getCooldownTime() {
+        return cooldownTime;
+    }
+
     // TODO: we need to hire people when a service area is built.
     // TODO: service area-ba is kéne valami kis cooldown, hogy a sorban állásnak legyen értelme, és ne daráljuk le őket egyből.
     public ServiceArea(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, int menuCost, int capacity) {
@@ -22,6 +28,7 @@ public class ServiceArea extends Block {
         this.capacity = capacity;
         workers = new ArrayList<>();
         queue = new ArrayBlockingQueue<>(capacity);
+
     }
 
     public ServiceArea(ServiceType type, Position pos) {
@@ -36,6 +43,7 @@ public class ServiceArea extends Block {
             this.size=new Position(1,1);
             workers = new ArrayList<>();
             queue = new ArrayBlockingQueue<>(capacity);
+            this.cooldownTime = 1;
         }
         if(type==ServiceType.TOILET)
         {
@@ -48,6 +56,7 @@ public class ServiceArea extends Block {
             this.size=new Position(1,1);
             workers = new ArrayList<>();
             queue = new ArrayBlockingQueue<>(this.capacity);
+            this.cooldownTime = 1;
         }
 
     }
@@ -71,6 +80,39 @@ public class ServiceArea extends Block {
 
     public int getCapacity() {
         return capacity;
+    }
+
+
+    public int getMenuCost() {
+        return menuCost;
+    }
+
+    public void setMenuCost(int menuCost) {
+        this.menuCost = menuCost;
+    }
+
+    public ArrayBlockingQueue<Visitor> getQueue() {
+        return queue;
+    }
+
+    public void setQueue(ArrayBlockingQueue<Visitor> queue) {
+        this.queue = queue;
+    }
+
+    public ArrayList<Employee> getWorkers() {
+        return workers;
+    }
+
+    public void setWorkers(ArrayList<Employee> workers) {
+        this.workers = workers;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public void setCooldownTime(int cooldownTime) {
+        this.cooldownTime = cooldownTime;
     }
 
     @Override

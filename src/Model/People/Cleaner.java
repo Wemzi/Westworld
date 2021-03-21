@@ -20,6 +20,21 @@ public class Cleaner extends Employee {
         this.setIsBusy(false);
 
     }
+
+    public void roundHasPassed()
+    {
+        if(currentActivityLength == 0)
+        {
+            // go clean smth
+            currentActivityLength = 3;
+        }
+        else
+        {
+            currentActivityLength--;
+        }
+        return;
+    }
+
     @Override
     protected Color getColor(){return Color.MAGENTA;};
 }
