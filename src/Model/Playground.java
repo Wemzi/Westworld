@@ -52,6 +52,9 @@ public class Playground {
         money = 100_000;
         days = 1; hours = 8; minutes = 0;
         popularity = 0;
+
+        //testVisitor
+        visitors.add(new Visitor(new Position(10,10,false)));
     }
 
     /* Metódusok */
