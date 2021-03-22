@@ -18,8 +18,6 @@ import java.util.Arrays;
  *
  * @author Gabor
  */
- // TODO: Ki tudjuk választani a játékok közül, hogy melyiket akarjuk megépíteni.
-    // TODO: Service area
 public class MainWindow2 extends JFrame{
     public static final int BOX_SIZE=40;//hany pixel szeles legyen egy elem a matrixban
     public static final int NUM_OF_COLS =25;//oszlopok szama
@@ -39,6 +37,7 @@ public class MainWindow2 extends JFrame{
     private final JLabel moneyLabel;
     private final JLabel popularityLabel;
     private final JLabel visitorsLabel;
+    private final JButton startDayButton;
 
 
     public MainWindow2() {
@@ -50,7 +49,7 @@ public class MainWindow2 extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 moneyLabel.setText("Money: $"+engine.getPg().getMoney());
                 popularityLabel.setText("Popularity: "+engine.getPg().getPopularity());
-                visitorsLabel.setText("Visitors: "+0);
+                visitorsLabel.setText("Visitors: "+engine.getPg().getVisitors().size());
                 timerText.setText(engine.getPg().dateToString());
 
                 field.repaint();
@@ -76,32 +75,22 @@ public class MainWindow2 extends JFrame{
         popularityLabel=new JLabel("Popularity: 0");
         visitorsLabel=new JLabel("Visitors: 0");
 
-        //menu items
-        JMenuBar menuBar = new JMenuBar();
-        JMenu menuGame = new JMenu("Other");
-
-        createMenus(menuBar);
-
-
-        /*
-        JMenuItem buildGameMenuItem=new JMenuItem("Game");
-        JMenuItem buildServiceAreaMenuItem=new JMenuItem("service");
-        JMenuItem buildRoadMenuItem=new JMenuItem("road");
-        JMenuItem buildDecorationMenuItem=new JMenuItem("decor");
-        JMenuItem buildFreePlaceMenuItem=new JMenuItem("free");
-
-        buildGameMenuItem.addActionListener(new AbstractAction() {
+        //Button
+        startDayButton=new JButton("Start day");
+        startDayButton.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Build game");
+                engine.startDay();
             }
         });
 
+        //menu items
+        JMenuBar menuBar = new JMenuBar();
+        JMenu buildMenu = new JMenu("Build");
+        JMenu otherMenu = new JMenu("Other");
 
-        buildMenu.add(buildGameMenuItem);
-        buildMenu.add(medium);
-        buildMenu.add(large);
-*/
+        createMenus(buildMenu);
+
 
 
         JMenuItem managementMenuItem = new JMenuItem(new AbstractAction("Management") {
@@ -121,11 +110,12 @@ public class MainWindow2 extends JFrame{
         //final initialization moves
         //menu
 
-        menuGame.add(managementMenuItem);
-        menuGame.addSeparator();
-        menuGame.add(menuGameExit);
+        otherMenu.add(managementMenuItem);
+        otherMenu.addSeparator();
+        otherMenu.add(menuGameExit);
 
-        menuBar.add(menuGame);
+        menuBar.add(buildMenu);
+        menuBar.add(otherMenu);
         setJMenuBar(menuBar);
 
         //window
@@ -153,6 +143,7 @@ public class MainWindow2 extends JFrame{
         playersPanel.add(moneyLabel);
         playersPanel.add(popularityLabel);
         playersPanel.add(visitorsLabel);
+        playersPanel.add(startDayButton);
         this.add(playersPanel,BorderLayout.NORTH);
         pack();
 
@@ -215,7 +206,7 @@ public class MainWindow2 extends JFrame{
     }
 
 
-    private void createMenus(JMenuBar buildMenu){
+    private void createMenus(JMenu buildMenu){
         JMenu buildGameMenu=new JMenu("Game");
         createGameMenuItems(buildGameMenu);
         buildMenu.add(buildGameMenu);
@@ -235,6 +226,20 @@ public class MainWindow2 extends JFrame{
             }
         });
         //------------ vege ---------------
+
+        //-----------Egy menu elem kezdete ------------
+        JMenuItem garbageCanMenuItem=new JMenuItem("Garbage Can");
+        buildMenu.add(garbageCanMenuItem);
+        garbageCanMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //todo create a garbage can block class
+                Block block=new GarbageCan();
+                startPlaceSelectionMode(block);
+            }
+        });
+        //------------ vege ---------------
+
 
         //-----------Egy menu elem kezdete ------------
         JMenuItem decorMenuItem=new JMenuItem("Decoration");
@@ -263,7 +268,7 @@ public class MainWindow2 extends JFrame{
 
     private boolean buildBlock(Block b){
         if(b instanceof FreePlace) {
-            engine.demolish((FreePlace) b);
+            engine.demolish(b);
             return true;
         }
         boolean l=engine.buildBlock(b);
