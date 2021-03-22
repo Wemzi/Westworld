@@ -37,6 +37,7 @@ public class MainWindow2 extends JFrame{
     private final JLabel moneyLabel;
     private final JLabel popularityLabel;
     private final JLabel visitorsLabel;
+    private final JButton startDayButton;
 
 
     public MainWindow2() {
@@ -73,6 +74,15 @@ public class MainWindow2 extends JFrame{
         moneyLabel=new JLabel("Money: $0");
         popularityLabel=new JLabel("Popularity: 0");
         visitorsLabel=new JLabel("Visitors: 0");
+
+        //Button
+        startDayButton=new JButton("Start day");
+        startDayButton.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                engine.startDay();
+            }
+        });
 
         //menu items
         JMenuBar menuBar = new JMenuBar();
@@ -133,6 +143,7 @@ public class MainWindow2 extends JFrame{
         playersPanel.add(moneyLabel);
         playersPanel.add(popularityLabel);
         playersPanel.add(visitorsLabel);
+        playersPanel.add(startDayButton);
         this.add(playersPanel,BorderLayout.NORTH);
         pack();
 

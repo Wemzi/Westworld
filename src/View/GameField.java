@@ -60,12 +60,17 @@ public class GameField extends JPanel {
         }
     }
 
+    private static void paintMousePreview(Graphics2D gr,GameEngine gameEngine){
+
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D gr = (Graphics2D) g;
         paintBlocks(gr,engine);
         paintVisitors(gr,engine);
+        paintMousePreview(gr,engine);
 
         if(mouseFollowing){
             Point p = getMousePosition();

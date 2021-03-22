@@ -107,6 +107,14 @@ public class GameEngine {
         }
         pg.setMoney(money);
     }
+
+    /**
+     * start the day
+     */
+    public void startDay(){
+        //todo implement
+        System.out.println("startDay()");
+    }
     /*public void visitorsDemand() {
         for(Visitor v : pg.getVisitors()) {
             if(v.getPlayfulness() <= 50) {
