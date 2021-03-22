@@ -15,6 +15,7 @@ public class ServiceArea extends Block {
     private ArrayList<Employee> workers;
     private int capacity;
     private int cooldownTime;
+    private ServiceType type;
 
     public int getCooldownTime() {
         return cooldownTime;
@@ -32,6 +33,7 @@ public class ServiceArea extends Block {
     }
 
     public ServiceArea(ServiceType type, Position pos) {
+        this.type=type;
         if(type==ServiceType.BUFFET)
         {
             buildingCost = 100;
@@ -40,7 +42,7 @@ public class ServiceArea extends Block {
             state = BlockState.UNDER_CONSTRUCTION;
             this.menuCost = 15;
             this.capacity = 50;
-            this.size=new Position(1,1);
+            this.size=new Position(1,2,false);
             workers = new ArrayList<>();
             queue = new ArrayBlockingQueue<>(capacity);
             this.cooldownTime = 1;
@@ -53,7 +55,7 @@ public class ServiceArea extends Block {
             state = BlockState.UNDER_CONSTRUCTION;
             this.menuCost = 3;
             this.capacity = 25;
-            this.size=new Position(1,1);
+            this.size=new Position(3,1,false);
             workers = new ArrayList<>();
             queue = new ArrayBlockingQueue<>(this.capacity);
             this.cooldownTime = 1;
@@ -117,7 +119,7 @@ public class ServiceArea extends Block {
 
     @Override
     public String toString() {
-        return "ServiceArea{" +
+        return "ServiceArea type : " + type + " " +
                 "menuCost=" + menuCost +
                 ", queue=" + queue +
                 ", workers=" + workers +

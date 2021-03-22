@@ -38,7 +38,6 @@ public class Game extends Block {
     }
     // Implemented preset types of games
     public Game(GameType type,Position pos) {
-        Game ret;
         this.type = type;
         if (type == GameType.DODGEM) {
             this.buildingCost = 300;
@@ -47,7 +46,7 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=25;
             this.capacity=20;
-            this.size= new Position(2, 2);
+            this.size= new Position(2, 2,false);
             this.pos = pos;
             this.cooldownTime=5;
             this.buildingTime = 5 * cooldownTime;
@@ -58,7 +57,7 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=40;
             this.capacity=20;
-            this.size= new Position(2, 3);
+            this.size= new Position(2, 4,false);
             this.pos = pos;
             this.cooldownTime = 3;
             this.buildingTime = 5 * cooldownTime;
@@ -70,7 +69,7 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=30;
             this.capacity=3;
-            this.size= new Position(1, 1);
+            this.size= new Position(2, 2,false);
             this.pos = pos;
             this.cooldownTime = 2;
             this.buildingTime = 5 * cooldownTime;
@@ -81,7 +80,7 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=60;
             this.capacity=15;
-            this.size= new Position(4, 2);
+            this.size= new Position(4, 2,false);
             this.pos = pos;
             this.cooldownTime = 5;
             this.buildingTime = 5 * cooldownTime;
@@ -92,7 +91,7 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=20;
             this.capacity=5;
-            this.size= new Position(1, 1);
+            this.size= new Position(2, 2,false);
             this.pos = pos;
             this.cooldownTime = 2;
             this.buildingTime = 5 * cooldownTime;

@@ -28,7 +28,8 @@ public abstract class Block {
                 this.buildingTime == block.buildingTime &&
                 this.upkeepCost == block.upkeepCost     &&
                 this.condition == block.condition       &&
-                this.size == block.size;
+                this.size == block.size                 &&
+                this.hashCode() == block.hashCode();
     }
 
     @Override
