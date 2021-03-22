@@ -21,15 +21,6 @@ public class Repairman extends Employee {
 
     }
 
-    public void roundHasPassed()
-    {
-        if(this.currentActivityLength==0)
-        {
-            // go repair smth
-        }
-        return;
-    }
-
     @Override
     protected Color getColor(){return Color.yellow;};
 }

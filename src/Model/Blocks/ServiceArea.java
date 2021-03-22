@@ -14,14 +14,7 @@ public class ServiceArea extends Block {
     private ArrayBlockingQueue<Visitor> queue;
     private ArrayList<Employee> workers;
     private int capacity;
-    private int cooldownTime;
-    private ServiceType type;
 
-    public int getCooldownTime() {
-        return cooldownTime;
-    }
-
-    // TODO: we need to hire people when a service area is built.
     // TODO: service area-ba is kéne valami kis cooldown, hogy a sorban állásnak legyen értelme, és ne daráljuk le őket egyből.
     public ServiceArea(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, int menuCost, int capacity) {
         super(buildingCost, upkeepCost, popularityIncrease, state);
@@ -29,11 +22,9 @@ public class ServiceArea extends Block {
         this.capacity = capacity;
         workers = new ArrayList<>();
         queue = new ArrayBlockingQueue<>(capacity);
-
     }
 
     public ServiceArea(ServiceType type, Position pos) {
-        this.type=type;
         if(type==ServiceType.BUFFET)
         {
             buildingCost = 100;
@@ -42,10 +33,9 @@ public class ServiceArea extends Block {
             state = BlockState.UNDER_CONSTRUCTION;
             this.menuCost = 15;
             this.capacity = 50;
-            this.size=new Position(1,2,false);
+            this.size=new Position(1,1);
             workers = new ArrayList<>();
             queue = new ArrayBlockingQueue<>(capacity);
-            this.cooldownTime = 1;
         }
         if(type==ServiceType.TOILET)
         {
@@ -55,10 +45,9 @@ public class ServiceArea extends Block {
             state = BlockState.UNDER_CONSTRUCTION;
             this.menuCost = 3;
             this.capacity = 25;
-            this.size=new Position(3,1,false);
+            this.size=new Position(1,1);
             workers = new ArrayList<>();
             queue = new ArrayBlockingQueue<>(this.capacity);
-            this.cooldownTime = 1;
         }
 
     }
@@ -84,42 +73,9 @@ public class ServiceArea extends Block {
         return capacity;
     }
 
-
-    public int getMenuCost() {
-        return menuCost;
-    }
-
-    public void setMenuCost(int menuCost) {
-        this.menuCost = menuCost;
-    }
-
-    public ArrayBlockingQueue<Visitor> getQueue() {
-        return queue;
-    }
-
-    public void setQueue(ArrayBlockingQueue<Visitor> queue) {
-        this.queue = queue;
-    }
-
-    public ArrayList<Employee> getWorkers() {
-        return workers;
-    }
-
-    public void setWorkers(ArrayList<Employee> workers) {
-        this.workers = workers;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
-    public void setCooldownTime(int cooldownTime) {
-        this.cooldownTime = cooldownTime;
-    }
-
     @Override
     public String toString() {
-        return "ServiceArea type : " + type + " " +
+        return "ServiceArea{" +
                 "menuCost=" + menuCost +
                 ", queue=" + queue +
                 ", workers=" + workers +

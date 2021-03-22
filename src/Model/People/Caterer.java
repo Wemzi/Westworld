@@ -1,38 +1,24 @@
 package Model.People;
 
-import Model.Blocks.*;
+import Model.Blocks.Block;
 import Model.Position;
 
 import java.awt.*;
 
 public class Caterer extends Employee {
-    ServiceArea workPlace;
+    //SericeArea workPlace;
 
-    public Caterer(Position startingPos, int salary, ServiceArea workPlace)
+    public Caterer(Position startingPos, int salary)
     {
         super(startingPos,salary);
-        this.workPlace=workPlace;
     }
 
     public void serve(Visitor v )
     {
-        v.eat(workPlace);
-    }
-
-    public void roundHasPassed()
-    {
-        if(currentActivityLength == 0)
-        {
-            Visitor hungryGuest = workPlace.getQueue().remove();
-            this.serve(hungryGuest);
-            currentActivityLength = 1;
-            // TODO: Money?
-        }
-        else
-        {
-            currentActivityLength--;
-        }
-        return;
+        this.setIsBusy(true);
+        //v.eat(workPlace)
+        // TODO: this should be handled in the playground?
+        this.setIsBusy(false);
     }
 
     @Override
