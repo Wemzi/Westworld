@@ -55,19 +55,31 @@ public class GameField extends JPanel {//todo serviceArea throws exceptions
                 Position where=Position.useMagicGravity(new Position(p.x,p.y,true));
                 toBuild.pos=where;
                 /*
-                Block b=engine.getPg().blocks[where.getX_asIndex()][where.getX_asIndex()];
-                if(b == null){b=new FreePlace(where);}
-                //System.out.println("Called");
-                gr.setColor(Color.PINK);
-                gr.fillRect(b.pos.getX_asPixel(),b.pos.getY_asPixel(),b.size.getX_asPixel(),b.size.getY_asPixel());*/
                 if(engine.getPg().isBuildable(toBuild)){
                     gr.setColor(toBuild.getColor());
                 }else{
                     gr.setColor(Color.BLACK);
-                }
+                }*/
+                setPreviewColor(toBuild,gr);
 
                 gr.fillRect(where.getX_asPixel(),where.getY_asPixel(), toBuild.size.getX_asPixel(), toBuild.size.getY_asPixel() );
 
+            }
+        }
+    }
+
+    private void setPreviewColor(Block b, Graphics2D gr){
+        if(b instanceof GarbageCan){
+            if(!engine.getPg().isBuildable(toBuild)){
+                gr.setColor(toBuild.getColor());
+            }else{
+                gr.setColor(Color.BLACK);
+            }
+        }else{
+            if(engine.getPg().isBuildable(toBuild)){
+                gr.setColor(toBuild.getColor());
+            }else{
+                gr.setColor(Color.BLACK);
             }
         }
     }

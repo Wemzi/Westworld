@@ -1,9 +1,6 @@
 package Model;
 
-import Model.Blocks.Block;
-import Model.Blocks.BlockState;
-import Model.Blocks.FreePlace;
-import Model.People.Visitor;
+import Model.Blocks.*;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -56,6 +53,7 @@ public class GameEngine {
      *          true, ha építés végbement
      */
     public boolean buildBlock(Block b) {
+        if(b instanceof GarbageCan){return buildBin(b.pos);}
         if(pg.getMoney() < b.getBuildingCost()) return false;
         if(!(pg.isBuildable(b))) return false;
 
@@ -71,6 +69,15 @@ public class GameEngine {
         pg.setMoney(pg.getMoney()-b.getBuildingCost());
         pg.getBuildedObjectList().add(b); System.out.println("BuildedObjectList-be bekerült a megépítendő block");
         return true;
+    }
+
+    boolean buildBin(Position p){//todo revise
+        boolean r=false;
+        if(pg.blocks[p.getX_asIndex()][p.getY_asIndex()] instanceof Road){
+            r=true;
+            ((Road) pg.blocks[p.getX_asIndex()][p.getY_asIndex()]).setHasGarbageCan(true);
+        }
+        return r;
     }
 
     public void demolish(Block b) {
