@@ -1,18 +1,42 @@
 package Model.Blocks;
 
 import Model.Position;
-
 import java.awt.*;
+import java.util.Objects;
 
 public abstract class Block {
-    private static final int MAX_CONDITION=100;
 
+    private static final int MAX_CONDITION=100;
     protected BlockState state;
     protected int buildingCost;
+    private int buildingTime;
     protected int upkeepCost;
     protected int condition;
     public Position size; //3 blokk szeles es 2 blokk magas. Ez egy relative kicsi szam!
     //public Coord pos; //bal felso eleme hol van
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Block)) return false;
+
+        Block block = (Block) o;
+
+        return this.state.equals(block.state)           &&
+                this.buildingCost == block.buildingCost &&
+                this.buildingTime == block.buildingTime &&
+                this.upkeepCost == block.upkeepCost     &&
+                this.condition == block.condition       &&
+                this.size == block.size                 &&
+                this.hashCode() == block.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.buildingTime,this.buildingCost,this.size,this.pos,this.size,this.upkeepCost,this.condition,this.popularityIncrease,this.state);
+    }
+
     public  Position pos;
     protected double popularityIncrease;
     public Block()

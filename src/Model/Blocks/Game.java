@@ -1,6 +1,5 @@
 package Model.Blocks;
 
-import Model.CountDown;
 import Model.People.Employee;
 import Model.People.Operator;
 import Model.People.Visitor;
@@ -17,8 +16,10 @@ public class Game extends Block {
     private ArrayBlockingQueue<Visitor> queue;
     private ArrayList<Employee> workers;
     private int capacity;
-    private int cooldownTime; // TODO: Building time should be 5 times cooldowntime
+    private int cooldownTime;
+    private int buildingTime;
     public GameType type;
+
 
     public Game(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, int ticketCost, int capacity, Position size, Position pos, int cooldownTime) {
         super(buildingCost, upkeepCost, popularityIncrease, state, size, pos);
@@ -26,6 +27,7 @@ public class Game extends Block {
         this.capacity = capacity;
         this.queue = new ArrayBlockingQueue<>(capacity);
         this.cooldownTime = cooldownTime;
+        this.buildingTime = 5 * cooldownTime;
     }
 
     public Game(Position size, Position pos) {
@@ -33,10 +35,8 @@ public class Game extends Block {
         this.ticketCost = 0;
         this.capacity = 0;
     }
-
     // Implemented preset types of games
     public Game(GameType type,Position pos) {
-        Game ret;
         this.type = type;
         if (type == GameType.DODGEM) {
             this.buildingCost = 300;
@@ -45,9 +45,10 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=25;
             this.capacity=20;
-            this.size= new Position(2, 2);
+            this.size= new Position(2, 2,false);
             this.pos = pos;
-            this.cooldownTime=120;
+            this.cooldownTime=5;
+            this.buildingTime = 5 * cooldownTime;
         } else if (type == GameType.FERRISWHEEL) {
             this.buildingCost = 600;
             this.upkeepCost = 150;
@@ -55,9 +56,10 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=40;
             this.capacity=20;
-            this.size= new Position(2, 3);
+            this.size= new Position(2, 4,false);
             this.pos = pos;
-            this.cooldownTime = 75;
+            this.cooldownTime = 3;
+            this.buildingTime = 5 * cooldownTime;
         } else if (type == GameType.RODEO)
         {
             this.buildingCost = 270;
@@ -66,10 +68,10 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=30;
             this.capacity=3;
-            this.size= new Position(1, 1);
+            this.size= new Position(2, 2,false);
             this.pos = pos;
-            this.cooldownTime = 90;
-
+            this.cooldownTime = 2;
+            this.buildingTime = 5 * cooldownTime;
         } else if( type == GameType.ROLLERCOASTER) {
             this.buildingCost = 800;
             this.upkeepCost = 200;
@@ -77,9 +79,10 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=60;
             this.capacity=15;
-            this.size= new Position(4, 2);
+            this.size= new Position(4, 2,false);
             this.pos = pos;
-            this.cooldownTime = 120;
+            this.cooldownTime = 5;
+            this.buildingTime = 5 * cooldownTime;
         } else if(type == GameType.SHOOTINGGALLERY) {
             this.buildingCost = 200;
             this.upkeepCost = 30;
@@ -87,11 +90,12 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=20;
             this.capacity=5;
-            this.size= new Position(1, 1);
+            this.size= new Position(2, 2,false);
             this.pos = pos;
-            this.cooldownTime = 120;
+            this.cooldownTime = 2;
+            this.buildingTime = 5 * cooldownTime;
         }
-        else throw new RuntimeException("Gametype not found, or not yet implemented");
+        else throw new RuntimeException("Gametype not found at creating game, or not yet implemented");
     }
 
     @Override
@@ -104,16 +108,36 @@ public class Game extends Block {
         if( this.getState() == BlockState.FREE ) queue.add(v);
         else throw new RuntimeException("Visitor tried to get into queue, but state of Game wasn't 'FREE' ");
     }
+
+    public int getCooldownTime() {
+        return cooldownTime;
+    }
+
     public void run(){
         queue.clear();
         this.setState(BlockState.USED);
         System.out.println("Game is running...");
-        CountDown cd = new CountDown();
-        cd.run(this.cooldownTime);
+
         this.setCondition(this.getCondition()-2);
         this.setState(BlockState.FREE);
     }
+    // TODO: create a "RoundHasPassed" method that checks condition, state, queue, and if everything is okay, then run the game
+    // TODO: also do it when a block has been built, do some sort of countdown ( -- a variable )
 
+    public void roundHasPassed()
+    {
+        if(state.equals(BlockState.UNDER_CONSTRUCTION))
+        {
+            buildingTime--;
+        }
+        if(buildingTime == 0 && !state.equals(BlockState.USED)) {
+            state = BlockState.FREE;
+        }
+        if(state.equals(BlockState.FREE))
+        {
+            this.run();
+        }
+    }
 
     public int getTicketCost() {
         return ticketCost;

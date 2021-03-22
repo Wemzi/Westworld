@@ -1,6 +1,8 @@
 package View;
 
 import Model.Blocks.Block;
+import Model.Blocks.GarbageCan;
+import Model.Blocks.Road;
 import Model.GameEngine;
 import Model.People.Visitor;
 import Model.Position;

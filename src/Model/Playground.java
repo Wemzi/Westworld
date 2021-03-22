@@ -103,14 +103,16 @@ public class Playground {
         if(money < salary) return false;
 
         if(e instanceof Caterer) {
-            cateres.add(new Caterer(new Position(0, 0, false), salary));
+            //cateres.add(new Caterer(new Position(0, 0, false), salary));
+            // TODO: implement new constructors
             return true;
         } else if(e instanceof Cleaner) {
             cleaners.add(new Cleaner(new Position(0,0,false), salary));
             return true;
         }
         else if(e instanceof Operator) {
-            operators.add(new Operator(new Position(0,0,false), salary));
+            //operators.add(new Operator(new Position(0,0,false), salary));
+            // TODO: implement new constructors
             return true;
         }
         else if(e instanceof Repairman) {
