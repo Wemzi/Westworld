@@ -55,7 +55,7 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=40;
             this.capacity=20;
-            this.size= new Position(2, 3);
+            this.size= new Position(2, 3,false);
             this.pos = pos;
             this.cooldownTime = 75;
         } else if (type == GameType.RODEO)
@@ -66,7 +66,7 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=30;
             this.capacity=3;
-            this.size= new Position(1, 1);
+            this.size= new Position(1, 1,false);
             this.pos = pos;
             this.cooldownTime = 90;
 
@@ -77,7 +77,7 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=60;
             this.capacity=15;
-            this.size= new Position(4, 2);
+            this.size= new Position(4, 2,false);
             this.pos = pos;
             this.cooldownTime = 120;
         } else if(type == GameType.SHOOTINGGALLERY) {
@@ -87,7 +87,7 @@ public class Game extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=20;
             this.capacity=5;
-            this.size= new Position(1, 1);
+            this.size= new Position(1, 1,false);
             this.pos = pos;
             this.cooldownTime = 120;
         }
