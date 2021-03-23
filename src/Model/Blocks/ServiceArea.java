@@ -14,6 +14,7 @@ public class ServiceArea extends Block {
     private ArrayBlockingQueue<Visitor> queue;
     private ArrayList<Employee> workers;
     private int capacity;
+    private ServiceType type;
 
     // TODO: service area-ba is kéne valami kis cooldown, hogy a sorban állásnak legyen értelme, és ne daráljuk le őket egyből.
     public ServiceArea(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, int menuCost, int capacity) {
@@ -25,6 +26,7 @@ public class ServiceArea extends Block {
     }
 
     public ServiceArea(ServiceType type, Position pos) {
+        this.type=type;
         if(type==ServiceType.BUFFET)
         {
             buildingCost = 100;
@@ -33,7 +35,7 @@ public class ServiceArea extends Block {
             state = BlockState.UNDER_CONSTRUCTION;
             this.menuCost = 15;
             this.capacity = 50;
-            this.size=new Position(1,1);
+            this.size=new Position(3,1,false);
             workers = new ArrayList<>();
             queue = new ArrayBlockingQueue<>(capacity);
         }
@@ -45,7 +47,7 @@ public class ServiceArea extends Block {
             state = BlockState.UNDER_CONSTRUCTION;
             this.menuCost = 3;
             this.capacity = 25;
-            this.size=new Position(1,1);
+            this.size=new Position(1,2,false);
             workers = new ArrayList<>();
             queue = new ArrayBlockingQueue<>(this.capacity);
         }
@@ -75,11 +77,10 @@ public class ServiceArea extends Block {
 
     @Override
     public String toString() {
-        return "ServiceArea{" +
+        return "ServiceArea type : " + type + " " +
                 "menuCost=" + menuCost +
                 ", queue=" + queue +
-                ", workers=" + workers +
-                ", capacity=" + capacity +
-                " " + super.toString();
+                ", workers=" + workers + super.toString();
+
     }
 }
