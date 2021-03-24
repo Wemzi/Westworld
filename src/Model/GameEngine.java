@@ -3,6 +3,7 @@ package Model;
 import Model.Blocks.*;
 import Model.People.*;
 
+import javax.print.attribute.standard.Destination;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,6 +17,8 @@ public class GameEngine {
     public GameEngine() {
         pg = new Playground();
         isBuildingPeriod = true;
+
+        pg.blocks[0][0] = new Road(0,0,0,BlockState.FREE,false,true,0);
     }
 
 
@@ -91,6 +94,82 @@ public class GameEngine {
         return false;
     }
 
+    public void startDay(){
+        if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return; }
+
+        isBuildingPeriod = false;
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+
+                int minutesPerSecond = setTimerSpeed(30);
+                pg.setMinutes(pg.getMinutes() + minutesPerSecond);
+
+                for(Visitor v : pg.getVisitors()) {
+                    v.setStayingTime(v.getStayingTime()-minutesPerSecond); // Lecsökkentjük a staying timeot a visitoroknak
+                    if(v.getStayingTime() == 0) {
+                        pg.getVisitors().remove(v);
+                        if(v.getHappiness() >= 50) {
+                            pg.setPopularity(pg.getPopularity()+1);
+                        } else {
+                            pg.setPopularity(pg.getPopularity()-1);
+                        }
+                        break;
+                    }
+
+                    if(v.getPlayfulness() <= 70) {
+                        //TODO: if(v.isPlaying()) { akkor ez fut le ->
+                        for(Block b : pg.getBuildedObjectList()) {
+                            if(b instanceof Game) {
+                                v.setPosition(new Position(b.getPos().getX_asIndex(),b.getPos().getY_asIndex(),false));
+                                //TODO: v.setHappiens(v.getHappiens()+1);
+                                //TODO: v.setPlayfullness(v.getPlayFullness()-10)
+                                //TODO: v.setHunger(v.getHunger()+1)
+                            } else {
+                                // TODO: v.setHappiens(v.getHappiens()-10);
+                            }
+                            break;
+                        }
+                    }
+                    else if(v.getHunger() >= 5) {
+                        //TODO: if(v.inServiceBuilding() { akkor ez fut le ->
+                        for(Block b: pg.getBuildedObjectList()) {
+                            if(b instanceof ServiceArea) {
+                                v.setPosition(new Position(b.getPos().getX_asIndex(),b.getPos().getY_asIndex(),false));
+                                //TODO: v.setHappiens(v.getHappiens()+1);
+                                //TODO: v.setPlayfullness(v.getPlayFullness()+10)
+                                //TODO: v.setHunger(v.getHunger()-5)
+                            } else {
+                                //v.setHappiness - 10
+                                pg.getVisitors().remove(v); // Elmegy ha nem kap kiszolgálást!
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
+                    pg.setMinutes(0);
+                    pg.setHours(pg.getHours()+1);
+
+                    pg.getVisitors().add(new Visitor(new Position(0,0,false)));
+                }
+                if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban
+                    pg.setMinutes(0);
+                    pg.setHours(8);
+                    pg.setDays(pg.getDays()+1);
+
+                    System.out.println("Nap vége! Mostantól lehet építkezni!");
+                    endDayPayOff(); //Nap végén lévő elszámolás
+                    timer.cancel(); timer.purge(); // Timer leállítása a nap végén
+                    isBuildingPeriod = true;
+                }
+            }}, 1000, 1000);
+        System.out.println("A nap elkeződött!");
+    }
+
+
     /**
      * Metódus lecsökkenti a játékos pénzét a nap végén upkeep costnyival
      * Minden block a nap végén veszít 1 conditiont
@@ -101,6 +180,11 @@ public class GameEngine {
         for(Block b : pg.getBuildedObjectList()) {
             money -= b.getUpkeepCost();
             b.setCondition(b.getCondition()-1);
+
+            //TODO: Buggernyiós exceptiont dob egyelőre
+            /*for(Visitor v : pg.getVisitors()) {
+                pg.getVisitors().remove(v);
+            }*/
             //További szimulációs lépések...
         }
         System.out.println("endPayOff msg: Építmények upkepp costjai ki lettek fizetve!");
@@ -114,62 +198,9 @@ public class GameEngine {
         pg.setMoney(money);
     }
 
-    public void startDay(){
-        if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return;  }
-
-        isBuildingPeriod = false;
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-            int minutesPerSecond = setTimerSpeed(30);
-
-            pg.setMinutes(pg.getMinutes() + minutesPerSecond);
-            if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
-                pg.setMinutes(0);
-                pg.setHours(pg.getHours()+1);
-            }
-            if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban
-                pg.setMinutes(0);
-                pg.setHours(8);
-                pg.setDays(pg.getDays()+1);
-
-                System.out.println("Nap vége! Mostantól lehet építkezni!");
-                endDayPayOff(); //Nap végén lévő elszámolás
-                timer.cancel(); timer.purge(); // Timer leállítása a nap végén
-                isBuildingPeriod = true;
-            }
-            }
-        }, 1000, 1000);
-        System.out.println("A nap elkeződött!");
-    }
-
-
-    /*public void visitorsDemand() {
-        for(Visitor v : pg.getVisitors()) {
-            if(v.getPlayfulness() <= 50) {
-                //GOTO: Nearest or for him the best Game block
-                //After the game hunger++
-                //If the best game block for him is not available happiness--
-            }
-            if(v.getHunger() >= 10) {
-                //GOTO: Nearest or for him the best Service Area
-                //After the serivice hunger = 0 &  If there is no garbage, garbageOnRoad++
-                //                                 else garbageContent++
-                //If service is not provided then he leaves & happiness--
-                //
-            }
-            // Kell a Visitornak: Eltölthető idő a vidámparkban
-            // Miután ez az idő lejár, happiness befolyásolja a popularity-t
-        }
-    }*/
-
 
     /* Getterek / Setterek */
-    BlockState getBlockState(Block b) { return pg.getBlockState(b); }
-
     public Playground getPg() { return pg; }
-
 
     public static int setTimerSpeed(int minutesPerSecond) { return minutesPerSecond; }
 

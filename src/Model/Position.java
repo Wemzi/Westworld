@@ -7,8 +7,8 @@ import static View.MainWindow2.BOX_SIZE;
  * Nem azonos a Coord -al. Az a kattintott pixelt jelöli. pl.: (201,54)
  */
 public final class Position {
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
 
     /**
      *
@@ -29,6 +29,10 @@ public final class Position {
         }
 
     }
+
+    public void setX_asIndex(int x) { this.x = x; }
+    public void setY_asIndex(int y) { this.y = y; }
+
 
     public int getX_asIndex() {
         return pixelToIndex(x);
