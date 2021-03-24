@@ -1,6 +1,8 @@
 package Model;
 
 import Model.Blocks.*;
+import Model.People.Caterer;
+import Model.People.Employee;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -8,12 +10,14 @@ import java.util.TimerTask;
 
 public class GameEngine {
     /* Adattagok */
-    private Playground pg;;
+    private Playground pg;
+    private boolean isBuildingPeriod;
 
     //TODO: Demolish esetén a buildedObject listből is kikerüljön!
     /* Konstruktor */
     public GameEngine() {
         pg = new Playground();
+        isBuildingPeriod = true;
     }
 
 
@@ -27,6 +31,8 @@ public class GameEngine {
      *          true, ha építés végbement
      */
     public boolean buildBlock(Block b) {
+        if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
+
         if(b instanceof GarbageCan){return buildBin(b.pos);}
         if(pg.getMoney() < b.getBuildingCost()) return false;
         if(!(pg.isBuildable(b))) return false;
@@ -89,6 +95,7 @@ public class GameEngine {
     public void startDay(){
         if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return;  }
 
+        isBuildingPeriod = false;
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -108,6 +115,7 @@ public class GameEngine {
                 System.out.println("Nap vége! Mostantól lehet építkezni!");
                 endDayPayOff(); //Nap végén lévő elszámolás
                 timer.cancel(); timer.purge(); // Timer leállítása a nap végén
+                isBuildingPeriod = true;
             }
             }
         }, 1000, 1000);
