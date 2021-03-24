@@ -96,8 +96,7 @@ public class Game extends Block {
             this.cooldownTime = 2;
             this.buildingTime = 5 * cooldownTime;
         }
-
-        throw new RuntimeException("Gametype not found at creating game, or not yet implemented");
+        else throw new RuntimeException("Gametype not found at creating game, or not yet implemented");
     }
 
     @Override
