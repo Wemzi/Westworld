@@ -1,8 +1,11 @@
 package View;
 
 import Model.Blocks.Block;
+import Model.Blocks.GarbageCan;
+import Model.Blocks.Road;
 import Model.GameEngine;
 import Model.People.Visitor;
+import Model.Playground;
 import Model.Position;
 
 import javax.swing.*;
@@ -60,6 +63,7 @@ public class GameField extends JPanel {
         }
     }
 
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -72,13 +76,7 @@ public class GameField extends JPanel {
             if(p!=null){
                 Position where=Position.useMagicGravity(new Position(p.x,p.y,true));
                 toBuild.pos=where;
-                /*
-                if(engine.getPg().isBuildable(toBuild)){
-                    gr.setColor(toBuild.getColor());
-                }else{
-                    gr.setColor(Color.BLACK);
-                }*/
-                setPreviewColor(toBuild,gr);
+                setPreviewColor(toBuild,gr,engine.getPg());
 
                 gr.fillRect(where.getX_asPixel(),where.getY_asPixel(), toBuild.size.getX_asPixel(), toBuild.size.getY_asPixel() );
 
@@ -86,20 +84,12 @@ public class GameField extends JPanel {
         }
     }
 
-    private void setPreviewColor(Block b, Graphics2D gr){
-        if(b instanceof GarbageCan){
-            if(!engine.getPg().isBuildable(toBuild)){
+    private static void setPreviewColor(Block toBuild, Graphics2D gr, Playground pg){
+            if(pg.isBuildable(toBuild)){
                 gr.setColor(toBuild.getColor());
             }else{
                 gr.setColor(Color.BLACK);
             }
-        }else{
-            if(engine.getPg().isBuildable(toBuild)){
-                gr.setColor(toBuild.getColor());
-            }else{
-                gr.setColor(Color.BLACK);
-            }
-        }
     }
 
 }

@@ -1,8 +1,6 @@
 package Model;
 
-import Model.Blocks.Block;
-import Model.Blocks.BlockState;
-import Model.Blocks.FreePlace;
+import Model.Blocks.*;
 import Model.People.*;
 
 import java.awt.*;
@@ -85,6 +83,12 @@ public class Playground {
      *          True ha az összesen helyen freeplace van
      */
     public boolean isBuildable(Block block){
+        if(block instanceof GarbageCan){
+            if(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof Road){
+                return !((Road) blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()]).isHasGarbageCan();
+            }
+            return false;
+        }
         if(!(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof FreePlace)) return false;
 
         int blockFromX = block.getPos().getX_asIndex();
@@ -118,6 +122,20 @@ public class Playground {
             return true;
         }
         else return false;
+    }
+
+    public boolean fire(Employee e){
+        //todo implement;
+        return true;
+    }
+
+    public ArrayList getEmployeesLike(Employee e){
+        if(e instanceof Caterer){return getCateres();}
+        if(e instanceof Cleaner){return getCleaners();}
+        if(e instanceof Operator){return getOperators();}
+        if(e instanceof Repairman){return getRepairmen();}
+
+        return null;
     }
 
 
