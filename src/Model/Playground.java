@@ -13,8 +13,7 @@ import static View.MainWindow2.NUM_OF_ROWS;
 //TODO: Visitor teleportáljon a játékokhoz
 
 public class Playground {
-    private static int MAX_VISITOR = 10;
-    private static int MAX_EMPLOYEES = 5;
+
     /* Adattagok */
     public Block[][] blocks;
     private ArrayList<Block> buildedObjects;

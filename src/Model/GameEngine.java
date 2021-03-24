@@ -12,7 +12,6 @@ public class GameEngine {
     private Playground pg;
     private boolean isBuildingPeriod;
 
-    //TODO: Demolish esetén a buildedObject listből is kikerüljön!
     /* Konstruktor */
     public GameEngine() {
         pg = new Playground();
@@ -72,6 +71,12 @@ public class GameEngine {
                 pg.demolishBlock(freeplaceBlock, x, y);
             }
         }
+        for(Block removedObject : pg.getBuildedObjectList()) {
+            if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
+                pg.getBuildedObjectList().remove(removedObject);
+                break;
+            }
+        }
     }
     /**
      * Metódus lecsökkenti a játékos pénzét a nap végén upkeep costnyival
@@ -95,10 +100,7 @@ public class GameEngine {
 
         pg.setMoney(money);
     }
-    //TODO: FIRE employee
-    /**
-     * start the day
-     */
+
     public void startDay(){
         if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return;  }
 
