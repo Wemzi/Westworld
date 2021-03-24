@@ -6,7 +6,6 @@ import Model.Position;
 import java.awt.*;
 
 abstract public class Person {
-    // TODO: delete Block position & only calculate position by pixels
     private Position pos;
     protected int currentActivityLength;
     protected Person(Position startingCoord)
@@ -26,7 +25,7 @@ abstract public class Person {
     }
     protected Color getColor(){return Color.white;};
     abstract protected void roundHasPassed();
-    protected boolean isFree(){return currentActivityLength==0;}
+    protected boolean isBusy(){return currentActivityLength==0;}
 
 
 }

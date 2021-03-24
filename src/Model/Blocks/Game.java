@@ -146,10 +146,10 @@ public class Game extends Block {
         {
             buildingTime--;
         }
-        if(buildingTime == 0 && !state.equals(BlockState.USED)) {
+        if(buildingTime == 0 && !(this.state == BlockState.USED)) {
             state = BlockState.FREE;
         }
-        if(state.equals(BlockState.FREE))
+        if(state.equals(BlockState.FREE) && queue.remainingCapacity()==0)
         {
             this.run();
         }

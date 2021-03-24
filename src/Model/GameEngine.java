@@ -117,17 +117,23 @@ public class GameEngine {
                         }
                         break;
                     }
-
+                    // TODO: ÖTLET: mi lenne ha inkább az isbusy-t használnád? Szerintem felesleges mindegyik activityre egy külön metódus.
+                    // TODO: a fontossági sorrendet úgy is eltudjuk dönteni, hogy az egyik ifet előrébb tesszük mint a másikat. többi meetingen.
                     if(v.getPlayfulness() <= 70) {
                         //TODO: if(v.isPlaying()) { akkor ez fut le ->
+                        // Van ilyen, v.isBusy néven
                         for(Block b : pg.getBuildedObjectList()) {
                             if(b instanceof Game) {
                                 v.setPosition(new Position(b.getPos().getX_asIndex(),b.getPos().getY_asIndex(),false));
                                 //TODO: v.setHappiens(v.getHappiens()+1);
+                                // setHappiness implementálva, getHappiness van
                                 //TODO: v.setPlayfullness(v.getPlayFullness()-10)
+                                // setPlayfulness implementálva, getPlayfulness van
                                 //TODO: v.setHunger(v.getHunger()+1)
+                                // setHunger implementálva, gethunger van
                             } else {
                                 // TODO: v.setHappiens(v.getHappiens()-10);
+                                // setHappiness implementálva, getHappiness van
                             }
                             break;
                         }
