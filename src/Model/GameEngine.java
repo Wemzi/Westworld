@@ -8,37 +8,12 @@ import java.util.TimerTask;
 
 public class GameEngine {
     /* Adattagok */
-    private Timer timer;
-    private Playground pg;
+    private Playground pg;;
 
-    //TODO: Timer egy függvény legyen!
     //TODO: Demolish esetén a buildedObject listből is kikerüljön!
     /* Konstruktor */
     public GameEngine() {
         pg = new Playground();
-        timer = new Timer();
-
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                int minutesPerSecond = setTimerSpeed(10);
-
-                pg.setMinutes(pg.getMinutes() + minutesPerSecond);
-
-
-                if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
-                    pg.setMinutes(0);
-                    pg.setHours(pg.getHours()+1);
-                }
-                if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban
-                    pg.setMinutes(0);
-                    pg.setHours(8);
-                    pg.setDays(pg.getDays()+1);
-
-                    endDayPayOff(); //Nap végén lévő elszámolás
-                }
-            }
-        }, 1000, 1000);
     }
 
 
@@ -112,9 +87,34 @@ public class GameEngine {
      * start the day
      */
     public void startDay(){
-        //todo implement
-        System.out.println("startDay()");
+        if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return;  }
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+            int minutesPerSecond = setTimerSpeed(30);
+
+            pg.setMinutes(pg.getMinutes() + minutesPerSecond);
+            if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
+                pg.setMinutes(0);
+                pg.setHours(pg.getHours()+1);
+            }
+            if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban
+                pg.setMinutes(0);
+                pg.setHours(8);
+                pg.setDays(pg.getDays()+1);
+
+                System.out.println("Nap vége! Mostantól lehet építkezni!");
+                endDayPayOff(); //Nap végén lévő elszámolás
+                timer.cancel(); timer.purge(); // Timer leállítása a nap végén
+            }
+            }
+        }, 1000, 1000);
+        System.out.println("A nap elkeződött!");
     }
+
+
     /*public void visitorsDemand() {
         for(Visitor v : pg.getVisitors()) {
             if(v.getPlayfulness() <= 50) {
@@ -145,8 +145,6 @@ public class GameEngine {
     public int getPlayerDaysPassedBy()     { return pg.getDays(); }
     public double getPlayerPopularity()    { return pg.getPopularity(); }
 
-
-    void setTimerOff() { timer.cancel(); System.out.println("Timer leállítva!"); }
 
     public static int setTimerSpeed(int minutesPerSecond) { return minutesPerSecond; }
 

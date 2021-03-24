@@ -40,6 +40,7 @@ public class Game extends Block {
     }
     // Implemented preset types of games
     public Game(GameType type,Position pos) {
+        ArrayBlockingQueue<Visitor> queue1;
         Game ret;
         this.type = type;
         if (type == GameType.DODGEM) {
@@ -53,7 +54,7 @@ public class Game extends Block {
             this.pos = pos;
             this.cooldownTime=5;
             this.buildingTime = 5 * cooldownTime;
-            this.queue = new ArrayBlockingQueue<>(this.capacity);
+            queue1 = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Employee>();
         } else if (type == GameType.FERRISWHEEL) {
             this.buildingCost = 600;
@@ -66,7 +67,7 @@ public class Game extends Block {
             this.pos = pos;
             this.cooldownTime = 3;
             this.buildingTime = 5 * cooldownTime;
-            this.queue = new ArrayBlockingQueue<>(this.capacity);
+            queue1 = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Employee>();
         } else if (type == GameType.RODEO)
         {
@@ -80,7 +81,7 @@ public class Game extends Block {
             this.pos = pos;
             this.cooldownTime = 2;
             this.buildingTime = 5 * cooldownTime;
-            this.queue = new ArrayBlockingQueue<>(this.capacity);
+            queue1 = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Employee>();
         } else if( type == GameType.ROLLERCOASTER) {
             this.buildingCost = 800;
@@ -93,7 +94,7 @@ public class Game extends Block {
             this.pos = pos;
             this.cooldownTime = 5;
             this.buildingTime = 5 * cooldownTime;
-            this.queue = new ArrayBlockingQueue<>(this.capacity);
+            queue1 = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Employee>();
         } else if(type == GameType.SHOOTINGGALLERY) {
             this.buildingCost = 200;
@@ -106,11 +107,12 @@ public class Game extends Block {
             this.pos = pos;
             this.cooldownTime = 2;
             this.buildingTime = 5 * cooldownTime;
-            this.queue = new ArrayBlockingQueue<>(this.capacity);
+            queue1 = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Employee>();
         }
         else throw new RuntimeException("Gametype not found at creating game, or not yet implemented");
-        this.queue = new ArrayBlockingQueue<>(capacity);
+        queue1 = new ArrayBlockingQueue<>(capacity);
+        this.queue = queue1;
     }
 
     @Override
