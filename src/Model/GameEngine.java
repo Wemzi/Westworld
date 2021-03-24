@@ -1,8 +1,7 @@
 package Model;
 
 import Model.Blocks.*;
-import Model.People.Caterer;
-import Model.People.Employee;
+import Model.People.*;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -86,9 +85,17 @@ public class GameEngine {
             b.setCondition(b.getCondition()-1);
             //További szimulációs lépések...
         }
+        System.out.println("endPayOff msg: Építmények upkepp costjai ki lettek fizetve!");
+
+        for(Caterer caterer : pg.getCateres())          money -= caterer.getSalary();
+        for(Cleaner cleaner : pg.getCleaners())         money -= cleaner.getSalary();
+        for(Operator operator : pg.getOperators())      money -= operator.getSalary();
+        for(Repairman repairman : pg.getRepairmen())    money -= repairman.getSalary();
+        System.out.println("endPayOff msg: Alkalmazottak ki lettek fizetve!");
+
         pg.setMoney(money);
     }
-
+    //TODO: FIRE employee
     /**
      * start the day
      */

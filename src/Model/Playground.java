@@ -125,8 +125,31 @@ public class Playground {
     }
 
     public boolean fire(Employee e){
-        //todo implement;
-        return true;
+        if(e instanceof Caterer) {
+            if (cateres.size() > 0) {
+                cateres.remove(cateres.size() - 1);
+                return true;
+            } else { return false; }
+        }
+        else if(e instanceof Cleaner) {
+            if(cleaners.size() > 0) {
+                cleaners.remove(cleaners.size()-1);
+                return true;
+            } else { return false; }
+        }
+        else if(e instanceof Operator) {
+            if(operators.size() > 0) {
+                operators.remove(operators.size()-1);
+                return true;
+            } else { return false; }
+        }
+        else if(e instanceof Repairman) {
+            if(repairmen.size() > 0) {
+                repairmen.remove(repairmen.size()-1);
+                return true;
+            } else { return false; }
+        }
+        return false;
     }
 
     public ArrayList getEmployeesLike(Employee e){
