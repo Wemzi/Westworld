@@ -214,6 +214,21 @@ public class MainWindow2 extends JFrame{
         }
     }
 
+    private void createDecorationMenuItems(JMenu menu){
+        ArrayList<DecType> possibleBlocks=new ArrayList<>( Arrays.asList(DecType.values()));
+        for(DecType type : possibleBlocks){
+            JMenuItem gameMenuItem=new JMenuItem(type.toString());
+            menu.add(gameMenuItem);
+            gameMenuItem.addActionListener(new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Decoration g=new Decoration(type,new Position(-1,-1,true));
+                    startPlaceSelectionMode(g);
+                }
+            });
+        }
+    }
+
 
     private void createMenus(JMenu buildMenu){
         JMenu buildGameMenu=new JMenu("Game");
@@ -242,25 +257,15 @@ public class MainWindow2 extends JFrame{
         garbageCanMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //todo create a garbage can block class
                 Block block=new GarbageCan();
                 startPlaceSelectionMode(block);
             }
         });
         //------------ vege ---------------
 
-
-        //-----------Egy menu elem kezdete ------------
-        JMenuItem decorMenuItem=new JMenuItem("Decoration");
-        buildMenu.add(decorMenuItem);
-        decorMenuItem.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Block block=new Decoration(100,1,5,BlockState.UNDER_PLACEMENT);
-                startPlaceSelectionMode(block);
-            }
-        });
-        //------------ vege ---------------
+        JMenu buildDecorationMenu=new JMenu("Decoration");
+        createDecorationMenuItems(buildDecorationMenu);
+        buildMenu.add(buildDecorationMenu);
 
         //-----------Egy menu elem kezdete ------------
         JMenuItem demolishMenuItem=new JMenuItem("Demolish");
