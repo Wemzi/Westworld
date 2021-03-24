@@ -13,7 +13,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class Game extends Block {
     private int ticketCost;
-    private ArrayBlockingQueue<Visitor> queue;
+    private final ArrayBlockingQueue<Visitor> queue;
     private ArrayList<Employee> workers;
     private int capacity;
     private int cooldownTime;
@@ -34,6 +34,7 @@ public class Game extends Block {
         super(0, 0, 0, BlockState.FREE, size, pos);
         this.ticketCost = 0;
         this.capacity = 0;
+        this.queue = new ArrayBlockingQueue<>(capacity);
     }
     // Implemented preset types of games
     public Game(GameType type,Position pos) {
@@ -97,6 +98,7 @@ public class Game extends Block {
             this.buildingTime = 5 * cooldownTime;
         }
         else throw new RuntimeException("Gametype not found at creating game, or not yet implemented");
+        this.queue = new ArrayBlockingQueue<>(capacity);
     }
 
     @Override
@@ -145,6 +147,18 @@ public class Game extends Block {
 
     public int getCapacity() {
         return capacity;
+    }
+
+    public ArrayBlockingQueue<Visitor> getQueue() {
+        return queue;
+    }
+
+    public ArrayList<Employee> getWorkers() {
+        return workers;
+    }
+
+    public int getBuildingTime() {
+        return buildingTime;
     }
 
     @Override

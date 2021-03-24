@@ -61,7 +61,9 @@ public class Decoration  extends Block {
         else throw new RuntimeException("Invalid type of decoration!");
     }
 
-
+    public DecType getDecorationType() {
+        return decorationType;
+    }
 
     @Override
     public Color getColor() {return Color.GREEN;}

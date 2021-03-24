@@ -54,24 +54,11 @@ public final class Position {
     public static int pixelToIndex(int coord){return coord/BOX_SIZE;}
     public static int indexToPixel(int index){return index*BOX_SIZE;}
 
-    /*
-    public static Position coordToIndexPair(int x, int y){
-        int i=x/BOX_SIZE;
-        int j=y/BOX_SIZE;
-        return new Position(i,j);
+    @Override
+    public String toString() {
+        return "{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
-    public static Position coordToIndexPair(Coord c){
-        int i=c.getPosX()/BOX_SIZE;
-        int j=c.getPosY()/BOX_SIZE;
-        return new Position(i,j);
-    }
-
-    public static Coord indexPairToCoord(IndexPair pair){
-        int i=pair.i *BOX_SIZE;
-        int j=pair.j *BOX_SIZE;
-        return new Coord(i,j);
-    }
-    public static Coord indexPairToCoord(int i, int j){
-        return new Coord(i*BOX_SIZE,j*BOX_SIZE);
-    }*/
 }

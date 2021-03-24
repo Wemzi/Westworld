@@ -55,7 +55,6 @@ public class ServiceArea extends Block {
             this.cooldownTime=1;
         }
         else throw new RuntimeException("Invalid type of service!");
-
     }
 
     public void addWorker(Operator o){workers.add(o);}
@@ -67,6 +66,10 @@ public class ServiceArea extends Block {
     @Override
     public Color getColor() {
         return Color.blue;
+    }
+
+    public ServiceType getType() {
+        return type;
     }
 
     public int getTicketCost() {

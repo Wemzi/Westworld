@@ -28,6 +28,7 @@ public class MainWindow2 extends JFrame{
     private final GameEngine engine;
 
     private boolean isPlaceSelectionMode=false;
+    private boolean isShowInfoMode=false;
     private MouseListener placementListener;
 
     private final Timer timer;
@@ -63,7 +64,7 @@ public class MainWindow2 extends JFrame{
                 //super.mouseClicked(e);
                 //System.out.println("Clicked pixel: "+e.getX()+" "+e.getY());
                 Position d= new Position(e.getX(),e.getY(),true);
-                System.out.println("Clicked box: "+d.getX_asIndex() +" "+d.getY_asIndex());
+                //System.out.println("Clicked box: "+d.getX_asIndex() +" "+d.getY_asIndex());
                 Block selectedBlock=engine.getPg().blocks[d.getX_asIndex()][d.getY_asIndex()];
                 onBlockClick(selectedBlock);
 
@@ -91,8 +92,6 @@ public class MainWindow2 extends JFrame{
 
         createMenus(buildMenu);
 
-
-
         JMenuItem managementMenuItem = new JMenuItem(new AbstractAction("Management") {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -109,6 +108,13 @@ public class MainWindow2 extends JFrame{
             }
         });
 
+        JMenuItem menuShowInfo = new JMenuItem(new AbstractAction("Select mode") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isShowInfoMode=!isShowInfoMode;
+            }
+        });
+
         JMenuItem menuGameExit = new JMenuItem(new AbstractAction("Exit") {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -120,6 +126,7 @@ public class MainWindow2 extends JFrame{
         //menu
 
         otherMenu.add(managementMenuItem);
+        otherMenu.add(menuShowInfo);
         otherMenu.addSeparator();
         otherMenu.add(menuGameExit);
 
@@ -147,7 +154,6 @@ public class MainWindow2 extends JFrame{
         this.add(field,BorderLayout.SOUTH);
         pack();
 
-
         JPanel playersPanel=new JPanel();
         playersPanel.add(moneyLabel);
         playersPanel.add(popularityLabel);
@@ -157,26 +163,20 @@ public class MainWindow2 extends JFrame{
         pack();
 
         timer.start();
-        //gameloop
-        //animationTimer.restart();
-        //System.out.println("Timer started");
-/*
-        stopper=new Timer(1, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                timerText.setText(String.valueOf(++time)+" millisecond");
-            }
-        });
-        stopper.start();*/
 
     }
 
-    private void onBlockClick(Block b){//Ezt modositsd ha valamit ki akarsz irni a blokkrol arrol a blokkrol, amire eppen rakattintottak
-        if(b !=null){
+    private void onBlockClick(Block block){//Ezt modositsd ha valamit ki akarsz irni a blokkrol arrol a blokkrol, amire eppen rakattintottak
+        if(block !=null){
+            /*
             System.out.println("--------------------------------------------");
             System.out.println("Selected block:");
             System.out.println(b.toString());
-            System.out.println("--------------------------------------------");
+            System.out.println("--------------------------------------------");*/
+            if(isShowInfoMode){
+                BlockInfoDialog blockInfoDialog = new BlockInfoDialog(this,block);
+                blockInfoDialog.setVisible(true);
+            }
         }else{
             System.out.println("Block is null");
         }
@@ -228,7 +228,6 @@ public class MainWindow2 extends JFrame{
             });
         }
     }
-
 
     private void createMenus(JMenu buildMenu){
         JMenu buildGameMenu=new JMenu("Game");
@@ -304,12 +303,12 @@ public class MainWindow2 extends JFrame{
         }
     }
 
-
     private boolean startPlaceSelectionMode(Block toBuild){
         if(isPlaceSelectionMode){
             System.err.println("Already in place selection mode");
             return false;
         }else{
+            isShowInfoMode=false;
             isPlaceSelectionMode=true;
             field.enableMouseFollowing(toBuild);
             System.out.println("Select a place");

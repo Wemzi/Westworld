@@ -1,6 +1,7 @@
 package Model.Blocks;
 
 import Model.Position;
+
 import java.awt.*;
 import java.util.Objects;
 
@@ -138,5 +139,10 @@ public abstract class Block {
                 ", pos=" + pos +
                 ", popularityIncrease=" + popularityIncrease +
                 '}';
+    }
+
+    public String getName(){
+        //todo implement; Determine the type of this block and return a user-friendly string like "Ferris Wheel"
+        return "Block";
     }
 }
