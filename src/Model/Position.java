@@ -57,8 +57,8 @@ public final class Position {
     @Override
     public String toString() {
         return "{" +
-                "x=" + x +
-                ", y=" + y +
+                "x=" + getX_asIndex() +
+                ", y=" + getY_asIndex() +
                 '}';
     }
 }
