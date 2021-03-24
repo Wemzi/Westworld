@@ -38,7 +38,7 @@ public class ServiceArea extends Block {
             this.capacity = 50;
             this.size=new Position(3,1,false);
             workers = new ArrayList<>();
-            queue = new ArrayBlockingQueue<>(capacity);
+            queue = new ArrayBlockingQueue<>(this.capacity);
             this.cooldownTime=1;
         }
         else if(type==ServiceType.TOILET)
