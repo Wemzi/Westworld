@@ -49,15 +49,6 @@ public class GameEngine {
         return true;
     }
 
-    boolean buildBin(Position p){//todo revise
-        boolean r=false;
-        if(pg.blocks[p.getX_asIndex()][p.getY_asIndex()] instanceof Road){
-            r=true;
-            ((Road) pg.blocks[p.getX_asIndex()][p.getY_asIndex()]).setHasGarbageCan(true);
-        }
-        return r;
-    }
-
     public void demolish(Block b) {
         int posFromX = b.getPos().getX_asIndex();
         int posFromY = b.getPos().getY_asIndex();
@@ -78,6 +69,28 @@ public class GameEngine {
             }
         }
     }
+
+    /**
+     * Kukát lehet lehelyezni az útra vagy eltávolítani, ha van rajta
+     * @param p pozíció ahova kattintottunk
+     * @return  true: Ha útra kattintuttunk
+     *          false: Ha nem útra kattintottunk
+     */
+    boolean buildBin(Position p){
+        if(pg.blocks[p.getX_asIndex()][p.getY_asIndex()] instanceof Road){
+            if(!(((Road) pg.blocks[p.getX_asIndex()][p.getY_asIndex()]).isHasGarbageCan())) {
+                ((Road) pg.blocks[p.getX_asIndex()][p.getY_asIndex()]).setHasGarbageCan(true);
+                System.out.println("Kuka lehelyezve!");
+            }
+            else {
+                ((Road) pg.blocks[p.getX_asIndex()][p.getY_asIndex()]).setHasGarbageCan(false);
+                System.out.println("Kuka eltávolítva!");
+            }
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Metódus lecsökkenti a játékos pénzét a nap végén upkeep costnyival
      * Minden block a nap végén veszít 1 conditiont
@@ -155,12 +168,7 @@ public class GameEngine {
     /* Getterek / Setterek */
     BlockState getBlockState(Block b) { return pg.getBlockState(b); }
 
-    public Playground getPlayground()      { return pg; }
     public Playground getPg() { return pg; }
-
-    public int getPlayerMoney()            { return pg.getMoney(); }
-    public int getPlayerDaysPassedBy()     { return pg.getDays(); }
-    public double getPlayerPopularity()    { return pg.getPopularity(); }
 
 
     public static int setTimerSpeed(int minutesPerSecond) { return minutesPerSecond; }
