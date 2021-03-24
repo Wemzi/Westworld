@@ -100,6 +100,15 @@ public class MainWindow2 extends JFrame{
             }
         });
 
+        //management dialog
+        ManagementDialog managementDialog=new ManagementDialog(this,engine);
+        managementMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                managementDialog.setVisible(true);
+            }
+        });
+
         JMenuItem menuGameExit = new JMenuItem(new AbstractAction("Exit") {
             @Override
             public void actionPerformed(ActionEvent e) {

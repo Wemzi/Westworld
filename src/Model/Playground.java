@@ -124,6 +124,20 @@ public class Playground {
         else return false;
     }
 
+    public boolean fire(Employee e){
+        //todo implement;
+        return true;
+    }
+
+    public ArrayList getEmployeesLike(Employee e){
+        if(e instanceof Caterer){return getCateres();}
+        if(e instanceof Cleaner){return getCleaners();}
+        if(e instanceof Operator){return getOperators();}
+        if(e instanceof Repairman){return getRepairmen();}
+
+        return null;
+    }
+
 
     /* Getterek / Setterek */
     public int getMoney()                           { return money; }
