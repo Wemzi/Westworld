@@ -110,7 +110,6 @@ public class Game extends Block {
             this.workers=new ArrayList<Employee>();
         }
         else throw new RuntimeException("Gametype not found at creating game, or not yet implemented");
-        this.queue = new ArrayBlockingQueue<>(capacity);
     }
 
     @Override
