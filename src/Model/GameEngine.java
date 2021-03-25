@@ -127,19 +127,41 @@ public class GameEngine {
         if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return; }
 
         Position entrancePosition = pg.getEntrancePosition();
+        pg.getVisitors().add(new Visitor(entrancePosition));
+
 
         isBuildingPeriod = false;
+        int minutesPerSecond = setTimerSpeed(5);
+
+        Timer visitorTimer = new Timer();
         Timer timer = new Timer();
+
+        visitorTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                for(Visitor v : pg.getVisitors()) {
+                    try {
+                        if(pg.blocks[v.getPosition().getX_asIndex()][v.getPosition().getY_asIndex()+1] instanceof Road) {
+                            v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel()+minutesPerSecond, true));
+                        } else if(pg.blocks[v.getPosition().getX_asIndex()+1][v.getPosition().getY_asIndex()] instanceof Road) {
+                            v.setPosition(new Position(v.getPosition().getX_asPixel()+minutesPerSecond, v.getPosition().getY_asPixel(), true));
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        pg.getVisitors().remove(v);
+                    }
+                }
+            }
+        },0,100);
+
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-
-                int minutesPerSecond = setTimerSpeed(10);
                 pg.setMinutes(pg.getMinutes() + minutesPerSecond);
 
+
                 for(Visitor v : pg.getVisitors()) {
-                    v.setStayingTime(v.getStayingTime()-minutesPerSecond); // Lecsökkentjük a staying timeot a visitoroknak
-                    if(v.getStayingTime() == 0) {
+                    v.setStayingTime(v.getStayingTime() - minutesPerSecond);
+                    if (v.getStayingTime() == 0) {
                         pg.getVisitors().remove(v);
                         if (v.getHappiness() >= 50) {
                             pg.setPopularity(pg.getPopularity() + 1);
@@ -148,9 +170,9 @@ public class GameEngine {
                         }
                         break;
                     }
-                    // TODO: ÖTLET: mi lenne ha inkább az isbusy-t használnád? Szerintem felesleges mindegyik activityre egy külön metódus.
-                    // TODO: a fontossági sorrendet úgy is eltudjuk dönteni, hogy az egyik ifet előrébb tesszük mint a másikat. többi meetingen.
-                    if(v.getPlayfulness() >= 50) {
+                }
+
+                    /*if(v.getPlayfulness() >= 50) {
                         //TODO: if(v.isPlaying()) { akkor ez fut le ->
                         // Van ilyen, v.isBusy néven
                         for(Block b : pg.getBuildedObjectList()) {
@@ -158,28 +180,16 @@ public class GameEngine {
                                 v.setPosition(new Position(b.getPos().getX_asIndex(),b.getPos().getY_asIndex(),false));
                                 //TODO: playgame() eat()
                                 //TODO: RoundHasPassed()
-
-                                //TODO: v.setHappiens(v.getHappiens()+1);
-                                // setHappiness implementálva, getHappiness van
-                                //TODO: v.setPlayfullness(v.getPlayFullness()-10)
-                                // setPlayfulness implementálva, getPlayfulness van
-                                //TODO: v.setHunger(v.getHunger()+1)
-                                // setHunger implementálva, gethunger van
                             } else {
-                                // TODO: v.setHappiens(v.getHappiens()-10);
-                                // setHappiness implementálva, getHappiness van
+
                             }
                             break;
                         }
                     }
                     else if(v.getHunger() >= 50) {
-                        //TODO: if(v.inServiceBuilding() { akkor ez fut le ->
                         for(Block b: pg.getBuildedObjectList()) {
                             if(b instanceof ServiceArea) {
                                 v.setPosition(new Position(b.getPos().getX_asIndex(),b.getPos().getY_asIndex(),false));
-                                //TODO: v.setHappiens(v.getHappiens()+1);
-                                //TODO: v.setPlayfullness(v.getPlayFullness()+10)
-                                //TODO: v.setHunger(v.getHunger()-5)
                             } else {
                                 //v.setHappiness - 10
                                 pg.getVisitors().remove(v); // Elmegy ha nem kap kiszolgálást!
@@ -187,7 +197,7 @@ public class GameEngine {
                             break;
                         }
                     }
-                }
+                }*/
 
                 if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
                     pg.setMinutes(0);
