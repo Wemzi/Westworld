@@ -7,6 +7,8 @@ import javax.print.attribute.standard.Destination;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static View.MainWindow2.NUM_OF_COLS;
+
 
 //TODO: Külön adatszerkezet minden egyes objektumhoz
 //TODO: Static metódusok paraméterrel run-nal
@@ -35,7 +37,7 @@ public class GameEngine {
      */
     //TODO: UNDER_CONST ha épül
     public boolean buildBlock(Block b) {
-        if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
+        //if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
 
         if(b instanceof GarbageCan){return buildBin(b.pos);}
         if(pg.getMoney() < b.getBuildingCost()) return false;
@@ -102,23 +104,25 @@ public class GameEngine {
     public void startDay(){
         if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return; }
 
+        Position entrancePosition = pg.getEntrancePosition();
+
         isBuildingPeriod = false;
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
 
-                int minutesPerSecond = setTimerSpeed(30);
+                int minutesPerSecond = setTimerSpeed(10);
                 pg.setMinutes(pg.getMinutes() + minutesPerSecond);
 
                 for(Visitor v : pg.getVisitors()) {
                     v.setStayingTime(v.getStayingTime()-minutesPerSecond); // Lecsökkentjük a staying timeot a visitoroknak
                     if(v.getStayingTime() == 0) {
                         pg.getVisitors().remove(v);
-                        if(v.getHappiness() >= 50) {
-                            pg.setPopularity(pg.getPopularity()+1);
+                        if (v.getHappiness() >= 50) {
+                            pg.setPopularity(pg.getPopularity() + 1);
                         } else {
-                            pg.setPopularity(pg.getPopularity()-1);
+                            pg.setPopularity(pg.getPopularity() - 1);
                         }
                         break;
                     }
@@ -167,7 +171,7 @@ public class GameEngine {
                     pg.setMinutes(0);
                     pg.setHours(pg.getHours()+1);
 
-                    pg.getVisitors().add(new Visitor(new Position(0,0,false)));
+                    pg.getVisitors().add(new Visitor(entrancePosition));
                 }
                 if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban
                     pg.setMinutes(0);

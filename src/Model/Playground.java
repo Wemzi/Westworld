@@ -29,6 +29,8 @@ public class Playground {
     private int days, hours, minutes;
     private double popularity;
 
+    private Position entrancePosition;
+
     /* Konstruktor */
     public Playground() {
         blocks              = new Block[NUM_OF_COLS][NUM_OF_ROWS];
@@ -88,6 +90,7 @@ public class Playground {
         blocks[10][10].pos = new Position(10,10,false);
         blocks[10][11].pos = new Position(10,11,false);
 
+        entrancePosition = new Position(5,0,false);
 
     }
 
@@ -204,6 +207,7 @@ public class Playground {
     public int getMinutes()                         { return minutes; }
     public int getDays()                            { return days; }
     public double getPopularity()                   { return popularity; }
+    public Position getEntrancePosition()           { return entrancePosition; }
 
     public BlockState getBlockState(Block block)    { return block.getState(); }
     public Color getColor(Block block)              { return block.getColor(); }
