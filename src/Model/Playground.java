@@ -50,8 +50,45 @@ public class Playground {
         days = 1; hours = 8; minutes = 0;
         popularity = 0;
 
-        //testVisitor
-        visitors.add(new Visitor(new Position(10,10,false)));
+
+        //test: Base Gamefield
+        blocks[5][0] = new Road(0,10,0,BlockState.FREE,false,true,0);
+        blocks[5][1] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[5][2] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[5][3] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[5][4] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[5][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[6][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[7][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[8][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[9][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][6] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][7] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][8] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][9] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][10] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][11] = new Road(0,10,0,BlockState.FREE,false,true,0);
+
+        blocks[5][0].pos = new Position(5,0,false);
+        blocks[5][1].pos = new Position(5,1,false);
+        blocks[5][2].pos = new Position(5,2,false);
+        blocks[5][3].pos = new Position(5,3,false);
+        blocks[5][4].pos = new Position(5,4,false);
+        blocks[5][5].pos = new Position(5,5,false);
+        blocks[6][5].pos = new Position(6,5,false);
+        blocks[7][5].pos = new Position(7,5,false);
+        blocks[8][5].pos = new Position(8,5,false);
+        blocks[9][5].pos = new Position(9,5,false);
+        blocks[10][5].pos = new Position(10,5,false);
+        blocks[10][6].pos = new Position(10,6,false);
+        blocks[10][7].pos = new Position(10,7,false);
+        blocks[10][8].pos = new Position(10,8,false);
+        blocks[10][9].pos = new Position(10,9,false);
+        blocks[10][10].pos = new Position(10,10,false);
+        blocks[10][11].pos = new Position(10,11,false);
+
+
     }
 
     /* Metódusok */
