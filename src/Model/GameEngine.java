@@ -7,6 +7,12 @@ import javax.print.attribute.standard.Destination;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static View.MainWindow2.NUM_OF_COLS;
+
+
+//TODO: Külön adatszerkezet minden egyes objektumhoz
+//TODO: Static metódusok paraméterrel run-nal
+//TODO: Szimuláció folyatása
 
 public class GameEngine {
     /* Adattagok */
@@ -17,8 +23,6 @@ public class GameEngine {
     public GameEngine() {
         pg = new Playground();
         isBuildingPeriod = true;
-
-        pg.blocks[0][0] = new Road(0,0,0,BlockState.FREE,false,true,0);
     }
 
 
@@ -32,7 +36,7 @@ public class GameEngine {
      *          true, ha építés végbement
      */
     public boolean buildBlock(Block b) {
-        if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
+        //if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
 
         if(b instanceof GarbageCan){return buildBin(b.pos);}
         if(pg.getMoney() < b.getBuildingCost()) return false;
@@ -47,8 +51,14 @@ public class GameEngine {
             for (int y = posFromY; y < buildUntilY; ++y)
                 pg.buildBlock(b, x, y);
 
+        b.setState(BlockState.UNDER_CONSTRUCTION);
+
         pg.setMoney(pg.getMoney()-b.getBuildingCost());
-        pg.getBuildedObjectList().add(b); System.out.println("BuildedObjectList-be bekerült a megépítendő block");
+        pg.getBuildedObjectList().add(b);
+
+        if(b instanceof Game)               pg.getBuildedGameList().add((Game) b);
+        else if(b instanceof ServiceArea)   pg.getBuildedServiceList().add((ServiceArea) b);
+
         return true;
     }
 
@@ -57,6 +67,8 @@ public class GameEngine {
         int posFromY = b.getPos().getY_asIndex();
         int demolishUntilX = posFromX + b.getSize().getX_asIndex();
         int demolishUntilY = posFromY + b.getSize().getY_asIndex();
+
+        Block demolishedBlock = pg.getBlockByPosition(new Position(posFromX,posFromY,false));
 
         for(int x=posFromX; x<demolishUntilX; ++x) {
             for(int y=posFromY; y<demolishUntilY; ++y) {
@@ -71,6 +83,23 @@ public class GameEngine {
                 break;
             }
         }
+
+        if(demolishedBlock instanceof Game) {
+            for(Block removedObject : pg.getBuildedGameList()) {
+                if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
+                    pg.getBuildedGameList().remove(b);
+                    break;
+                }
+            }
+        } else if (demolishedBlock instanceof ServiceArea) {
+            for(Block removedObject : pg.getBuildedServiceList()) {
+                if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
+                    pg.getBuildedServiceList().remove(b);
+                    break;
+                }
+            }
+        }
+
     }
 
     /**
@@ -79,7 +108,7 @@ public class GameEngine {
      * @return  true: Ha útra kattintuttunk
      *          false: Ha nem útra kattintottunk
      */
-    boolean buildBin(Position p){
+    public boolean buildBin(Position p){
         if(pg.blocks[p.getX_asIndex()][p.getY_asIndex()] instanceof Road){
             if(!(((Road) pg.blocks[p.getX_asIndex()][p.getY_asIndex()]).isHasGarbageCan())) {
                 ((Road) pg.blocks[p.getX_asIndex()][p.getY_asIndex()]).setHasGarbageCan(true);
@@ -97,34 +126,39 @@ public class GameEngine {
     public void startDay(){
         if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return; }
 
+        Position entrancePosition = pg.getEntrancePosition();
+
         isBuildingPeriod = false;
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
 
-                int minutesPerSecond = setTimerSpeed(30);
+                int minutesPerSecond = setTimerSpeed(10);
                 pg.setMinutes(pg.getMinutes() + minutesPerSecond);
 
                 for(Visitor v : pg.getVisitors()) {
                     v.setStayingTime(v.getStayingTime()-minutesPerSecond); // Lecsökkentjük a staying timeot a visitoroknak
                     if(v.getStayingTime() == 0) {
                         pg.getVisitors().remove(v);
-                        if(v.getHappiness() >= 50) {
-                            pg.setPopularity(pg.getPopularity()+1);
+                        if (v.getHappiness() >= 50) {
+                            pg.setPopularity(pg.getPopularity() + 1);
                         } else {
-                            pg.setPopularity(pg.getPopularity()-1);
+                            pg.setPopularity(pg.getPopularity() - 1);
                         }
                         break;
                     }
                     // TODO: ÖTLET: mi lenne ha inkább az isbusy-t használnád? Szerintem felesleges mindegyik activityre egy külön metódus.
                     // TODO: a fontossági sorrendet úgy is eltudjuk dönteni, hogy az egyik ifet előrébb tesszük mint a másikat. többi meetingen.
-                    if(v.getPlayfulness() <= 70) {
+                    if(v.getPlayfulness() >= 50) {
                         //TODO: if(v.isPlaying()) { akkor ez fut le ->
                         // Van ilyen, v.isBusy néven
                         for(Block b : pg.getBuildedObjectList()) {
                             if(b instanceof Game) {
                                 v.setPosition(new Position(b.getPos().getX_asIndex(),b.getPos().getY_asIndex(),false));
+                                //TODO: playgame() eat()
+                                //TODO: RoundHasPassed()
+
                                 //TODO: v.setHappiens(v.getHappiens()+1);
                                 // setHappiness implementálva, getHappiness van
                                 //TODO: v.setPlayfullness(v.getPlayFullness()-10)
@@ -138,7 +172,7 @@ public class GameEngine {
                             break;
                         }
                     }
-                    else if(v.getHunger() >= 5) {
+                    else if(v.getHunger() >= 50) {
                         //TODO: if(v.inServiceBuilding() { akkor ez fut le ->
                         for(Block b: pg.getBuildedObjectList()) {
                             if(b instanceof ServiceArea) {
@@ -159,7 +193,7 @@ public class GameEngine {
                     pg.setMinutes(0);
                     pg.setHours(pg.getHours()+1);
 
-                    pg.getVisitors().add(new Visitor(new Position(0,0,false)));
+                    pg.getVisitors().add(new Visitor(entrancePosition));
                 }
                 if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban
                     pg.setMinutes(0);
