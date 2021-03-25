@@ -54,15 +54,11 @@ public class GameEngine {
         b.setState(BlockState.UNDER_CONSTRUCTION);
 
         pg.setMoney(pg.getMoney()-b.getBuildingCost());
-        pg.getBuildedObjectList().add(b); System.out.println("BuildedObjectList-be bekerült a megépítendő block");
+        pg.getBuildedObjectList().add(b);
 
-        if(b instanceof Game) {
-            pg.getBuildedGameList().add((Game) b);
-            System.out.println("Játék bekerült");
-        } else if(b instanceof ServiceArea) {
-            pg.getBuildedServiceList().add((ServiceArea) b);
-            System.out.println("Service bekerült");
-        }
+        if(b instanceof Game)               pg.getBuildedGameList().add((Game) b);
+        else if(b instanceof ServiceArea)   pg.getBuildedServiceList().add((ServiceArea) b);
+
         return true;
     }
 
@@ -71,6 +67,8 @@ public class GameEngine {
         int posFromY = b.getPos().getY_asIndex();
         int demolishUntilX = posFromX + b.getSize().getX_asIndex();
         int demolishUntilY = posFromY + b.getSize().getY_asIndex();
+
+        Block demolishedBlock = pg.getBlockByPosition(new Position(posFromX,posFromY,false));
 
         for(int x=posFromX; x<demolishUntilX; ++x) {
             for(int y=posFromY; y<demolishUntilY; ++y) {
@@ -85,18 +83,23 @@ public class GameEngine {
                 break;
             }
         }
-        for(Block removedObject : pg.getBuildedGameList()) {
-            if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
-                pg.getBuildedGameList().remove(b);
-                break;
+
+        if(demolishedBlock instanceof Game) {
+            for(Block removedObject : pg.getBuildedGameList()) {
+                if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
+                    pg.getBuildedGameList().remove(b);
+                    break;
+                }
+            }
+        } else if (demolishedBlock instanceof ServiceArea) {
+            for(Block removedObject : pg.getBuildedServiceList()) {
+                if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
+                    pg.getBuildedServiceList().remove(b);
+                    break;
+                }
             }
         }
-        for(Block removedObject : pg.getBuildedServiceList()) {
-            if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
-                pg.getBuildedServiceList().remove(b);
-                break;
-            }
-        }
+
     }
 
     /**

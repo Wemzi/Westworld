@@ -213,6 +213,7 @@ public class Playground {
     public int getDays()                                    { return days; }
     public double getPopularity()                           { return popularity; }
     public Position getEntrancePosition()                   { return entrancePosition; }
+    public Block getBlockByPosition(Position pos)           { return blocks[pos.getX_asIndex()][pos.getY_asIndex()]; }
 
     public BlockState getBlockState(Block block)            { return block.getState(); }
     public Color getColor(Block block)                      { return block.getColor(); }
