@@ -35,7 +35,6 @@ public class GameEngine {
      * @return  false, ha egyik blockban nem freeplace van
      *          true, ha építés végbement
      */
-    //TODO: UNDER_CONST ha épül
     public boolean buildBlock(Block b) {
         //if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
 
@@ -56,6 +55,14 @@ public class GameEngine {
 
         pg.setMoney(pg.getMoney()-b.getBuildingCost());
         pg.getBuildedObjectList().add(b); System.out.println("BuildedObjectList-be bekerült a megépítendő block");
+
+        if(b instanceof Game) {
+            pg.getBuildedGameList().add((Game) b);
+            System.out.println("Játék bekerült");
+        } else if(b instanceof ServiceArea) {
+            pg.getBuildedServiceList().add((ServiceArea) b);
+            System.out.println("Service bekerült");
+        }
         return true;
     }
 
@@ -75,6 +82,18 @@ public class GameEngine {
         for(Block removedObject : pg.getBuildedObjectList()) {
             if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
                 pg.getBuildedObjectList().remove(removedObject);
+                break;
+            }
+        }
+        for(Block removedObject : pg.getBuildedGameList()) {
+            if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
+                pg.getBuildedGameList().remove(b);
+                break;
+            }
+        }
+        for(Block removedObject : pg.getBuildedServiceList()) {
+            if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
+                pg.getBuildedServiceList().remove(b);
                 break;
             }
         }

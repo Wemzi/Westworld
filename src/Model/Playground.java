@@ -4,6 +4,7 @@ import Model.Blocks.*;
 import Model.People.*;
 
 import java.awt.*;
+import java.security.Provider;
 import java.util.ArrayList;
 
 import static View.MainWindow2.NUM_OF_COLS;
@@ -17,6 +18,8 @@ public class Playground {
     /* Adattagok */
     public Block[][] blocks;
     private ArrayList<Block> buildedObjects;
+    private ArrayList<Game> builedGames;
+    private ArrayList<ServiceArea> builededServices;
 
     private ArrayList<Visitor> visitors;
 
@@ -35,6 +38,8 @@ public class Playground {
     public Playground() {
         blocks              = new Block[NUM_OF_COLS][NUM_OF_ROWS];
         buildedObjects      = new ArrayList<>();
+        builedGames         = new ArrayList<>();
+        builededServices    = new ArrayList<>();
         visitors            = new ArrayList<>();
         cateres             = new ArrayList<>();
         cleaners            = new ArrayList<>();
@@ -202,29 +207,31 @@ public class Playground {
 
 
     /* Getterek / Setterek */
-    public int getMoney()                           { return money; }
-    public int getHours()                           { return hours; }
-    public int getMinutes()                         { return minutes; }
-    public int getDays()                            { return days; }
-    public double getPopularity()                   { return popularity; }
-    public Position getEntrancePosition()           { return entrancePosition; }
+    public int getMoney()                                   { return money; }
+    public int getHours()                                   { return hours; }
+    public int getMinutes()                                 { return minutes; }
+    public int getDays()                                    { return days; }
+    public double getPopularity()                           { return popularity; }
+    public Position getEntrancePosition()                   { return entrancePosition; }
 
-    public BlockState getBlockState(Block block)    { return block.getState(); }
-    public Color getColor(Block block)              { return block.getColor(); }
-    public Block[][] getBlocks()                    { return blocks; }
-    public ArrayList<Block> getBuildedObjectList()  { return buildedObjects; }
+    public BlockState getBlockState(Block block)            { return block.getState(); }
+    public Color getColor(Block block)                      { return block.getColor(); }
+    public Block[][] getBlocks()                            { return blocks; }
+    public ArrayList<Block> getBuildedObjectList()          { return buildedObjects; }
+    public ArrayList<Game> getBuildedGameList()             { return builedGames; }
+    public ArrayList<ServiceArea> getBuildedServiceList()   { return builededServices; }
 
-    public ArrayList<Visitor> getVisitors()         { return visitors; }
-    public ArrayList<Caterer> getCateres()          { return cateres; }
-    public ArrayList<Cleaner> getCleaners()         { return cleaners; }
-    public ArrayList<Operator> getOperators()       { return operators; }
-    public ArrayList<Repairman> getRepairmen()      { return repairmen; }
+    public ArrayList<Visitor> getVisitors()                 { return visitors; }
+    public ArrayList<Caterer> getCateres()                  { return cateres; }
+    public ArrayList<Cleaner> getCleaners()                 { return cleaners; }
+    public ArrayList<Operator> getOperators()               { return operators; }
+    public ArrayList<Repairman> getRepairmen()              { return repairmen; }
 
-    public void setMoney(int money)                 { this.money = money; }
-    public void setDays(int days)                   { this.days = days; }
-    public void setHours(int hours)                 { this.hours = hours; }
-    public void setMinutes(int minutes)             { this.minutes = minutes; }
-    public void setPopularity(double popularity)    { this.popularity = popularity; }
+    public void setMoney(int money)                         { this.money = money; }
+    public void setDays(int days)                           { this.days = days; }
+    public void setHours(int hours)                         { this.hours = hours; }
+    public void setMinutes(int minutes)                     { this.minutes = minutes; }
+    public void setPopularity(double popularity)            { this.popularity = popularity; }
     public void setBuildedObjects(ArrayList<Block> buildedObjects) { this.buildedObjects = buildedObjects; }
 
     public String dateToString() {
