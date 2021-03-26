@@ -65,7 +65,7 @@ public class GameField extends JPanel {
 
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {//todo alul kilogonal crash
         super.paintComponent(g);
         Graphics2D gr = (Graphics2D) g;
         paintBlocks(gr,engine);

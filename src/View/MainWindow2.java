@@ -52,6 +52,9 @@ public class MainWindow2 extends JFrame{
                 popularityLabel.setText("Popularity: "+engine.getPg().getPopularity());
                 visitorsLabel.setText("Visitors: "+engine.getPg().getVisitors().size());
                 timerText.setText(engine.getPg().dateToString());
+                if(engine.isBuildingPeriod() != startDayButton.isEnabled()){
+                    startDayButton.setEnabled(engine.isBuildingPeriod());
+                }
 
                 field.repaint();
             }

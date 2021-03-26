@@ -3,7 +3,6 @@ package Model;
 import Model.Blocks.*;
 import Model.People.*;
 
-import javax.print.attribute.standard.Destination;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -204,6 +203,9 @@ public class GameEngine {
         pg.setMoney(money);
     }
 
+    public boolean isBuildingPeriod() {
+        return isBuildingPeriod;
+    }
 
     /* Getterek / Setterek */
     public Playground getPg() { return pg; }
