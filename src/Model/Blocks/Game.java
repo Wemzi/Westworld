@@ -15,10 +15,11 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class Game extends Block {
     private int ticketCost;
     private final ArrayBlockingQueue<Visitor> queue;
-    private ArrayList<Employee> workers;
+    private ArrayList<Operator> workers;
     private int capacity;
     private int cooldownTime;
     private int buildingTime;
+    private int currentActivityTime;
     public GameType type;
 
     @Deprecated
@@ -29,7 +30,7 @@ public class Game extends Block {
         this.queue = new ArrayBlockingQueue<>(capacity);
         this.cooldownTime = cooldownTime;
         this.buildingTime = 5 * cooldownTime;
-        this.workers=new ArrayList<Employee>();
+        this.workers=new ArrayList<Operator>();
     }
     @Deprecated
     public Game(Position size, Position pos) {
@@ -40,8 +41,6 @@ public class Game extends Block {
     }
     // Implemented preset types of games
     public Game(GameType type,Position pos) {
-        ArrayBlockingQueue<Visitor> queue1;
-        Game ret;
         this.type = type;
         if (type == GameType.DODGEM) {
             this.buildingCost = 300;
@@ -54,8 +53,8 @@ public class Game extends Block {
             this.pos = pos;
             this.cooldownTime=5;
             this.buildingTime = 5 * cooldownTime;
-            queue1 = new ArrayBlockingQueue<>(this.capacity);
-            this.workers=new ArrayList<Employee>();
+            queue = new ArrayBlockingQueue<>(this.capacity);
+            this.workers=new ArrayList<Operator>();
         } else if (type == GameType.FERRISWHEEL) {
             this.buildingCost = 600;
             this.upkeepCost = 150;
@@ -67,8 +66,8 @@ public class Game extends Block {
             this.pos = pos;
             this.cooldownTime = 3;
             this.buildingTime = 5 * cooldownTime;
-            queue1 = new ArrayBlockingQueue<>(this.capacity);
-            this.workers=new ArrayList<Employee>();
+            queue = new ArrayBlockingQueue<>(this.capacity);
+            this.workers=new ArrayList<Operator>();
         } else if (type == GameType.RODEO)
         {
             this.buildingCost = 270;
@@ -81,8 +80,8 @@ public class Game extends Block {
             this.pos = pos;
             this.cooldownTime = 2;
             this.buildingTime = 5 * cooldownTime;
-            queue1 = new ArrayBlockingQueue<>(this.capacity);
-            this.workers=new ArrayList<Employee>();
+            queue = new ArrayBlockingQueue<>(this.capacity);
+            this.workers=new ArrayList<Operator>();
         } else if( type == GameType.ROLLERCOASTER) {
             this.buildingCost = 800;
             this.upkeepCost = 200;
@@ -94,8 +93,8 @@ public class Game extends Block {
             this.pos = pos;
             this.cooldownTime = 5;
             this.buildingTime = 5 * cooldownTime;
-            queue1 = new ArrayBlockingQueue<>(this.capacity);
-            this.workers=new ArrayList<Employee>();
+            queue = new ArrayBlockingQueue<>(this.capacity);
+            this.workers=new ArrayList<Operator>();
         } else if(type == GameType.SHOOTINGGALLERY) {
             this.buildingCost = 200;
             this.upkeepCost = 30;
@@ -107,12 +106,10 @@ public class Game extends Block {
             this.pos = pos;
             this.cooldownTime = 2;
             this.buildingTime = 5 * cooldownTime;
-            queue1 = new ArrayBlockingQueue<>(this.capacity);
-            this.workers=new ArrayList<Employee>();
+            queue = new ArrayBlockingQueue<>(this.capacity);
+            this.workers=new ArrayList<Operator>();
         }
         else throw new RuntimeException("Gametype not found at creating game, or not yet implemented");
-        queue1 = new ArrayBlockingQueue<>(capacity);
-        this.queue = queue1;
     }
 
     @Override
@@ -131,27 +128,47 @@ public class Game extends Block {
     }
 
     public void run(){
-        queue.clear();
-        this.setState(BlockState.USED);
-        System.out.println("Game is running...");
-
-        this.setCondition(this.getCondition()-2);
-        this.setState(BlockState.FREE);
+        if(this.state.equals(BlockState.FREE))
+        {
+            queue.clear();
+            this.setState(BlockState.USED);
+            System.out.println("Game is running...");
+            currentActivityTime = cooldownTime;
+            this.setCondition(this.getCondition()-2);
+        }
+        else throw new RuntimeException("You can't run the game cause it's not free!");
     }
-    // TODO: also do it when a block has been built, do some sort of countdown ( -- a variable )
 
-    public void roundHasPassed()
+    public void roundHasPassed(int minutesPerSecond)
     {
+        if(workers.size() <= 1 )
+        {
+            state = BlockState.NOT_OPERABLE;
+            return;
+        }
         if(state.equals(BlockState.UNDER_CONSTRUCTION))
         {
-            buildingTime--;
+            buildingTime-=minutesPerSecond;
         }
-        if(buildingTime == 0 && !(this.state == BlockState.USED)) {
+        if(state.equals(BlockState.USED))
+        {
+            currentActivityTime-=minutesPerSecond;
+        }
+        else if(buildingTime == 0 && !(state.equals(BlockState.USED))) {
             state = BlockState.FREE;
         }
-        if(state.equals(BlockState.FREE) && queue.remainingCapacity()==0)
+        else if(state.equals(BlockState.FREE) && queue.remainingCapacity()==0)
         {
-            this.run();
+            workers.get(0).operate();
+        }
+        if(state.equals(BlockState.UNDER_REPAIR))
+        {
+            currentActivityTime -= minutesPerSecond;
+        }
+        if(state.equals(BlockState.UNDER_REPAIR) && currentActivityTime <= 0 )
+        {
+            state = BlockState.FREE;
+            currentActivityTime = 0;
         }
     }
 
@@ -167,13 +184,34 @@ public class Game extends Block {
         return queue;
     }
 
-    public ArrayList<Employee> getWorkers() {
+    public ArrayList<Operator> getWorkers() {
         return workers;
     }
 
     public int getBuildingTime() {
         return buildingTime;
     }
+
+    public void setTicketCost(int ticketCost) {
+        this.ticketCost = ticketCost;
+    }
+
+    public void setWorkers(ArrayList<Operator> workers) {
+        this.workers = workers;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public void setCooldownTime(int cooldownTime) {
+        this.cooldownTime = cooldownTime;
+    }
+
+    public void setBuildingTime(int buildingTime) {
+        this.buildingTime = buildingTime;
+    }
+
 
     @Override
     public String toString() {

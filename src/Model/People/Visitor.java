@@ -5,6 +5,7 @@ import Model.Blocks.Game;
 import Model.Blocks.Road;
 import Model.Blocks.ServiceArea;
 import Model.Position;
+import java.util.Random;
 
 import java.awt.*;
 
@@ -13,17 +14,19 @@ public class Visitor extends Person {
     private int hunger;
     private int playfulness;
     private int stayingTime;
+    private VisitorState state;
     // TODO: add a new value that defines how long are they staying. make it changeable.
     // TODO: cyclical waiting at a game for example
     // TODO: change playfulness and hunger in time
     // TODO: they shouldnt interrupt their actions
-
+    // TODO: generate random numbers
     public Visitor(Position startingPos) {
         super(startingPos);
-        happiness = 50;
-        hunger = 0;
-        playfulness = 50;
-        stayingTime = 300;
+        Random rnd = new Random();
+        happiness = rnd.nextInt() % 100;
+        hunger = rnd.nextInt() % 100;
+        playfulness = rnd.nextInt() % 100;
+        stayingTime = rnd.nextInt() % 500;
     }
 
     public void playGame(Game that) {
@@ -38,31 +41,55 @@ public class Visitor extends Person {
         happiness += 5;
         playfulness += 30;
         currentActivityLength = where.getCooldownTime();
-        //throwGarbage(posBlock);
+        state = VisitorState.WANNA_TOILET;
+    }
+
+    public void toilet(ServiceArea where) {
+        currentActivityLength = where.getCooldownTime();
+        state = VisitorState.WANNA_PLAY;
     }
 
     public Road throwGarbage(Road there) {
-        // TODO: need to see exact implementation of this in Road Class
         there.setGarbage(there.getGarbage() + 2);
         return there;
     }
 
+    // TODO : én beállítom úgy a stateket, hogy akar valamit csinálni, Alex pedig visszaállítja arra, hogy készen van
+    // TODO : gamespeed related paraméter hozzáadása
+    public void roundHasPassed(int minutesPerSecond) {
 
-    public void roundHasPassed() {
-        this.hunger += 1;
+        if(state.equals(VisitorState.WANNA_LEAVE) || state.equals(VisitorState.WANNA_TOILET))
+        {
+            return;
+        }
+        this.hunger += minutesPerSecond;
         if (hunger < 50) {
-            this.playfulness += 2;
+            this.playfulness += minutesPerSecond * 2 ;
+        }
+        else
+        {
+            this.state = VisitorState.WANNA_EAT;
+            return;
+        }
+        if(playfulness > 50 && hunger < 50)
+        {
+            this.state = VisitorState.WANNA_PLAY;
+            return;
+        }
+        if(stayingTime == 0 )
+        {
+            state = VisitorState.WANNA_LEAVE;
+            return;
         }
         if (this.currentActivityLength == 0) {
-            happiness--;
-        } else {
-            currentActivityLength--;
+            happiness-= minutesPerSecond;
         }
-
-        if (stayingTime == 0) {
-            // TODO: leave the playground
-        } else {
-            stayingTime--;
+        else {
+            currentActivityLength-= minutesPerSecond;
+        }
+        if(currentActivityLength <= 0)
+        {
+            currentActivityLength = 0;
         }
         return;
     }
@@ -73,6 +100,10 @@ public class Visitor extends Person {
 
     public int getHappiness() {
         return happiness;
+    }
+
+    public VisitorState getState() {
+        return state;
     }
 
     public void setHappiness(int happiness) {
