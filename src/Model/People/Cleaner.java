@@ -1,6 +1,7 @@
 package Model.People;
 
 import Model.Blocks.Block;
+import Model.Blocks.Road;
 import Model.Position;
 
 import java.awt.*;
@@ -12,25 +13,21 @@ public class Cleaner extends Employee {
         super(startingPos,salary);
     }
 
-    public void clean(Block b )
+    public void clean(Road b )
     {
-        this.setIsBusy(true);
-        //b.garbage = 0;
-        // TODO: this should be handled in the playground?
-        this.setIsBusy(false);
-
+        currentActivityLength = 25;
+        b.setGarbage(0);
     }
 
-    public void roundHasPassed()
+    public void roundHasPassed(int minutesPerSecond)
     {
         if(currentActivityLength == 0)
         {
             // go clean smth
-            currentActivityLength = 3;
         }
         else
         {
-            currentActivityLength--;
+            currentActivityLength-= minutesPerSecond;
         }
         return;
     }

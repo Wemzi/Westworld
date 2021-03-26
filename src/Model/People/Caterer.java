@@ -25,18 +25,17 @@ public class Caterer extends Employee {
         v.eat(workPlace);
     }
 
-    public void roundHasPassed()
+    public void roundHasPassed(int minutesPerSecond)
     {
         if(currentActivityLength == 0)
         {
             Visitor hungryGuest = workPlace.getQueue().remove();
             this.serve(hungryGuest);
             currentActivityLength = 1;
-            // TODO: Money?
         }
         else
         {
-            currentActivityLength--;
+            currentActivityLength-=minutesPerSecond;
         }
         return;
     }

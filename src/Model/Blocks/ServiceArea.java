@@ -16,6 +16,8 @@ public class ServiceArea extends Block {
     private int capacity;
     private ServiceType type;
     private int cooldownTime;
+    private int buildingTime;
+    private int currentActivityTime;
 
     @Deprecated
     public ServiceArea(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, int menuCost, int capacity) {
@@ -30,6 +32,7 @@ public class ServiceArea extends Block {
         this.type=type;
         if(type==ServiceType.BUFFET)
         {
+            buildingTime = 30;
             buildingCost = 100;
             upkeepCost = 10;
             popularityIncrease = 1.0;
@@ -43,6 +46,7 @@ public class ServiceArea extends Block {
         }
         else if(type==ServiceType.TOILET)
         {
+            buildingTime = 30;
             buildingCost = 75;
             upkeepCost = 10;
             popularityIncrease = 1.0;
@@ -97,6 +101,30 @@ public class ServiceArea extends Block {
     public void setCooldownTime(int cooldownTime) {this.cooldownTime = cooldownTime; }
 
     public int getCooldownTime() { return cooldownTime; }
+
+    public void roundHasPassed(int minutesPerSecond)
+    {
+        if(state.equals(BlockState.UNDER_CONSTRUCTION))
+        {
+            buildingTime-=minutesPerSecond;
+        }
+        if(state.equals(BlockState.USED))
+        {
+            currentActivityTime-=minutesPerSecond;
+        }
+        else if(buildingTime == 0 && !(state.equals(BlockState.USED))) {
+            state = BlockState.FREE;
+        }
+        if(state.equals(BlockState.UNDER_REPAIR))
+        {
+            currentActivityTime -= minutesPerSecond;
+        }
+        if(state.equals(BlockState.UNDER_REPAIR) && currentActivityTime <= 0 )
+        {
+            state = BlockState.FREE;
+            currentActivityTime = 0;
+        }
+    }
 
     @Override
     public String toString() {
