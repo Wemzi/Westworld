@@ -21,23 +21,25 @@ public class Operator extends Employee {
         this.operateThis = operateThis;
     }
 
-    public void operate(Game g )
+    public void operate()
     {
-        this.setIsBusy(true);
-        currentActivityLength = g.getCooldownTime();
-        this.setIsBusy(false);
+        operateThis.run();
+        currentActivityLength = operateThis.getCooldownTime();
     }
 
-    public void roundHasPassed()
+    public void roundHasPassed(int minutesPerSecond)
     {
-        if(currentActivityLength == 0)
+        if(currentActivityLength == 0 && operateThis.getQueue().remainingCapacity()==0)
         {
-            this.operate(operateThis);
-            currentActivityLength = operateThis.getCooldownTime();
+            this.operate();
         }
         else
         {
-            currentActivityLength--;
+            currentActivityLength-=minutesPerSecond;
+        }
+        if(currentActivityLength <= 0 )
+        {
+            currentActivityLength = 0;
         }
         return;
     }
