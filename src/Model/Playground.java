@@ -94,6 +94,7 @@ public class Playground {
         int blockFromY = block.getPos().getY_asIndex();
         int blockMaxX = blockFromX + block.getSize().getX_asIndex();
         int blockMaxY = blockFromY + block.getSize().getY_asIndex();
+        if(blockMaxX >= NUM_OF_COLS || blockMaxY >=NUM_OF_ROWS){return false;}// Ha kilóg, akkor nyilván nem építhető
 
         for(int x=blockFromX; x<blockMaxX; ++x)
             for(int y=blockFromY; y<blockMaxY; ++y)
