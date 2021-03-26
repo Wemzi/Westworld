@@ -141,6 +141,11 @@ public class Game extends Block {
 
     public void roundHasPassed(int minutesPerSecond)
     {
+        if(workers.size() <= 1 )
+        {
+            state = BlockState.NOT_OPERABLE;
+            return;
+        }
         if(state.equals(BlockState.UNDER_CONSTRUCTION))
         {
             buildingTime-=minutesPerSecond;
