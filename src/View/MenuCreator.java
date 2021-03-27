@@ -99,6 +99,18 @@ public class MenuCreator {
         });
         //------------ vege ---------------
 
+        //-----------Egy menu elem kezdete ------------
+        JMenuItem entranceMenuItem =new JMenuItem("Entrance");
+        buildMenu.add(entranceMenuItem);
+        entranceMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Block block=new Road(200,15,0,BlockState.UNDER_PLACEMENT,false,true,0);
+                parent.startPlaceSelectionMode(block);
+            }
+        });
+        //------------ vege ---------------
+
         JMenu buildDecorationMenu=new JMenu("Decoration");
         createDecorationMenuItems(buildDecorationMenu);
         buildMenu.add(buildDecorationMenu);

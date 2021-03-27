@@ -43,7 +43,7 @@ public class Road extends Block {
 
     @Override
     public Color getColor() {
-        return Color.gray;
+        return isEntrance ? Color.DARK_GRAY : Color.GRAY;
     }
 
     @Override

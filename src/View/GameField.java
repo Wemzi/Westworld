@@ -56,6 +56,7 @@ public class GameField extends JPanel {
 
                     }
 
+
                     drawBlockLabel(b,gr);
                 }
 

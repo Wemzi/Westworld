@@ -4,7 +4,6 @@ import Model.Blocks.*;
 import Model.People.*;
 
 import java.awt.*;
-import java.security.Provider;
 import java.util.ArrayList;
 
 import static View.MainWindow2.NUM_OF_COLS;
@@ -126,7 +125,7 @@ public class Playground {
      *          False literálisan, ha valamelyik helyen nem freeplace van
      *          True ha az összesen helyen freeplace van
      */
-    public boolean isBuildable(Block block){
+    public boolean isBuildable(Block block){ //todo implement for Entrance
         if(block instanceof GarbageCan){
             if(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof Road){
                 return !((Road) blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()]).isHasGarbageCan();
