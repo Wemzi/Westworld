@@ -1,18 +1,16 @@
 package Model.Blocks;
 
-import Model.People.Employee;
 import Model.People.Operator;
 import Model.People.Visitor;
 import Model.Position;
 
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 
 
 
-public class Game extends Block {
+public class Game extends Block implements Queueable{
     private int ticketCost;
     private final ArrayBlockingQueue<Visitor> queue;
     private ArrayList<Operator> workers;

@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class ServiceArea extends Block {
+public class ServiceArea extends Block implements Queueable{
     private int menuCost;
     private ArrayBlockingQueue<Visitor> queue;
     private ArrayList<Employee> workers;
