@@ -4,6 +4,7 @@ import Model.Blocks.*;
 import Model.People.*;
 
 import java.awt.*;
+import java.security.Provider;
 import java.util.ArrayList;
 
 import static View.MainWindow2.NUM_OF_COLS;
@@ -17,6 +18,8 @@ public class Playground {
     /* Adattagok */
     public Block[][] blocks;
     private ArrayList<Block> buildedObjects;
+    private ArrayList<Game> builedGames;
+    private ArrayList<ServiceArea> builededServices;
 
     private ArrayList<Visitor> visitors;
 
@@ -29,10 +32,14 @@ public class Playground {
     private int days, hours, minutes;
     private double popularity;
 
+    private Position entrancePosition;
+
     /* Konstruktor */
     public Playground() {
         blocks              = new Block[NUM_OF_COLS][NUM_OF_ROWS];
         buildedObjects      = new ArrayList<>();
+        builedGames         = new ArrayList<>();
+        builededServices    = new ArrayList<>();
         visitors            = new ArrayList<>();
         cateres             = new ArrayList<>();
         cleaners            = new ArrayList<>();
@@ -50,8 +57,46 @@ public class Playground {
         days = 1; hours = 8; minutes = 0;
         popularity = 0;
 
-        //testVisitor
-        visitors.add(new Visitor(new Position(10,10,false)));
+
+        //test: Base Gamefield
+        blocks[5][0] = new Road(0,10,0,BlockState.FREE,false,true,0);
+        blocks[5][1] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[5][2] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[5][3] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[5][4] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[5][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[6][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[7][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[8][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[9][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][6] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][7] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][8] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][9] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][10] = new Road(0,10,0,BlockState.FREE,false,false,0);
+        blocks[10][11] = new Road(0,10,0,BlockState.FREE,false,true,0);
+
+        blocks[5][0].pos = new Position(5,0,false);
+        blocks[5][1].pos = new Position(5,1,false);
+        blocks[5][2].pos = new Position(5,2,false);
+        blocks[5][3].pos = new Position(5,3,false);
+        blocks[5][4].pos = new Position(5,4,false);
+        blocks[5][5].pos = new Position(5,5,false);
+        blocks[6][5].pos = new Position(6,5,false);
+        blocks[7][5].pos = new Position(7,5,false);
+        blocks[8][5].pos = new Position(8,5,false);
+        blocks[9][5].pos = new Position(9,5,false);
+        blocks[10][5].pos = new Position(10,5,false);
+        blocks[10][6].pos = new Position(10,6,false);
+        blocks[10][7].pos = new Position(10,7,false);
+        blocks[10][8].pos = new Position(10,8,false);
+        blocks[10][9].pos = new Position(10,9,false);
+        blocks[10][10].pos = new Position(10,10,false);
+        blocks[10][11].pos = new Position(10,11,false);
+
+        entrancePosition = new Position(5,0,false);
+
     }
 
     /* Metódusok */
@@ -152,6 +197,70 @@ public class Playground {
         return false;
     }
 
+    public boolean findRoute(Visitor visitor, Position start, Position destination) {
+        boolean visited[][] = new boolean[NUM_OF_COLS][NUM_OF_ROWS];
+
+        for (int i = 0; i < NUM_OF_COLS; i++)
+            for (int j = 0; j < NUM_OF_ROWS; j++)
+                if (i == start.getX_asIndex() && j == start.getY_asIndex() && !visited[i][j])
+                    if (isPath(i, j, visited, destination, visitor)) {
+                        visitor.getPathPositionList().add(new Position(i,j,false));
+                        return true;
+                    }
+
+        return false;
+    }
+    public boolean isSafe(int i, int j) {
+        if (i >= 0 && i < blocks.length && j >= 0 && j < blocks[0].length)
+            return true;
+
+        return false;
+    }
+
+    public boolean isPath(int i, int j, boolean visited[][], Position destination, Visitor visitor) {
+        if (isSafe(i, j) &&
+                (blocks[i][j] instanceof Road || blocks[i][j] instanceof Game || blocks[i][j] instanceof ServiceArea) &&
+                !visited[i][j]) {
+
+            visited[i][j] = true;
+
+            if (i == destination.getX_asIndex() && j == destination.getY_asIndex()){
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+
+            boolean up = isPath(i - 1, j, visited, destination, visitor);
+
+            if (up){
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+
+            boolean left = isPath(i, j - 1, visited, destination, visitor);
+
+            if (left){
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+
+            boolean down = isPath(i + 1, j, visited, destination, visitor);
+
+
+            if (down){
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+
+            boolean right = isPath(i, j + 1, visited, destination, visitor);
+
+            if (right) {
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ArrayList getEmployeesLike(Employee e){
         if(e instanceof Caterer){return getCateres();}
         if(e instanceof Cleaner){return getCleaners();}
@@ -163,28 +272,32 @@ public class Playground {
 
 
     /* Getterek / Setterek */
-    public int getMoney()                           { return money; }
-    public int getHours()                           { return hours; }
-    public int getMinutes()                         { return minutes; }
-    public int getDays()                            { return days; }
-    public double getPopularity()                   { return popularity; }
+    public int getMoney()                                   { return money; }
+    public int getHours()                                   { return hours; }
+    public int getMinutes()                                 { return minutes; }
+    public int getDays()                                    { return days; }
+    public double getPopularity()                           { return popularity; }
+    public Position getEntrancePosition()                   { return entrancePosition; }
+    public Block getBlockByPosition(Position pos)           { return blocks[pos.getX_asIndex()][pos.getY_asIndex()]; }
 
-    public BlockState getBlockState(Block block)    { return block.getState(); }
-    public Color getColor(Block block)              { return block.getColor(); }
-    public Block[][] getBlocks()                    { return blocks; }
-    public ArrayList<Block> getBuildedObjectList()  { return buildedObjects; }
+    public BlockState getBlockState(Block block)            { return block.getState(); }
+    public Color getColor(Block block)                      { return block.getColor(); }
+    public Block[][] getBlocks()                            { return blocks; }
+    public ArrayList<Block> getBuildedObjectList()          { return buildedObjects; }
+    public ArrayList<Game> getBuildedGameList()             { return builedGames; }
+    public ArrayList<ServiceArea> getBuildedServiceList()   { return builededServices; }
 
-    public ArrayList<Visitor> getVisitors()         { return visitors; }
-    public ArrayList<Caterer> getCateres()          { return cateres; }
-    public ArrayList<Cleaner> getCleaners()         { return cleaners; }
-    public ArrayList<Operator> getOperators()       { return operators; }
-    public ArrayList<Repairman> getRepairmen()      { return repairmen; }
+    public ArrayList<Visitor> getVisitors()                 { return visitors; }
+    public ArrayList<Caterer> getCateres()                  { return cateres; }
+    public ArrayList<Cleaner> getCleaners()                 { return cleaners; }
+    public ArrayList<Operator> getOperators()               { return operators; }
+    public ArrayList<Repairman> getRepairmen()              { return repairmen; }
 
-    public void setMoney(int money)                 { this.money = money; }
-    public void setDays(int days)                   { this.days = days; }
-    public void setHours(int hours)                 { this.hours = hours; }
-    public void setMinutes(int minutes)             { this.minutes = minutes; }
-    public void setPopularity(double popularity)    { this.popularity = popularity; }
+    public void setMoney(int money)                         { this.money = money; }
+    public void setDays(int days)                           { this.days = days; }
+    public void setHours(int hours)                         { this.hours = hours; }
+    public void setMinutes(int minutes)                     { this.minutes = minutes; }
+    public void setPopularity(double popularity)            { this.popularity = popularity; }
     public void setBuildedObjects(ArrayList<Block> buildedObjects) { this.buildedObjects = buildedObjects; }
 
     public String dateToString() {

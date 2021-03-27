@@ -1,6 +1,7 @@
 package Model.People;
 
 import Model.Blocks.Block;
+import Model.Blocks.BlockState;
 import Model.Blocks.Game;
 import Model.Position;
 
@@ -14,19 +15,22 @@ public class Repairman extends Employee {
     }
 
     public void repair(Game g ) {
-        this.setIsBusy(true);
-        g.setCondition(100);
-         // TODO: this should be handled in the playground?
-        this.setIsBusy(false);
-
+        if (g.getState().equals(BlockState.FREE)) {
+            g.setState(BlockState.UNDER_REPAIR);
+            g.setCondition(100);
+            currentActivityLength = g.getBuildingTime() / 5;
+            g.setCooldownTime(currentActivityLength);
+        }
     }
 
-    public void roundHasPassed()
+    public void roundHasPassed(int minutesPerSecond)
     {
         if(this.currentActivityLength==0)
         {
             // go repair smth
         }
+        else
+        { currentActivityLength -= minutesPerSecond; }
         return;
     }
 

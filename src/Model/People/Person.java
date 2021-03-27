@@ -24,8 +24,8 @@ abstract public class Person {
         pos= that;
     }
     protected Color getColor(){return Color.white;};
-    abstract protected void roundHasPassed();
-    protected boolean isBusy(){return currentActivityLength==0;}
+    abstract protected void roundHasPassed(int minutesPerSecond);
+    protected boolean isBusy(){return currentActivityLength!=0;}
 
 
 }
