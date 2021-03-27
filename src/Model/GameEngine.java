@@ -3,21 +3,23 @@ package Model;
 import Model.Blocks.*;
 import Model.People.*;
 
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+//TODO: Szimuláció folyatása
 
 public class GameEngine {
     /* Adattagok */
     private Playground pg;
     private boolean isBuildingPeriod;
+    public static int TIME_1x=30;
 
     /* Konstruktor */
     public GameEngine() {
         pg = new Playground();
         isBuildingPeriod = true;
-
-        pg.blocks[0][0] = new Road(0,0,0,BlockState.FREE,false,true,0);
     }
 
 
@@ -31,7 +33,7 @@ public class GameEngine {
      *          true, ha építés végbement
      */
     public boolean buildBlock(Block b) {
-        if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }//todo demolisholni se lehessen
+        //if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
 
         if(b instanceof GarbageCan){return buildBin(b.pos);}
         if(pg.getMoney() < b.getBuildingCost()) return false;
@@ -46,8 +48,14 @@ public class GameEngine {
             for (int y = posFromY; y < buildUntilY; ++y)
                 pg.buildBlock(b, x, y);
 
+        b.setState(BlockState.UNDER_CONSTRUCTION);
+
         pg.setMoney(pg.getMoney()-b.getBuildingCost());
-        pg.getBuildedObjectList().add(b); System.out.println("BuildedObjectList-be bekerült a megépítendő block");
+        pg.getBuildedObjectList().add(b);
+
+        if(b instanceof Game)               pg.getBuildedGameList().add((Game) b);
+        else if(b instanceof ServiceArea)   pg.getBuildedServiceList().add((ServiceArea) b);
+
         return true;
     }
 
@@ -56,6 +64,8 @@ public class GameEngine {
         int posFromY = b.getPos().getY_asIndex();
         int demolishUntilX = posFromX + b.getSize().getX_asIndex();
         int demolishUntilY = posFromY + b.getSize().getY_asIndex();
+
+        Block demolishedBlock = pg.getBlockByPosition(new Position(posFromX,posFromY,false));
 
         for(int x=posFromX; x<demolishUntilX; ++x) {
             for(int y=posFromY; y<demolishUntilY; ++y) {
@@ -70,6 +80,23 @@ public class GameEngine {
                 break;
             }
         }
+
+        if(demolishedBlock instanceof Game) {
+            for(Block removedObject : pg.getBuildedGameList()) {
+                if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
+                    pg.getBuildedGameList().remove(b);
+                    break;
+                }
+            }
+        } else if (demolishedBlock instanceof ServiceArea) {
+            for(Block removedObject : pg.getBuildedServiceList()) {
+                if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
+                    pg.getBuildedServiceList().remove(b);
+                    break;
+                }
+            }
+        }
+
     }
 
     /**
@@ -78,7 +105,7 @@ public class GameEngine {
      * @return  true: Ha útra kattintuttunk
      *          false: Ha nem útra kattintottunk
      */
-    boolean buildBin(Position p){
+    public boolean buildBin(Position p){
         if(pg.blocks[p.getX_asIndex()][p.getY_asIndex()] instanceof Road){
             if(!(((Road) pg.blocks[p.getX_asIndex()][p.getY_asIndex()]).isHasGarbageCan())) {
                 ((Road) pg.blocks[p.getX_asIndex()][p.getY_asIndex()]).setHasGarbageCan(true);
@@ -93,58 +120,126 @@ public class GameEngine {
         return false;
     }
 
-    public void startDay(){
+    public void startDay()  {
         if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return; }
 
+        Position entrancePosition = pg.getEntrancePosition();
+        pg.getVisitors().add(new Visitor(entrancePosition));
+
+
         isBuildingPeriod = false;
+        int minutesPerSecond = setTimerSpeed(5);
+
+        Timer visitorTimer = new Timer();
         Timer timer = new Timer();
+        visitorTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    for (Visitor v : pg.getVisitors()) {
+                        if (!v.isMoving && v.getPlayfulness() >= 0) {
+                            if (pg.getBuildedGameList().size() == 0) break;
+
+                            Position gamePos = pg.getBuildedGameList().get(0).getPos();
+                            pg.findRoute(v, v.getPosition(), gamePos);
+                            v.pathPositionIndex = v.getPathPositionList().size()-1;
+                            v.isMoving = true;
+
+                            System.out.println(v.getPathPositionList());
+                        }
+                        if (v.isMoving) {
+                            Position nextBlockPosition = v.getPathPositionList().get(v.pathPositionIndex);
+
+                            boolean isArrived = v.getPosition().getX_asIndex() == v.getPathPositionList().get(0).getX_asIndex() &&
+                                    v.getPosition().getY_asIndex() == v.getPathPositionList().get(0).getY_asIndex();
+                            boolean isSamePosition = v.getPosition().getX_asIndex() == nextBlockPosition.getX_asIndex()
+                                    && v.getPosition().getY_asIndex() == nextBlockPosition.getY_asIndex();
+                            boolean isDifferentPosition = v.getPosition().getX_asIndex() != nextBlockPosition.getX_asIndex()
+                                    || v.getPosition().getY_asIndex() != nextBlockPosition.getY_asIndex();
+                            boolean goingRight = nextBlockPosition.getX_asIndex() > v.getPosition().getX_asIndex();
+                            boolean goingLeft = nextBlockPosition.getX_asIndex() < v.getPosition().getX_asIndex();
+                            boolean goingUp = nextBlockPosition.getY_asIndex() > v.getPosition().getY_asIndex();
+                            boolean goingDown = nextBlockPosition.getY_asIndex() < v.getPosition().getY_asIndex();
+
+                            if (isArrived) {
+                                v.isMoving = false;
+                                ArrayList<Position> copy = v.getPathPositionList();
+                                v.getPathPositionList().removeAll(copy);
+
+                                v.playGame(pg.getBuildedGameList().get(0));
+                                //v.setPlayfulness(-1);
+                            }
+
+                            if (isSamePosition) {
+                                v.pathPositionIndex--;
+                                continue;
+                            }
+                            else if (isDifferentPosition) {
+
+                                if (goingRight) {
+                                    v.setPosition(new Position(v.getPosition().getX_asPixel() + minutesPerSecond, v.getPosition().getY_asPixel(), true));
+                                }
+                                if (goingLeft) {
+                                    v.setPosition(new Position(v.getPosition().getX_asPixel() - minutesPerSecond, v.getPosition().getY_asPixel(), true));
+                                }
+                                if (goingUp) {
+                                    v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() + minutesPerSecond, true));
+                                }
+                                if (goingDown) {
+                                    v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() - minutesPerSecond, true));
+                                }
+                            }
+                        }
+                    }
+                } catch (ConcurrentModificationException e) { }
+            }
+        },0,100);
+
+        final int[] vistorsComingPeriod = {5};
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-
-                int minutesPerSecond = setTimerSpeed(30);
                 pg.setMinutes(pg.getMinutes() + minutesPerSecond);
+                //pg.getVisitors().add(new Visitor(entrancePosition));
+
+                /*vistorsComingPeriod[0] -= minutesPerSecond;
+                if(vistorsComingPeriod[0] <= 0) {
+                    vistorsComingPeriod[0] = 20;
+                    pg.getVisitors().add(new Visitor(entrancePosition));
+                }*/
+
 
                 for(Visitor v : pg.getVisitors()) {
-                    v.setStayingTime(v.getStayingTime()-minutesPerSecond); // Lecsökkentjük a staying timeot a visitoroknak
-                    if(v.getStayingTime() == 0) {
+                    v.setStayingTime(v.getStayingTime() - minutesPerSecond);
+                    if (v.getStayingTime() == 0) {
                         pg.getVisitors().remove(v);
-                        if(v.getHappiness() >= 50) {
-                            pg.setPopularity(pg.getPopularity()+1);
+                        if (v.getHappiness() >= 50) {
+                            pg.setPopularity(pg.getPopularity() + 1);
                         } else {
-                            pg.setPopularity(pg.getPopularity()-1);
+                            pg.setPopularity(pg.getPopularity() - 1);
                         }
                         break;
                     }
-                    // TODO: ÖTLET: mi lenne ha inkább az isbusy-t használnád? Szerintem felesleges mindegyik activityre egy külön metódus.
-                    // TODO: a fontossági sorrendet úgy is eltudjuk dönteni, hogy az egyik ifet előrébb tesszük mint a másikat. többi meetingen.
-                    if(v.getPlayfulness() <= 70) {
+                }
+
+                    /*if(v.getPlayfulness() >= 50) {
                         //TODO: if(v.isPlaying()) { akkor ez fut le ->
                         // Van ilyen, v.isBusy néven
                         for(Block b : pg.getBuildedObjectList()) {
                             if(b instanceof Game) {
                                 v.setPosition(new Position(b.getPos().getX_asIndex(),b.getPos().getY_asIndex(),false));
-                                //TODO: v.setHappiens(v.getHappiens()+1);
-                                // setHappiness implementálva, getHappiness van
-                                //TODO: v.setPlayfullness(v.getPlayFullness()-10)
-                                // setPlayfulness implementálva, getPlayfulness van
-                                //TODO: v.setHunger(v.getHunger()+1)
-                                // setHunger implementálva, gethunger van
+                                //TODO: playgame() eat()
+                                //TODO: RoundHasPassed()
                             } else {
-                                // TODO: v.setHappiens(v.getHappiens()-10);
-                                // setHappiness implementálva, getHappiness van
+
                             }
                             break;
                         }
                     }
-                    else if(v.getHunger() >= 5) {
-                        //TODO: if(v.inServiceBuilding() { akkor ez fut le ->
+                    else if(v.getHunger() >= 50) {
                         for(Block b: pg.getBuildedObjectList()) {
                             if(b instanceof ServiceArea) {
                                 v.setPosition(new Position(b.getPos().getX_asIndex(),b.getPos().getY_asIndex(),false));
-                                //TODO: v.setHappiens(v.getHappiens()+1);
-                                //TODO: v.setPlayfullness(v.getPlayFullness()+10)
-                                //TODO: v.setHunger(v.getHunger()-5)
                             } else {
                                 //v.setHappiness - 10
                                 pg.getVisitors().remove(v); // Elmegy ha nem kap kiszolgálást!
@@ -152,13 +247,13 @@ public class GameEngine {
                             break;
                         }
                     }
-                }
+                }*/
 
                 if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
                     pg.setMinutes(0);
                     pg.setHours(pg.getHours()+1);
 
-                    pg.getVisitors().add(new Visitor(new Position(0,0,false)));
+                    pg.getVisitors().add(new Visitor(entrancePosition));
                 }
                 if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban
                     pg.setMinutes(0);
@@ -203,14 +298,15 @@ public class GameEngine {
         pg.setMoney(money);
     }
 
-    public boolean isBuildingPeriod() {
-        return isBuildingPeriod;
-    }
 
     /* Getterek / Setterek */
     public Playground getPg() { return pg; }
 
-    public static int TIME_1x=30;//minutes per second
-    public int setTimerSpeed(int minutesPerSecond) { return minutesPerSecond; }
+    public boolean isBuildingPeriod() {
+        return isBuildingPeriod;
+    }
+
+
+    public  int setTimerSpeed(int minutesPerSecond) { return minutesPerSecond; }
 
 }
