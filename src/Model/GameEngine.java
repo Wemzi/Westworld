@@ -3,15 +3,11 @@ package Model;
 import Model.Blocks.*;
 import Model.People.*;
 
-import javax.print.attribute.standard.Destination;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static View.MainWindow2.NUM_OF_COLS;
-
-
-//TODO: Külön adatszerkezet minden egyes objektumhoz
-//TODO: Static metódusok paraméterrel run-nal
 //TODO: Szimuláció folyatása
 
 public class GameEngine {
@@ -123,7 +119,7 @@ public class GameEngine {
         return false;
     }
 
-    public void startDay(){
+    public void startDay()  {
         if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return; }
 
         Position entrancePosition = pg.getEntrancePosition();
@@ -135,28 +131,81 @@ public class GameEngine {
 
         Timer visitorTimer = new Timer();
         Timer timer = new Timer();
-
         visitorTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                for(Visitor v : pg.getVisitors()) {
-                    try {
-                        if(pg.blocks[v.getPosition().getX_asIndex()][v.getPosition().getY_asIndex()+1] instanceof Road) {
-                            v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel()+minutesPerSecond, true));
-                        } else if(pg.blocks[v.getPosition().getX_asIndex()+1][v.getPosition().getY_asIndex()] instanceof Road) {
-                            v.setPosition(new Position(v.getPosition().getX_asPixel()+minutesPerSecond, v.getPosition().getY_asPixel(), true));
+                try {
+                    for (Visitor v : pg.getVisitors()) {
+                        if (!v.isMoving && v.getPlayfulness() >= 0) {
+                            if (pg.getBuildedGameList().size() == 0) break;
+
+                            Position gamePos = pg.getBuildedGameList().get(0).getPos();
+                            pg.findRoute(v, v.getPosition(), gamePos);
+                            v.pathPositionIndex = v.getPathPositionList().size()-1;
+                            v.isMoving = true;
+
+                            System.out.println(v.getPathPositionList());
                         }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        pg.getVisitors().remove(v);
+                        if (v.isMoving) {
+                            Position nextBlockPosition = v.getPathPositionList().get(v.pathPositionIndex);
+
+                            boolean isArrived = v.getPosition().getX_asIndex() == v.getPathPositionList().get(0).getX_asIndex() &&
+                                    v.getPosition().getY_asIndex() == v.getPathPositionList().get(0).getY_asIndex();
+                            boolean isSamePosition = v.getPosition().getX_asIndex() == nextBlockPosition.getX_asIndex()
+                                    && v.getPosition().getY_asIndex() == nextBlockPosition.getY_asIndex();
+                            boolean isDifferentPosition = v.getPosition().getX_asIndex() != nextBlockPosition.getX_asIndex()
+                                    || v.getPosition().getY_asIndex() != nextBlockPosition.getY_asIndex();
+                            boolean goingRight = nextBlockPosition.getX_asIndex() > v.getPosition().getX_asIndex();
+                            boolean goingLeft = nextBlockPosition.getX_asIndex() < v.getPosition().getX_asIndex();
+                            boolean goingUp = nextBlockPosition.getY_asIndex() > v.getPosition().getY_asIndex();
+                            boolean goingDown = nextBlockPosition.getY_asIndex() < v.getPosition().getY_asIndex();
+
+                            if (isArrived) {
+                                v.isMoving = false;
+                                ArrayList<Position> copy = v.getPathPositionList();
+                                v.getPathPositionList().removeAll(copy);
+
+                                v.playGame(pg.getBuildedGameList().get(0));
+                                //v.setPlayfulness(-1);
+                            }
+
+                            if (isSamePosition) {
+                                v.pathPositionIndex--;
+                                continue;
+                            }
+                            else if (isDifferentPosition) {
+
+                                if (goingRight) {
+                                    v.setPosition(new Position(v.getPosition().getX_asPixel() + minutesPerSecond, v.getPosition().getY_asPixel(), true));
+                                }
+                                if (goingLeft) {
+                                    v.setPosition(new Position(v.getPosition().getX_asPixel() - minutesPerSecond, v.getPosition().getY_asPixel(), true));
+                                }
+                                if (goingUp) {
+                                    v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() + minutesPerSecond, true));
+                                }
+                                if (goingDown) {
+                                    v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() - minutesPerSecond, true));
+                                }
+                            }
+                        }
                     }
-                }
+                } catch (ConcurrentModificationException e) { }
             }
         },0,100);
 
+        final int[] vistorsComingPeriod = {5};
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 pg.setMinutes(pg.getMinutes() + minutesPerSecond);
+                //pg.getVisitors().add(new Visitor(entrancePosition));
+
+                /*vistorsComingPeriod[0] -= minutesPerSecond;
+                if(vistorsComingPeriod[0] <= 0) {
+                    vistorsComingPeriod[0] = 20;
+                    pg.getVisitors().add(new Visitor(entrancePosition));
+                }*/
 
 
                 for(Visitor v : pg.getVisitors()) {
@@ -253,5 +302,7 @@ public class GameEngine {
     public Playground getPg() { return pg; }
 
     public static int setTimerSpeed(int minutesPerSecond) { return minutesPerSecond; }
+
+
 
 }

@@ -196,6 +196,70 @@ public class Playground {
         return false;
     }
 
+    public boolean findRoute(Visitor visitor, Position start, Position destination) {
+        boolean visited[][] = new boolean[NUM_OF_COLS][NUM_OF_ROWS];
+
+        for (int i = 0; i < NUM_OF_COLS; i++)
+            for (int j = 0; j < NUM_OF_ROWS; j++)
+                if (i == start.getX_asIndex() && j == start.getY_asIndex() && !visited[i][j])
+                    if (isPath(i, j, visited, destination, visitor)) {
+                        visitor.getPathPositionList().add(new Position(i,j,false));
+                        return true;
+                    }
+
+        return false;
+    }
+    public boolean isSafe(int i, int j) {
+        if (i >= 0 && i < blocks.length && j >= 0 && j < blocks[0].length)
+            return true;
+
+        return false;
+    }
+
+    public boolean isPath(int i, int j, boolean visited[][], Position destination, Visitor visitor) {
+        if (isSafe(i, j) &&
+                (blocks[i][j] instanceof Road || blocks[i][j] instanceof Game || blocks[i][j] instanceof ServiceArea) &&
+                !visited[i][j]) {
+
+            visited[i][j] = true;
+
+            if (i == destination.getX_asIndex() && j == destination.getY_asIndex()){
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+
+            boolean up = isPath(i - 1, j, visited, destination, visitor);
+
+            if (up){
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+
+            boolean left = isPath(i, j - 1, visited, destination, visitor);
+
+            if (left){
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+
+            boolean down = isPath(i + 1, j, visited, destination, visitor);
+
+
+            if (down){
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+
+            boolean right = isPath(i, j + 1, visited, destination, visitor);
+
+            if (right) {
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ArrayList getEmployeesLike(Employee e){
         if(e instanceof Caterer){return getCateres();}
         if(e instanceof Cleaner){return getCleaners();}
