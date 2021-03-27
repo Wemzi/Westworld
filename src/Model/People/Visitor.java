@@ -32,10 +32,10 @@ public class Visitor extends Person {
         hunger = rnd.nextInt() % 100;
         playfulness = 50;
         stayingTime = rnd.nextInt() % 500;
-
         pathPosition = new ArrayList<>();
         isMoving = false;
         pathPositionIndex = 0;
+        state = VisitorState.DOESNT_KNOW;
     }
 
     public void playGame(Game that) {
@@ -64,9 +64,7 @@ public class Visitor extends Person {
     }
 
     // TODO : én beállítom úgy a stateket, hogy akar valamit csinálni, Alex pedig visszaállítja arra, hogy készen van
-    // TODO : gamespeed related paraméter hozzáadása
     public void roundHasPassed(int minutesPerSecond) {
-
         if(state.equals(VisitorState.WANNA_LEAVE) || state.equals(VisitorState.WANNA_TOILET))
         {
             return;
