@@ -51,6 +51,7 @@ public class BlockInfoDialog extends JDialog {
     }
 
     private static void addUnifiedBlockInfoContent(JPanel panel, Block block){
+        panel.add(new JLabel("Class: "+block.getName()));
         panel.add(new JLabel("State: "+block.getState()));
         panel.add(new JLabel("Building cost: "+block.getBuildingCost()));
         panel.add(new JLabel("Upkeep cost: "+block.getUpkeepCost()));
