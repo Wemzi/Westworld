@@ -78,6 +78,7 @@ public class MainWindow2 extends JFrame{
         //menu items
         JMenuBar menuBar = new JMenuBar();
         JMenu buildMenu = new JMenu("Build");
+        JMenu timeMenu = new JMenu("Time");
         JMenu otherMenu = new JMenu("Other");
 
         new MenuCreator(buildMenu,this).inflate();
@@ -99,14 +100,40 @@ public class MainWindow2 extends JFrame{
             }
         });
 
+        JMenuItem timeOneMenuItem = new JMenuItem("Time 1x");
+        timeOneMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                engine.setTimerSpeed(GameEngine.TIME_1x);
+            }
+        });
+        JMenuItem timeTwoMenuItem = new JMenuItem("Time 2x");
+        timeTwoMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                engine.setTimerSpeed(GameEngine.TIME_1x*2);
+            }
+        });
+        JMenuItem timeThreeMenuItem = new JMenuItem("Time 3x");
+        timeThreeMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                engine.setTimerSpeed(GameEngine.TIME_1x*3);
+            }
+        });
+
         //final initialization moves
         //menu
+        timeMenu.add(timeOneMenuItem);
+        timeMenu.add(timeTwoMenuItem);
+        timeMenu.add(timeThreeMenuItem);
 
         otherMenu.add(managementMenuItem);
         otherMenu.addSeparator();
         otherMenu.add(menuGameExit);
 
         menuBar.add(buildMenu);
+        menuBar.add(timeMenu);
         menuBar.add(otherMenu);
         setJMenuBar(menuBar);
 

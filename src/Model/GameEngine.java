@@ -210,6 +210,7 @@ public class GameEngine {
     /* Getterek / Setterek */
     public Playground getPg() { return pg; }
 
-    public static int setTimerSpeed(int minutesPerSecond) { return minutesPerSecond; }
+    public static int TIME_1x=30;//minutes per second
+    public int setTimerSpeed(int minutesPerSecond) { return minutesPerSecond; }
 
 }
