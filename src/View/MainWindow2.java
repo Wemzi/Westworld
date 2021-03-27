@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -28,8 +27,8 @@ public class MainWindow2 extends JFrame{
     private final GameEngine engine;
 
     private boolean isPlaceSelectionMode=false;
-    private boolean isShowInfoMode=false;
-    private MouseListener placementListener;
+    private Block toBuild;
+    private boolean isShowInfoMode=true;
 
     private final Timer timer;
 
@@ -64,13 +63,7 @@ public class MainWindow2 extends JFrame{
         field.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                //super.mouseClicked(e);
-                //System.out.println("Clicked pixel: "+e.getX()+" "+e.getY());
-                Position d= new Position(e.getX(),e.getY(),true);
-                //System.out.println("Clicked box: "+d.getX_asIndex() +" "+d.getY_asIndex());
-                Block selectedBlock=engine.getPg().blocks[d.getX_asIndex()][d.getY_asIndex()];
-                onBlockClick(selectedBlock);
-
+                onFieldClick(e);
             }
         });
 
@@ -111,13 +104,6 @@ public class MainWindow2 extends JFrame{
             }
         });
 
-        JMenuItem menuShowInfo = new JMenuItem(new AbstractAction("Select mode") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                isShowInfoMode=!isShowInfoMode;
-            }
-        });
-
         JMenuItem menuGameExit = new JMenuItem(new AbstractAction("Exit") {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -129,7 +115,6 @@ public class MainWindow2 extends JFrame{
         //menu
 
         otherMenu.add(managementMenuItem);
-        otherMenu.add(menuShowInfo);
         otherMenu.addSeparator();
         otherMenu.add(menuGameExit);
 
@@ -171,11 +156,6 @@ public class MainWindow2 extends JFrame{
 
     private void onBlockClick(Block block){//Ezt modositsd ha valamit ki akarsz irni a blokkrol arrol a blokkrol, amire eppen rakattintottak
         if(block !=null){
-            /*
-            System.out.println("--------------------------------------------");
-            System.out.println("Selected block:");
-            System.out.println(b.toString());
-            System.out.println("--------------------------------------------");*/
             if(isShowInfoMode){
                 BlockInfoDialog blockInfoDialog = new BlockInfoDialog(this,block);
                 blockInfoDialog.setVisible(true);
@@ -301,7 +281,7 @@ public class MainWindow2 extends JFrame{
             System.err.println("Place selection mode is already inactive");
         }else{
             isPlaceSelectionMode=false;
-            field.removeMouseListener(placementListener);
+            isShowInfoMode=true;
             field.disableMouseFollowing();
         }
     }
@@ -314,36 +294,31 @@ public class MainWindow2 extends JFrame{
             isShowInfoMode=false;
             isPlaceSelectionMode=true;
             field.enableMouseFollowing(toBuild);
+            this.toBuild=toBuild;
             System.out.println("Select a place");
-            placementListener = new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                }
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if(MouseEvent.BUTTON1==e.getButton()){//Left-click
-                        Position clickedHere=new Position(e.getX(),e.getY(),true);
-                        //toBuild.pos=new Position(clickedHere.getX_asIndex(),clickedHere.getY_asIndex(),false);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
-                        toBuild.pos=Position.useMagicGravity(clickedHere);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
-                        if(toBuild instanceof FreePlace){
-                            toBuild.size= engine.getPg().blocks[toBuild.pos.getX_asIndex()][toBuild.pos.getY_asIndex()].getSize();
-                            toBuild.pos=engine.getPg().blocks[toBuild.pos.getX_asIndex()][toBuild.pos.getY_asIndex()].getPos();
-                        }
-                        buildBlock(toBuild);
-                        //System.out.println("Block placed");
-                        stopPlaceSelectionMode();
-                    }else if(MouseEvent.BUTTON3==e.getButton()){//right-click
-                        System.out.println("Cancelled with mouse right click");
-                        stopPlaceSelectionMode();
-                    }
-
-                }
-            };
-
-            field.addMouseListener(placementListener);
         }
         return true;
+    }
+
+    public void onFieldClick(MouseEvent e){
+        Position clickedHere=new Position(e.getX(),e.getY(),true);
+        if(isShowInfoMode && !isPlaceSelectionMode && MouseEvent.BUTTON1==e.getButton()){
+            Block selectedBlock=engine.getPg().blocks[clickedHere.getX_asIndex()][clickedHere.getY_asIndex()];
+            onBlockClick(selectedBlock);
+        }else if(isPlaceSelectionMode){
+            if(MouseEvent.BUTTON1==e.getButton()){//Left-click
+                toBuild.pos=Position.useMagicGravity(clickedHere);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
+                if(toBuild instanceof FreePlace){
+                    toBuild.size= engine.getPg().blocks[toBuild.pos.getX_asIndex()][toBuild.pos.getY_asIndex()].getSize();
+                    toBuild.pos=engine.getPg().blocks[toBuild.pos.getX_asIndex()][toBuild.pos.getY_asIndex()].getPos();
+                }
+                buildBlock(toBuild);
+                stopPlaceSelectionMode();
+            }else if(MouseEvent.BUTTON3==e.getButton()){//right-click
+                System.out.println("Cancelled with mouse right click");
+                stopPlaceSelectionMode();
+            }
+        }
     }
 
 }

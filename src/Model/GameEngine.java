@@ -3,7 +3,6 @@ package Model;
 import Model.Blocks.*;
 import Model.People.*;
 
-import javax.print.attribute.standard.Destination;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,7 +31,7 @@ public class GameEngine {
      *          true, ha építés végbement
      */
     public boolean buildBlock(Block b) {
-        if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
+        if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }//todo demolisholni se lehessen
 
         if(b instanceof GarbageCan){return buildBin(b.pos);}
         if(pg.getMoney() < b.getBuildingCost()) return false;
@@ -204,6 +203,9 @@ public class GameEngine {
         pg.setMoney(money);
     }
 
+    public boolean isBuildingPeriod() {
+        return isBuildingPeriod;
+    }
 
     /* Getterek / Setterek */
     public Playground getPg() { return pg; }
