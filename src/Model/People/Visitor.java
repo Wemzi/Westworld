@@ -48,7 +48,7 @@ public class Visitor extends Person {
     public void eat(ServiceArea where) {
         hunger = 0;
         happiness += 5;
-        playfulness += 30;
+        playfulness += 50;
         currentActivityLength = where.getCooldownTime();
         state = VisitorState.WANNA_TOILET;
     }

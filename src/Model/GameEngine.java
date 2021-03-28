@@ -136,6 +136,7 @@ public class GameEngine {
                 Random rnd = new Random();
                 try {
                     for (Visitor v : pg.getVisitors()) {
+                        if(v.isBusy()) continue;
                         Position wheretogo = null;
                         Block interactwithme = null;
                         if (!v.isMoving && v.getState().equals(VisitorState.WANNA_PLAY)) {
