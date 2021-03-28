@@ -1,7 +1,8 @@
 
 package View;
 
-import Model.Blocks.*;
+import Model.Blocks.Block;
+import Model.Blocks.FreePlace;
 import Model.GameEngine;
 import Model.Position;
 
@@ -10,9 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  *
@@ -28,8 +26,8 @@ public class MainWindow2 extends JFrame{
     private final GameEngine engine;
 
     private boolean isPlaceSelectionMode=false;
-    private boolean isShowInfoMode=false;
-    private MouseListener placementListener;
+    private Block toBuild;
+    private boolean isShowInfoMode=true;
 
     private final Timer timer;
 
@@ -52,24 +50,16 @@ public class MainWindow2 extends JFrame{
                 popularityLabel.setText("Popularity: "+engine.getPg().getPopularity());
                 visitorsLabel.setText("Visitors: "+engine.getPg().getVisitors().size());
                 timerText.setText(engine.getPg().dateToString());
+                if(engine.isBuildingPeriod() != startDayButton.isEnabled()){
+                    startDayButton.setEnabled(engine.isBuildingPeriod());
+                }
 
                 field.repaint();
             }
         });
 
         //handle click event
-        field.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                //super.mouseClicked(e);
-                //System.out.println("Clicked pixel: "+e.getX()+" "+e.getY());
-                Position d= new Position(e.getX(),e.getY(),true);
-                //System.out.println("Clicked box: "+d.getX_asIndex() +" "+d.getY_asIndex());
-                Block selectedBlock=engine.getPg().blocks[d.getX_asIndex()][d.getY_asIndex()];
-                onBlockClick(selectedBlock);
-
-            }
-        });
+        field.addMouseListener(new MouseAdapter(){@Override public void mouseClicked(MouseEvent e) {onFieldClick(e);}});
 
         //labels
         moneyLabel=new JLabel("Money: $0");
@@ -88,30 +78,18 @@ public class MainWindow2 extends JFrame{
         //menu items
         JMenuBar menuBar = new JMenuBar();
         JMenu buildMenu = new JMenu("Build");
+        JMenu timeMenu = new JMenu("Time");
         JMenu otherMenu = new JMenu("Other");
 
-        createMenus(buildMenu);
-
-        JMenuItem managementMenuItem = new JMenuItem(new AbstractAction("Management") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
+        new MenuCreator(buildMenu,this).inflate();
 
         //management dialog
         ManagementDialog managementDialog=new ManagementDialog(this,engine);
+        JMenuItem managementMenuItem = new JMenuItem("Management");
         managementMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 managementDialog.setVisible(true);
-            }
-        });
-
-        JMenuItem menuShowInfo = new JMenuItem(new AbstractAction("Select mode") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                isShowInfoMode=!isShowInfoMode;
             }
         });
 
@@ -122,15 +100,40 @@ public class MainWindow2 extends JFrame{
             }
         });
 
+        JMenuItem timeOneMenuItem = new JMenuItem("Time 1x");
+        timeOneMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                engine.setTimerSpeed(GameEngine.TIME_1x);
+            }
+        });
+        JMenuItem timeTwoMenuItem = new JMenuItem("Time 2x");
+        timeTwoMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                engine.setTimerSpeed(GameEngine.TIME_1x*2);
+            }
+        });
+        JMenuItem timeThreeMenuItem = new JMenuItem("Time 3x");
+        timeThreeMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                engine.setTimerSpeed(GameEngine.TIME_1x*3);
+            }
+        });
+
         //final initialization moves
         //menu
+        timeMenu.add(timeOneMenuItem);
+        timeMenu.add(timeTwoMenuItem);
+        timeMenu.add(timeThreeMenuItem);
 
         otherMenu.add(managementMenuItem);
-        otherMenu.add(menuShowInfo);
         otherMenu.addSeparator();
         otherMenu.add(menuGameExit);
 
         menuBar.add(buildMenu);
+        menuBar.add(timeMenu);
         menuBar.add(otherMenu);
         setJMenuBar(menuBar);
 
@@ -152,7 +155,6 @@ public class MainWindow2 extends JFrame{
 
         field.setPreferredSize(new Dimension(BOX_SIZE* NUM_OF_COLS,BOX_SIZE* NUM_OF_ROWS));
         this.add(field,BorderLayout.SOUTH);
-        pack();
 
         JPanel playersPanel=new JPanel();
         playersPanel.add(moneyLabel);
@@ -166,118 +168,6 @@ public class MainWindow2 extends JFrame{
 
     }
 
-    private void onBlockClick(Block block){//Ezt modositsd ha valamit ki akarsz irni a blokkrol arrol a blokkrol, amire eppen rakattintottak
-        if(block !=null){
-            /*
-            System.out.println("--------------------------------------------");
-            System.out.println("Selected block:");
-            System.out.println(b.toString());
-            System.out.println("--------------------------------------------");*/
-            if(isShowInfoMode){
-                BlockInfoDialog blockInfoDialog = new BlockInfoDialog(this,block);
-                blockInfoDialog.setVisible(true);
-            }
-        }else{
-            System.out.println("Block is null");
-        }
-    }
-
-    private void createGameMenuItems(JMenu menu){
-        ArrayList<GameType> possibleBlocks=new ArrayList<>( Arrays.asList(GameType.values()));
-        for(GameType type : possibleBlocks){
-            JMenuItem gameMenuItem=new JMenuItem(type.toString());
-            menu.add(gameMenuItem);
-            gameMenuItem.addActionListener(new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Game g=new Game(type,new Position(-1,-1,true));
-                    //Game g=new Game(new Position(1,1,false),new Position(-1,-1,true));//direkt invalid hely, még nem tudjuk hova kerul
-                    g.setState(BlockState.UNDER_PLACEMENT);//elhelyezes alatt
-                    startPlaceSelectionMode(g);
-                }
-            });
-        }
-    }
-
-    private void createServiceMenuItems(JMenu menu){
-        ArrayList<ServiceType> possibleBlocks=new ArrayList<>( Arrays.asList(ServiceType.values()));
-        for(ServiceType type : possibleBlocks){
-            JMenuItem gameMenuItem=new JMenuItem(type.toString());
-            menu.add(gameMenuItem);
-            gameMenuItem.addActionListener(new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    ServiceArea g=new ServiceArea(type,new Position(-1,-1,true));
-                    startPlaceSelectionMode(g);
-                }
-            });
-        }
-    }
-
-    private void createDecorationMenuItems(JMenu menu){
-        ArrayList<DecType> possibleBlocks=new ArrayList<>( Arrays.asList(DecType.values()));
-        for(DecType type : possibleBlocks){
-            JMenuItem gameMenuItem=new JMenuItem(type.toString());
-            menu.add(gameMenuItem);
-            gameMenuItem.addActionListener(new AbstractAction() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Decoration g=new Decoration(type,new Position(-1,-1,true));
-                    startPlaceSelectionMode(g);
-                }
-            });
-        }
-    }
-
-    private void createMenus(JMenu buildMenu){
-        JMenu buildGameMenu=new JMenu("Game");
-        createGameMenuItems(buildGameMenu);
-        buildMenu.add(buildGameMenu);
-
-        JMenu buildServiceMenu=new JMenu("Service");
-        createServiceMenuItems(buildServiceMenu);
-        buildMenu.add(buildServiceMenu);
-
-        //-----------Egy menu elem kezdete ------------
-        JMenuItem roadMenuItem=new JMenuItem("Road");
-        buildMenu.add(roadMenuItem);
-        roadMenuItem.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Block block=new Road(100,5,0,BlockState.UNDER_PLACEMENT,false,false,0);
-                startPlaceSelectionMode(block);
-            }
-        });
-        //------------ vege ---------------
-
-        //-----------Egy menu elem kezdete ------------
-        JMenuItem garbageCanMenuItem=new JMenuItem("Garbage Can");
-        buildMenu.add(garbageCanMenuItem);
-        garbageCanMenuItem.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Block block=new GarbageCan();
-                startPlaceSelectionMode(block);
-            }
-        });
-        //------------ vege ---------------
-
-        JMenu buildDecorationMenu=new JMenu("Decoration");
-        createDecorationMenuItems(buildDecorationMenu);
-        buildMenu.add(buildDecorationMenu);
-
-        //-----------Egy menu elem kezdete ------------
-        JMenuItem demolishMenuItem=new JMenuItem("Demolish");
-        buildMenu.add(demolishMenuItem);
-        demolishMenuItem.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Block block=new FreePlace(0,0,0,BlockState.UNDER_PLACEMENT);
-                startPlaceSelectionMode(block);
-            }
-        });
-        //------------ vege ---------------
-    }
 
     private boolean buildBlock(Block b){
         if(b instanceof FreePlace) {
@@ -285,8 +175,7 @@ public class MainWindow2 extends JFrame{
             return true;
         }
         boolean l=engine.buildBlock(b);
-        if(l){
-            field.repaint();
+        if(l){field.repaint();
         }else{
             System.out.println("Foglalt!");
         }
@@ -298,12 +187,12 @@ public class MainWindow2 extends JFrame{
             System.err.println("Place selection mode is already inactive");
         }else{
             isPlaceSelectionMode=false;
-            field.removeMouseListener(placementListener);
+            isShowInfoMode=true;
             field.disableMouseFollowing();
         }
     }
 
-    private boolean startPlaceSelectionMode(Block toBuild){
+    boolean startPlaceSelectionMode(Block toBuild){
         if(isPlaceSelectionMode){
             System.err.println("Already in place selection mode");
             return false;
@@ -311,36 +200,36 @@ public class MainWindow2 extends JFrame{
             isShowInfoMode=false;
             isPlaceSelectionMode=true;
             field.enableMouseFollowing(toBuild);
+            this.toBuild=toBuild;
             System.out.println("Select a place");
-            placementListener = new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                }
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if(MouseEvent.BUTTON1==e.getButton()){//Left-click
-                        Position clickedHere=new Position(e.getX(),e.getY(),true);
-                        //toBuild.pos=new Position(clickedHere.getX_asIndex(),clickedHere.getY_asIndex(),false);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
-                        toBuild.pos=Position.useMagicGravity(clickedHere);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
-                        if(toBuild instanceof FreePlace){
-                            toBuild.size= engine.getPg().blocks[toBuild.pos.getX_asIndex()][toBuild.pos.getY_asIndex()].getSize();
-                            toBuild.pos=engine.getPg().blocks[toBuild.pos.getX_asIndex()][toBuild.pos.getY_asIndex()].getPos();
-                        }
-                        buildBlock(toBuild);
-                        //System.out.println("Block placed");
-                        stopPlaceSelectionMode();
-                    }else if(MouseEvent.BUTTON3==e.getButton()){//right-click
-                        System.out.println("Cancelled with mouse right click");
-                        stopPlaceSelectionMode();
-                    }
-
-                }
-            };
-
-            field.addMouseListener(placementListener);
         }
         return true;
+    }
+
+    public void onFieldClick(MouseEvent e){
+        Position clickedHere=new Position(e.getX(),e.getY(),true);
+        if(isShowInfoMode && !isPlaceSelectionMode && MouseEvent.BUTTON1==e.getButton()){
+            Block selectedBlock=engine.getPg().blocks[clickedHere.getX_asIndex()][clickedHere.getY_asIndex()];
+            if(selectedBlock !=null){
+                BlockInfoDialog blockInfoDialog = new BlockInfoDialog(this,selectedBlock);
+                blockInfoDialog.setVisible(true);
+            }else{
+                System.out.println("Block is null");
+            }
+        }else if(isPlaceSelectionMode){
+            if(MouseEvent.BUTTON1==e.getButton()){//Left-click
+                toBuild.pos=Position.useMagicGravity(clickedHere);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
+                if(toBuild instanceof FreePlace){
+                    toBuild.size= engine.getPg().blocks[toBuild.pos.getX_asIndex()][toBuild.pos.getY_asIndex()].getSize();
+                    toBuild.pos=engine.getPg().blocks[toBuild.pos.getX_asIndex()][toBuild.pos.getY_asIndex()].getPos();
+                }
+                buildBlock(toBuild);
+                stopPlaceSelectionMode();
+            }else if(MouseEvent.BUTTON3==e.getButton()){//right-click
+                System.out.println("Cancelled with mouse right click");
+                stopPlaceSelectionMode();
+            }
+        }
     }
 
 }

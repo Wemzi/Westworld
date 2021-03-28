@@ -4,7 +4,6 @@ import Model.Blocks.*;
 import Model.People.*;
 
 import java.awt.*;
-import java.security.Provider;
 import java.util.ArrayList;
 
 import static View.MainWindow2.NUM_OF_COLS;
@@ -126,7 +125,7 @@ public class Playground {
      *          False literálisan, ha valamelyik helyen nem freeplace van
      *          True ha az összesen helyen freeplace van
      */
-    public boolean isBuildable(Block block){
+    public boolean isBuildable(Block block){ //todo implement for Entrance
         if(block instanceof GarbageCan){
             if(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof Road){
                 return !((Road) blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()]).isHasGarbageCan();
@@ -139,6 +138,7 @@ public class Playground {
         int blockFromY = block.getPos().getY_asIndex();
         int blockMaxX = blockFromX + block.getSize().getX_asIndex();
         int blockMaxY = blockFromY + block.getSize().getY_asIndex();
+        if(blockMaxX >= NUM_OF_COLS || blockMaxY >=NUM_OF_ROWS){return false;}// Ha kilóg, akkor nyilván nem építhető
 
         for(int x=blockFromX; x<blockMaxX; ++x)
             for(int y=blockFromY; y<blockMaxY; ++y)
@@ -192,6 +192,70 @@ public class Playground {
                 repairmen.remove(repairmen.size()-1);
                 return true;
             } else { return false; }
+        }
+        return false;
+    }
+
+    public boolean findRoute(Visitor visitor, Position start, Position destination) {
+        boolean visited[][] = new boolean[NUM_OF_COLS][NUM_OF_ROWS];
+
+        for (int i = 0; i < NUM_OF_COLS; i++)
+            for (int j = 0; j < NUM_OF_ROWS; j++)
+                if (i == start.getX_asIndex() && j == start.getY_asIndex() && !visited[i][j])
+                    if (isPath(i, j, visited, destination, visitor)) {
+                        visitor.getPathPositionList().add(new Position(i,j,false));
+                        return true;
+                    }
+
+        return false;
+    }
+    public boolean isSafe(int i, int j) {
+        if (i >= 0 && i < blocks.length && j >= 0 && j < blocks[0].length)
+            return true;
+
+        return false;
+    }
+
+    public boolean isPath(int i, int j, boolean visited[][], Position destination, Visitor visitor) {
+        if (isSafe(i, j) &&
+                (blocks[i][j] instanceof Road || blocks[i][j] instanceof Game || blocks[i][j] instanceof ServiceArea) &&
+                !visited[i][j]) {
+
+            visited[i][j] = true;
+
+            if (i == destination.getX_asIndex() && j == destination.getY_asIndex()){
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+
+            boolean up = isPath(i - 1, j, visited, destination, visitor);
+
+            if (up){
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+
+            boolean left = isPath(i, j - 1, visited, destination, visitor);
+
+            if (left){
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+
+            boolean down = isPath(i + 1, j, visited, destination, visitor);
+
+
+            if (down){
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
+
+            boolean right = isPath(i, j + 1, visited, destination, visitor);
+
+            if (right) {
+                visitor.getPathPositionList().add(new Position(i,j,false));
+                return true;
+            }
         }
         return false;
     }

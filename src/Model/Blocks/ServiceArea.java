@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class ServiceArea extends Block {
+public class ServiceArea extends Block implements Queueable{
     private int menuCost;
     private ArrayBlockingQueue<Visitor> queue;
     private ArrayList<Employee> workers;
@@ -42,7 +42,7 @@ public class ServiceArea extends Block {
             this.size=new Position(3,1,false);
             workers = new ArrayList<>();
             queue = new ArrayBlockingQueue<>(this.capacity);
-            this.cooldownTime=1;
+            this.cooldownTime=10;
         }
         else if(type==ServiceType.TOILET)
         {
@@ -56,7 +56,7 @@ public class ServiceArea extends Block {
             this.size=new Position(1,2,false);
             workers = new ArrayList<>();
             queue = new ArrayBlockingQueue<>(this.capacity);
-            this.cooldownTime=1;
+            this.cooldownTime=10;
         }
         else throw new RuntimeException("Invalid type of service!");
     }

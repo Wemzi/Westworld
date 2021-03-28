@@ -1,15 +1,20 @@
 package Model.People;
 
-import Model.Blocks.Block;
 import Model.Blocks.Game;
 import Model.Blocks.Road;
 import Model.Blocks.ServiceArea;
 import Model.Position;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 import java.awt.*;
 
 public class Visitor extends Person {
+    private ArrayList<Position> pathPosition;
+    public boolean isMoving;
+    public int pathPositionIndex;
+
     private int happiness;
     private int hunger;
     private int playfulness;
@@ -25,8 +30,12 @@ public class Visitor extends Person {
         Random rnd = new Random();
         happiness = rnd.nextInt() % 100;
         hunger = rnd.nextInt() % 100;
-        playfulness = rnd.nextInt() % 100;
+        playfulness = 50;
         stayingTime = rnd.nextInt() % 500;
+        pathPosition = new ArrayList<>();
+        isMoving = false;
+        pathPositionIndex = 0;
+        state = VisitorState.DOESNT_KNOW;
     }
 
     public void playGame(Game that) {
@@ -55,9 +64,7 @@ public class Visitor extends Person {
     }
 
     // TODO : én beállítom úgy a stateket, hogy akar valamit csinálni, Alex pedig visszaállítja arra, hogy készen van
-    // TODO : gamespeed related paraméter hozzáadása
     public void roundHasPassed(int minutesPerSecond) {
-
         if(state.equals(VisitorState.WANNA_LEAVE) || state.equals(VisitorState.WANNA_TOILET))
         {
             return;
@@ -125,6 +132,8 @@ public class Visitor extends Person {
     public int getStayingTime() {
         return stayingTime;
     }
+
+    public ArrayList<Position> getPathPositionList() { return pathPosition; }
 
 
     @Override
