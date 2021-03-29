@@ -54,4 +54,7 @@ public class Road extends Block {
                 ", garbage=" + garbage +
                 " " + super.toString();
     }
+
+    @Override
+    public String getName(){return "Road"; }
 }

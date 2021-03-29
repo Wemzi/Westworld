@@ -20,4 +20,7 @@ public class GarbageCan extends Block{
     public Color getColor() {
         return Color.GREEN;
     }
+
+    @Override
+    public String getName(){return "Garbage Can";}
 }
