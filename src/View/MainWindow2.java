@@ -2,7 +2,9 @@
 package View;
 
 import Model.Blocks.Block;
+import Model.Blocks.BlockState;
 import Model.Blocks.FreePlace;
+import Model.Blocks.Road;
 import Model.GameEngine;
 import Model.Position;
 
@@ -11,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 /**
  *
@@ -20,7 +23,7 @@ public class MainWindow2 extends JFrame{
     public static final int BOX_SIZE=40;//hany pixel szeles legyen egy elem a matrixban
     public static final int NUM_OF_COLS =25;//oszlopok szama
     public static final int NUM_OF_ROWS =12;//sorok szama
-    public static final int FPS=20;
+    public static final int FPS=50;
 
     private final GameField field;
     private final GameEngine engine;
@@ -59,7 +62,29 @@ public class MainWindow2 extends JFrame{
         });
 
         //handle click event
-        field.addMouseListener(new MouseAdapter(){@Override public void mouseClicked(MouseEvent e) {onFieldClick(e);}});
+        field.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                if(toBuild instanceof Road){return;}
+                onFieldClick(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if(toBuild instanceof Road){onFieldClick(e);}
+                //super.mouseReleased(e);
+            }
+        });
+
+        field.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if(isPlaceSelectionMode && toBuild instanceof Road){
+                    toBuild=new Road(100,5,0, BlockState.UNDER_PLACEMENT,false,((Road) toBuild).isEntrance(),0);
+                    onFieldClick(e);
+                }
+            }
+        });
 
         //labels
         moneyLabel=new JLabel("Money: $0");
@@ -176,7 +201,7 @@ public class MainWindow2 extends JFrame{
         }
         boolean l=engine.buildBlock(b);
         if(l){field.repaint();
-        }else{
+        }else if(! (toBuild instanceof Road)){
             System.out.println("Foglalt!");
         }
         return l;
@@ -217,14 +242,14 @@ public class MainWindow2 extends JFrame{
                 System.out.println("Block is null");
             }
         }else if(isPlaceSelectionMode){
-            if(MouseEvent.BUTTON1==e.getButton()){//Left-click
+            if(MouseEvent.BUTTON1==e.getButton() || MouseEvent.NOBUTTON == e.getButton() && toBuild instanceof Road){//Left-click
                 toBuild.pos=Position.useMagicGravity(clickedHere);//beigazitja egy negyzetbe/dobozba, h ne random pixelen kezdodjon
                 if(toBuild instanceof FreePlace){
                     toBuild.size= engine.getPg().blocks[toBuild.pos.getX_asIndex()][toBuild.pos.getY_asIndex()].getSize();
                     toBuild.pos=engine.getPg().blocks[toBuild.pos.getX_asIndex()][toBuild.pos.getY_asIndex()].getPos();
                 }
                 buildBlock(toBuild);
-                stopPlaceSelectionMode();
+                if(MouseEvent.NOBUTTON != e.getButton()){stopPlaceSelectionMode();}
             }else if(MouseEvent.BUTTON3==e.getButton()){//right-click
                 System.out.println("Cancelled with mouse right click");
                 stopPlaceSelectionMode();

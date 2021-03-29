@@ -126,6 +126,12 @@ public class Playground {
      *          True ha az összesen helyen freeplace van
      */
     public boolean isBuildable(Block block){ //todo implement for Entrance
+        int blockFromX = block.getPos().getX_asIndex();
+        int blockFromY = block.getPos().getY_asIndex();
+
+
+        if(blockFromX<0 || blockFromX >=NUM_OF_COLS ||blockFromY<0 || blockFromY >=NUM_OF_ROWS ){return false;} //Nincs a fieldben
+
         if(block instanceof GarbageCan){
             if(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof Road){
                 return !((Road) blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()]).isHasGarbageCan();
@@ -134,11 +140,10 @@ public class Playground {
         }
         if(!(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof FreePlace)) return false;
 
-        int blockFromX = block.getPos().getX_asIndex();
-        int blockFromY = block.getPos().getY_asIndex();
+
         int blockMaxX = blockFromX + block.getSize().getX_asIndex();
         int blockMaxY = blockFromY + block.getSize().getY_asIndex();
-        if(blockMaxX >= NUM_OF_COLS || blockMaxY >=NUM_OF_ROWS){return false;}// Ha kilóg, akkor nyilván nem építhető
+        if(blockMaxX > NUM_OF_COLS || blockMaxY >NUM_OF_ROWS){return false;}// Ha kilóg, akkor nyilván nem építhető
 
         for(int x=blockFromX; x<blockMaxX; ++x)
             for(int y=blockFromY; y<blockMaxY; ++y)
