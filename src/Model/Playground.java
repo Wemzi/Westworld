@@ -156,7 +156,8 @@ public class Playground {
         if(money < salary) return false;
 
         if(e instanceof Caterer) {
-            cateres.add(new Caterer(new Position(0, 0, false), salary));
+            cateres.add((Caterer) e);
+            ((Caterer) e).workPlace.addWorker((Caterer) e);
             return true;
         } else if(e instanceof Cleaner) {
             cleaners.add(new Cleaner(new Position(0,0,false), salary));
@@ -177,6 +178,7 @@ public class Playground {
         if(e instanceof Caterer) {
             if (cateres.size() > 0) {
                 cateres.remove(cateres.size() - 1);
+                ((Caterer) e).workPlace.getWorkers().remove(e);
                 return true;
             } else { return false; }
         }

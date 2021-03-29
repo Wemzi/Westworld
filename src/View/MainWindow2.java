@@ -26,7 +26,7 @@ public class MainWindow2 extends JFrame{
     public static final int FPS=50;
 
     private final GameField field;
-    private final GameEngine engine;
+    public final GameEngine engine;
 
     private boolean isPlaceSelectionMode=false;
     private Block toBuild;
@@ -72,7 +72,6 @@ public class MainWindow2 extends JFrame{
             @Override
             public void mouseReleased(MouseEvent e) {
                 if(toBuild instanceof Road){onFieldClick(e);}
-                //super.mouseReleased(e);
             }
         });
 

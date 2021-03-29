@@ -1,7 +1,7 @@
 package Model.Blocks;
 
+import Model.People.Caterer;
 import Model.People.Employee;
-import Model.People.Operator;
 import Model.People.Visitor;
 import Model.Position;
 
@@ -61,7 +61,7 @@ public class ServiceArea extends Block implements Queueable{
         else throw new RuntimeException("Invalid type of service!");
     }
 
-    public void addWorker(Operator o){workers.add(o);}
+    public void addWorker(Caterer o){workers.add(o);}
     public void addVisitor(Visitor v){
         if( this.getState() == BlockState.FREE ) queue.add(v);
         else throw new RuntimeException("Visitor tried to get into queue, but state of Service Area wasn't 'FREE' ");

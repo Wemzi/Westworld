@@ -1,7 +1,10 @@
 package View;
 
 import Model.GameEngine;
-import Model.People.*;
+import Model.People.Cleaner;
+import Model.People.Employee;
+import Model.People.Operator;
+import Model.People.Repairman;
 import Model.Position;
 
 import javax.swing.*;
@@ -19,7 +22,7 @@ public class ManagementDialog extends JDialog {
         mainPanel.setBorder(new EmptyBorder(20,20,20,20));
 
 
-        mainPanel.add(createEmployeePanel("Caterer",engine,new Caterer(new Position(0,0,false),10,null)));
+        //mainPanel.add(createEmployeePanel("Caterer",engine,new Caterer(new Position(0,0,false),10,null)));
         mainPanel.add(createEmployeePanel("Cleaner",engine,new Cleaner(new Position(0,0,false),10)));
         mainPanel.add(createEmployeePanel("Operator",engine,new Operator(new Position(0,0,false),10,null)));
         mainPanel.add(createEmployeePanel("Repairman",engine,new Repairman(new Position(0,0,false),10)));

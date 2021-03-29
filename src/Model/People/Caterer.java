@@ -1,12 +1,12 @@
 package Model.People;
 
-import Model.Blocks.*;
+import Model.Blocks.ServiceArea;
 import Model.Position;
 
 import java.awt.*;
 
 public class Caterer extends Employee {
-    ServiceArea workPlace;
+    public ServiceArea workPlace;
 
     @Deprecated
     public Caterer(Position startingPos, int salary)
