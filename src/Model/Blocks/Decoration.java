@@ -72,4 +72,18 @@ public class Decoration  extends Block {
         public String toString() {
             return  "Decoration type: " + decorationType.toString() + " " + super.toString();
         }
+
+    @Override
+    public String getName()
+    {
+        switch(this.decorationType)
+        {
+            case MONKEYCAGE :return "Monkey Cage";
+            case JUNGLETREE: return "Jungle Tree";
+            case LAKE: return "Lake";
+            case FLOWERGARDEN: return "Flower Garden";
+            case BUSH : return "Bush";
+            default : return "undefined";
+        }
     }
+}

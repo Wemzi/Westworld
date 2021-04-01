@@ -222,4 +222,18 @@ public class Game extends Block implements Queueable{
                 ", cooldownTime=" + cooldownTime +
                 '}' + super.toString();
     }
+
+    @Override
+    public String getName()
+    {
+        switch(this.type)
+        {
+            case FERRISWHEEL: return "Ferris Wheel";
+            case RODEO: return "Rodeo";
+            case ROLLERCOASTER: return "Roller Coaster";
+            case DODGEM: return "Dodgem";
+            case SHOOTINGGALLERY: return "Shooting Gallery";
+            default : return "undefined";
+        }
+    }
 }

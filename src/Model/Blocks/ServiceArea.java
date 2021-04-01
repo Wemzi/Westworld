@@ -141,4 +141,15 @@ public class ServiceArea extends Block implements Queueable{
                 " " + super.toString();
     }
 
+    @Override
+    public String getName()
+    {
+        switch(this.type)
+        {
+            case BUFFET:return "Monkey Cage";
+            case TOILET: return "Jungle Tree";
+            default : return "undefined";
+        }
+    }
+
 }

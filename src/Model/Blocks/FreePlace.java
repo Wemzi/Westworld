@@ -22,4 +22,10 @@ public class FreePlace extends Block {
     public String toString() {
         return "FreePlace{}" + super.toString();
     }
+
+    @Override
+    public String getName()
+    { return "Free place";
+    }
+
 }
