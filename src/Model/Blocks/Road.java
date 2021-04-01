@@ -7,11 +7,24 @@ public class Road extends Block {
     private boolean isEntrance;
     private int garbage;
 
+
     public Road(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, boolean hasGarbageCan, boolean isEntrance, int garbage) {
         super(buildingCost, upkeepCost, popularityIncrease, state);
         this.hasGarbageCan = hasGarbageCan;
         this.isEntrance = isEntrance;
         this.garbage = garbage;
+        this.buildingCost = 100;
+        this.upkeepCost = 0;
+
+    }
+    public Road(boolean isEntrance, int garbage) {
+        super();
+        this.hasGarbageCan = hasGarbageCan;
+        this.isEntrance = isEntrance;
+        this.garbage = garbage;
+        this.buildingCost = 100;
+        this.upkeepCost = 0;
+
     }
 
     //getters setters

@@ -39,7 +39,7 @@ public class Visitor extends Person {
     }
 
     public void playGame(Game that) {
-        playfulness -= 50;
+        playfulness -= 100;
         happiness += 20;
         hunger += 15;
         currentActivityLength = that.getCooldownTime();

@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public abstract class Block {
 
+
     private static final int MAX_CONDITION=100;
     protected BlockState state;
     protected int buildingCost;
