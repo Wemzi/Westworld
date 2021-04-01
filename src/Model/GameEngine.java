@@ -126,7 +126,7 @@ public class GameEngine {
 
 
         isBuildingPeriod = false;
-        int minutesPerSecond = setTimerSpeed(5);
+        int minutesPerSecond = setTimerSpeed(10);
 
         Timer visitorTimer = new Timer();
         Timer timer = new Timer();
@@ -185,16 +185,16 @@ public class GameEngine {
                         if (v.isMoving) {
                             Position nextBlockPosition = v.getPathPositionList().get(v.pathPositionIndex);
 
-                            boolean isArrived = v.getPosition().getX_asIndex() == v.getPathPositionList().get(0).getX_asIndex() &&
-                                    v.getPosition().getY_asIndex() == v.getPathPositionList().get(0).getY_asIndex();
-                            boolean isSamePosition = v.getPosition().getX_asIndex() == nextBlockPosition.getX_asIndex()
-                                    && v.getPosition().getY_asIndex() == nextBlockPosition.getY_asIndex();
-                            boolean isDifferentPosition = v.getPosition().getX_asIndex() != nextBlockPosition.getX_asIndex()
-                                    || v.getPosition().getY_asIndex() != nextBlockPosition.getY_asIndex();
-                            boolean goingRight = nextBlockPosition.getX_asIndex() > v.getPosition().getX_asIndex();
-                            boolean goingLeft = nextBlockPosition.getX_asIndex() < v.getPosition().getX_asIndex();
-                            boolean goingUp = nextBlockPosition.getY_asIndex() > v.getPosition().getY_asIndex();
-                            boolean goingDown = nextBlockPosition.getY_asIndex() < v.getPosition().getY_asIndex();
+                            boolean isArrived = v.getPosition().getX_asPixel() == v.getPathPositionList().get(0).getX_asPixel() &&
+                                    v.getPosition().getY_asPixel() == v.getPathPositionList().get(0).getY_asPixel();
+                            boolean isSamePosition = v.getPosition().getX_asPixel() == nextBlockPosition.getX_asPixel()
+                                    && v.getPosition().getY_asPixel() == nextBlockPosition.getY_asPixel();
+                            boolean isDifferentPosition = v.getPosition().getX_asPixel() != nextBlockPosition.getX_asPixel()
+                                    || v.getPosition().getY_asPixel() != nextBlockPosition.getY_asPixel();
+                            boolean goingRight = nextBlockPosition.getX_asPixel() > v.getPosition().getX_asPixel();
+                            boolean goingLeft = nextBlockPosition.getX_asPixel() < v.getPosition().getX_asPixel();
+                            boolean goingUp = nextBlockPosition.getY_asPixel() > v.getPosition().getY_asPixel();
+                            boolean goingDown = nextBlockPosition.getY_asPixel() < v.getPosition().getY_asPixel();
 
                             if (isArrived) {
                                 v.isMoving = false;
@@ -243,14 +243,6 @@ public class GameEngine {
             @Override
             public void run() {
                 pg.setMinutes(pg.getMinutes() + minutesPerSecond);
-                //pg.getVisitors().add(new Visitor(entrancePosition));
-
-                /*vistorsComingPeriod[0] -= minutesPerSecond;
-                if(vistorsComingPeriod[0] <= 0) {
-                    vistorsComingPeriod[0] = 20;
-                    pg.getVisitors().add(new Visitor(entrancePosition));
-                }*/
-
 
                 for(Visitor v : pg.getVisitors()) {
                     v.setStayingTime(v.getStayingTime() - minutesPerSecond);
@@ -266,33 +258,6 @@ public class GameEngine {
                     }
                 }
 
-                    /*if(v.getPlayfulness() >= 50) {
-                        //TODO: if(v.isPlaying()) { akkor ez fut le ->
-                        // Van ilyen, v.isBusy néven
-                        for(Block b : pg.getBuildedObjectList()) {
-                            if(b instanceof Game) {
-                                v.setPosition(new Position(b.getPos().getX_asIndex(),b.getPos().getY_asIndex(),false));
-                                //TODO: playgame() eat()
-                                //TODO: RoundHasPassed()
-                            } else {
-
-                            }
-                            break;
-                        }
-                    }
-                    else if(v.getHunger() >= 50) {
-                        for(Block b: pg.getBuildedObjectList()) {
-                            if(b instanceof ServiceArea) {
-                                v.setPosition(new Position(b.getPos().getX_asIndex(),b.getPos().getY_asIndex(),false));
-                            } else {
-                                //v.setHappiness - 10
-                                pg.getVisitors().remove(v); // Elmegy ha nem kap kiszolgálást!
-                            }
-                            break;
-                        }
-                    }
-                }*/
-
                 if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
                     pg.setMinutes(0);
                     pg.setHours(pg.getHours()+1);
@@ -304,10 +269,11 @@ public class GameEngine {
                     pg.setHours(8);
                     pg.setDays(pg.getDays()+1);
 
-                    System.out.println("Nap vége! Mostantól lehet építkezni!");
-                    endDayPayOff(); //Nap végén lévő elszámolás
                     timer.cancel(); timer.purge(); // Timer leállítása a nap végén
+                    visitorTimer.cancel(); visitorTimer.purge(); // Visitor timer leállítása
+                    endDayPayOff(); //Nap végén lévő elszámolás
                     isBuildingPeriod = true;
+                    System.out.println("Nap véget ért!");
                 }
             }}, 1000, 1000);
         System.out.println("A nap elkeződött!");
@@ -324,12 +290,6 @@ public class GameEngine {
         for(Block b : pg.getBuildedObjectList()) {
             money -= b.getUpkeepCost();
             b.setCondition(b.getCondition()-1);
-
-            //TODO: Buggernyiós exceptiont dob egyelőre
-            /*for(Visitor v : pg.getVisitors()) {
-                pg.getVisitors().remove(v);
-            }*/
-            //További szimulációs lépések...
         }
         System.out.println("endPayOff msg: Építmények upkepp costjai ki lettek fizetve!");
 
