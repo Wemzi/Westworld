@@ -3,7 +3,6 @@ package Model;
 import Model.Blocks.*;
 import Model.People.*;
 
-import java.security.Provider;
 import java.util.*;
 
 //TODO: Szimuláció folyatása
@@ -67,7 +66,7 @@ public class GameEngine {
 
         for(int x=posFromX; x<demolishUntilX; ++x) {
             for(int y=posFromY; y<demolishUntilY; ++y) {
-                Block freeplaceBlock = new FreePlace(0,0,0,BlockState.FREE);
+                FreePlace freeplaceBlock = new FreePlace(0,0,0,BlockState.FREE);
                 freeplaceBlock.setPos(new Position(x,y,false));
                 pg.demolishBlock(freeplaceBlock, x, y);
             }

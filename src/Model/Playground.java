@@ -113,7 +113,7 @@ public class Playground {
         blocks[posX][posY] = block;
         return true;
     }
-    public void demolishBlock(Block block, int posX, int posY) {
+    public void demolishBlock(FreePlace block, int posX, int posY) {
         blocks[posX][posY] = block;
     }
 
