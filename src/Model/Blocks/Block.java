@@ -3,11 +3,11 @@ package Model.Blocks;
 import Model.Position;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 public abstract class Block {
-
-
+    protected static final Color DEFAULT_BACKGROUNG_COLOR=new Color(52, 177, 52);
     private static final int MAX_CONDITION=100;
     protected BlockState state;
     protected int buildingCost;
@@ -104,8 +104,6 @@ public abstract class Block {
         return popularityIncrease;
     }
 
-    abstract public Color getColor();
-
     public void setState(BlockState state) {
         this.state = state;
     }
@@ -145,5 +143,25 @@ public abstract class Block {
     public String getName(){
         //todo implement; Determine the type of this block and return a user-friendly string like "Ferris Wheel"
         return "Block";
+    }
+
+    abstract public Color getColor();
+
+    public void paint(Graphics2D gr){
+        gr.setColor(getColor());
+        gr.fillRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
+        gr.setColor(Color.BLACK);
+        gr.drawRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
+    }
+
+    public static BufferedImage resize(BufferedImage img, int newW, int newH) {
+        Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+        BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = dimg.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+
+        return dimg;
     }
 }

@@ -1,7 +1,6 @@
 package View;
 
 import Model.Blocks.Block;
-import Model.Blocks.Queueable;
 import Model.Blocks.Road;
 import Model.GameEngine;
 import Model.People.Visitor;
@@ -45,10 +44,12 @@ public class GameField extends JPanel {
         for(Block[] row : gameEngine.getPg().blocks){
             for(Block b : row){
                 if(b!=null){
+                    b.paint(gr);
+                    /*
                     gr.setColor(b.getColor());
                     gr.fillRect(b.pos.getX_asPixel(),b.pos.getY_asPixel(),b.size.getX_asPixel(),b.size.getY_asPixel());
                     gr.setColor(Color.BLACK);
-                    gr.drawRect(b.pos.getX_asPixel(),b.pos.getY_asPixel(),b.size.getX_asPixel(),b.size.getY_asPixel());
+                    gr.drawRect(b.pos.getX_asPixel(),b.pos.getY_asPixel(),b.size.getX_asPixel(),b.size.getY_asPixel());*/
 
                     if(b instanceof Road && ((Road) b).isHasGarbageCan()){
                         gr.setColor(Color.GREEN);
@@ -92,6 +93,7 @@ public class GameField extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D gr = (Graphics2D) g;
+        gr.setBackground(new Color(24, 83, 24));
         paintBlocks(gr,engine);
         paintVisitors(gr,engine);
 
@@ -115,9 +117,10 @@ public class GameField extends JPanel {
     }
 
     private static void drawBlockLabel(Block block, Graphics2D gr){
+        /*
         if(block instanceof Queueable){
             centerString(gr,getBlockAsRectangle(block),"V:"+((Queueable) block).getQueue().size());
-        }
+        }*/
 
     }
 

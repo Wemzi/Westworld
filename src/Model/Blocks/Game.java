@@ -4,13 +4,19 @@ import Model.People.Operator;
 import Model.People.Visitor;
 import Model.Position;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 
 
 
 public class Game extends Block implements Queueable{
+    private static final HashMap<GameType,BufferedImage> imgMap=new HashMap<>();
     private int ticketCost;
     private final ArrayBlockingQueue<Visitor> queue;
     private ArrayList<Operator> workers;
@@ -29,6 +35,7 @@ public class Game extends Block implements Queueable{
         this.cooldownTime = cooldownTime;
         this.buildingTime = 5 * cooldownTime;
         this.workers=new ArrayList<Operator>();
+        setupImage();
     }
     @Deprecated
     public Game(Position size, Position pos) {
@@ -36,6 +43,7 @@ public class Game extends Block implements Queueable{
         this.ticketCost = 0;
         this.capacity = 0;
         this.queue = new ArrayBlockingQueue<>(capacity);
+        setupImage();
     }
     // Implemented preset types of games
     public Game(GameType type,Position pos) {
@@ -87,7 +95,7 @@ public class Game extends Block implements Queueable{
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=60;
             this.capacity=15;
-            this.size= new Position(2, 3,false);
+            this.size= new Position(3, 2,false);
             this.pos = pos;
             this.cooldownTime = 5;
             this.buildingTime = 5 * cooldownTime;
@@ -108,6 +116,8 @@ public class Game extends Block implements Queueable{
             this.workers=new ArrayList<Operator>();
         }
         else throw new RuntimeException("Gametype not found at creating game, or not yet implemented");
+
+        setupImage();
     }
 
     @Override
@@ -235,5 +245,41 @@ public class Game extends Block implements Queueable{
             case SHOOTINGGALLERY: return "Shooting Gallery";
             default : return "undefined";
         }
+    }
+
+    private String getImagePath(){
+        switch (this.type) {
+            case FERRISWHEEL:
+                return "graphics/ferriswheel2.png";
+            case ROLLERCOASTER:
+                return "graphics/ROLLERCOASTER.png";
+            default:
+                return "undefined";
+        }
+    }
+
+    private void setupImage(){
+        String imgPath=getImagePath();
+        try {
+            if(!imgMap.containsKey(type) && !imgPath.equals("undefined")){
+                BufferedImage i= ImageIO.read(new File(imgPath));
+                BufferedImage img=resize(i, size.getX_asPixel(),size.getY_asPixel());
+                imgMap.put(type,img);
+            }
+        } catch (IOException e) {
+            System.err.println(imgPath+" not found");
+        }
+    }
+
+    @Override
+    public void paint(Graphics2D gr) {
+        if(!imgMap.containsKey(type)){
+            gr.setColor(getColor());
+            gr.fillRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
+        }else{
+            gr.drawImage(imgMap.get(type),pos.getX_asPixel(),pos.getY_asPixel(),DEFAULT_BACKGROUNG_COLOR,null);
+        }
+        gr.setColor(Color.BLACK);
+        gr.drawRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
     }
 }
