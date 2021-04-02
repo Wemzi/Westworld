@@ -21,7 +21,7 @@ public class testPlayground {
     public void buildBlock_game(){
         Position p=new Position(0,0,false);
         Block b=new Game(GameType.FERRISWHEEL,p);
-        assertTrue(pg.buildBlock(b));
+        assertTrue(pg.buildBlock(b,p.getX_asIndex(),p.getY_asIndex()));
         assertEquals(pg.blocks[0][0],b);
     }
 
@@ -30,9 +30,9 @@ public class testPlayground {
         Position p=new Position(0,0,false);
         Block b1=new Game(GameType.FERRISWHEEL,p);
         Block b2=new Game(GameType.FERRISWHEEL,p);
-        assertTrue(pg.buildBlock(b1));
+        assertTrue(pg.buildBlock(b1,0,0));
         assertEquals(pg.blocks[0][0],b1);
-        assertFalse(pg.buildBlock(b2));
+        assertFalse(pg.buildBlock(b2,0,0));
     }
 
     @Test
@@ -47,8 +47,9 @@ public class testPlayground {
     public void isBuildable_game(){
         Position p=new Position(0,0,false);
         Block b=new Game(GameType.FERRISWHEEL,p);
+        pg.buildBlock(new FreePlace(p),0,0);
         assertTrue(pg.blocks[0][0] instanceof FreePlace);
-        assertTrue(pg.isBuildable(b));
+        assertFalse(pg.isBuildable(b));
     }
 
     @Test
@@ -65,7 +66,7 @@ public class testPlayground {
         //init
         Position p =new Position(0,0,true);
         ServiceArea buffet=new ServiceArea(ServiceType.BUFFET,p);
-        pg.buildBlock(buffet);
+        pg.buildBlock(buffet,0,0);
 
         //before hire
         assertEquals(0, pg.getCateres().size());
@@ -86,7 +87,7 @@ public class testPlayground {
         //init
         Position p =new Position(0,0,true);
         ServiceArea buffet=new ServiceArea(ServiceType.BUFFET,p);
-        pg.buildBlock(buffet);
+        pg.buildBlock(buffet,0,0);
 
         //before hire
         assertEquals(0, pg.getCateres().size());

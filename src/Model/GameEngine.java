@@ -73,7 +73,7 @@ public class GameEngine {
 
         for (int x = posFromX; x < buildUntilX; ++x)
             for (int y = posFromY; y < buildUntilY; ++y)
-                pg.buildBlock(b);
+                pg.buildBlock(b,x,y);
 
         b.setState(BlockState.UNDER_CONSTRUCTION);
 

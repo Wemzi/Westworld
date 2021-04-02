@@ -59,14 +59,14 @@ public class Playground {
     /**
      * Metódus segítségével X,Y pozícióba lehet egy objektumot építeni
      * @param block : Megépítendő block
+     * @param posX
+     * @param posY
      * @return  false: HA adott blockon már van valami építve
      *          true: Ha adott blockon nincs még semmi építve
      */
-    public boolean buildBlock(Block block) {
-        //block.pos.setX_asIndex(posX);
-        //block.pos.setY_asIndex(posY);
-        if(!isBuildable(block)) return false;
-        blocks[block.pos.getX_asIndex()][block.pos.getY_asIndex()] = block;
+    public boolean buildBlock(Block block, int posX, int posY) {
+        if(!(blocks[posX][posY] instanceof FreePlace) && !Objects.isNull(blocks[posX][posY])) return false;
+        blocks[posX][posY] = block;
         return true;
     }
     public void demolishBlock(FreePlace block, int posX, int posY) {
