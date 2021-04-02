@@ -41,8 +41,7 @@ public class GameField extends JPanel {
     }
 
     private static void paintBlocks(Graphics2D gr,GameEngine gameEngine){
-        for(Block[] row : gameEngine.getPg().blocks){
-            for(Block b : row){
+        for(Block b : gameEngine.getPg().getBuildedObjectList()){
                 if(b!=null){
                     b.paint(gr);
                     /*
@@ -60,8 +59,6 @@ public class GameField extends JPanel {
 
                     drawBlockLabel(b,gr);
                 }
-
-            }
         }
     }
 

@@ -5,6 +5,7 @@ import Model.People.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static View.MainWindow2.NUM_OF_COLS;
 import static View.MainWindow2.NUM_OF_ROWS;
@@ -31,7 +32,7 @@ public class Playground {
     private int days, hours, minutes;
     private double popularity;
 
-    private Position entrancePosition;
+    Position entrancePosition;
 
     /* Konstruktor */
     public Playground() {
@@ -45,56 +46,11 @@ public class Playground {
         operators           = new ArrayList<>();
         repairmen           = new ArrayList<>();
 
-        for(int i = 0; i < NUM_OF_COLS; i++) {
-            for(int j = 0; j < NUM_OF_ROWS; j++) {
-                blocks[i][j] = new FreePlace(0,0,0,BlockState.FREE);
-                blocks[i][j].pos = new Position(i,j,false);
-            }
-        }
+
 
         money = 100_000;
         days = 1; hours = 8; minutes = 0;
         popularity = 0;
-
-
-        //test: Base Gamefield
-        blocks[5][0] = new Road(0,10,0,BlockState.FREE,false,true,0);
-        blocks[5][1] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[5][2] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[5][3] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[5][4] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[5][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[6][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[7][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[8][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[9][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[10][5] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[10][6] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[10][7] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[10][8] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[10][9] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[10][10] = new Road(0,10,0,BlockState.FREE,false,false,0);
-        blocks[10][11] = new Road(0,10,0,BlockState.FREE,false,true,0);
-
-        blocks[5][0].pos = new Position(5,0,false);
-        blocks[5][1].pos = new Position(5,1,false);
-        blocks[5][2].pos = new Position(5,2,false);
-        blocks[5][3].pos = new Position(5,3,false);
-        blocks[5][4].pos = new Position(5,4,false);
-        blocks[5][5].pos = new Position(5,5,false);
-        blocks[6][5].pos = new Position(6,5,false);
-        blocks[7][5].pos = new Position(7,5,false);
-        blocks[8][5].pos = new Position(8,5,false);
-        blocks[9][5].pos = new Position(9,5,false);
-        blocks[10][5].pos = new Position(10,5,false);
-        blocks[10][6].pos = new Position(10,6,false);
-        blocks[10][7].pos = new Position(10,7,false);
-        blocks[10][8].pos = new Position(10,8,false);
-        blocks[10][9].pos = new Position(10,9,false);
-        blocks[10][10].pos = new Position(10,10,false);
-        blocks[10][11].pos = new Position(10,11,false);
-
-        entrancePosition = new Position(5,0,false);
 
     }
 
@@ -102,15 +58,15 @@ public class Playground {
 
     /**
      * Metódus segítségével X,Y pozícióba lehet egy objektumot építeni
-     * @param block: Megépítendő block
-     * @param posX: GE-ből megkapott X pozíció ahová építeni kell
-     * @param posY: GE-ből megkapott Y pozíció ahová építeni kell
+     * @param block : Megépítendő block
      * @return  false: HA adott blockon már van valami építve
      *          true: Ha adott blockon nincs még semmi építve
      */
-    public boolean buildBlock(Block block, int posX, int posY) {
-        if(!(blocks[posX][posY] instanceof FreePlace)) return false;
-        blocks[posX][posY] = block;
+    public boolean buildBlock(Block block) {
+        //block.pos.setX_asIndex(posX);
+        //block.pos.setY_asIndex(posY);
+        if(!isBuildable(block)) return false;
+        blocks[block.pos.getX_asIndex()][block.pos.getY_asIndex()] = block;
         return true;
     }
     public void demolishBlock(FreePlace block, int posX, int posY) {
@@ -132,13 +88,15 @@ public class Playground {
 
         if(blockFromX<0 || blockFromX >=NUM_OF_COLS ||blockFromY<0 || blockFromY >=NUM_OF_ROWS ){return false;} //Nincs a fieldben
 
+        if(Objects.isNull(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()])){return true;}
+
         if(block instanceof GarbageCan){
             if(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof Road){
                 return !((Road) blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()]).isHasGarbageCan();
             }
             return false;
         }
-        if(!(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof FreePlace)) return false;
+        if(!(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof FreePlace) ) return false;
 
 
         int blockMaxX = blockFromX + block.getSize().getX_asIndex();

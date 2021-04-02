@@ -5,6 +5,9 @@ import Model.People.*;
 
 import java.util.*;
 
+import static View.MainWindow2.NUM_OF_COLS;
+import static View.MainWindow2.NUM_OF_ROWS;
+
 //TODO: Szimuláció folyatása
 
 public class GameEngine {
@@ -17,6 +20,33 @@ public class GameEngine {
     public GameEngine() {
         pg = new Playground();
         isBuildingPeriod = true;
+
+        for(int i = 0; i < NUM_OF_COLS; i++) {
+            for(int j = 0; j < NUM_OF_ROWS; j++) {
+                buildBlock(new FreePlace(new Position(i,j,false)));
+            }
+        }
+
+        //test: Base Gamefield
+        buildBlock(new Road(new Position(5,0,false),false,true));
+        buildBlock(new Road(new Position(5,1,false)));
+        buildBlock(new Road(new Position(5,2,false)));
+        buildBlock(new Road(new Position(5,3,false)));
+        buildBlock(new Road(new Position(5,4,false)));
+        buildBlock(new Road(new Position(5,5,false)));
+        buildBlock(new Road(new Position(6,5,false)));
+        buildBlock(new Road(new Position(7,5,false)));
+        buildBlock(new Road(new Position(8,5,false)));
+        buildBlock(new Road(new Position(9,5,false)));
+        buildBlock(new Road(new Position(10,5,false)));
+        buildBlock(new Road(new Position(10,6,false)));
+        buildBlock(new Road(new Position(10,7,false)));
+        buildBlock(new Road(new Position(10,8,false)));
+        buildBlock(new Road(new Position(10,9,false)));
+        buildBlock(new Road(new Position(10,10,false)));
+        buildBlock(new Road(new Position(10,11,false),false,true));
+
+        pg.entrancePosition = new Position(5,0,false);
     }
 
 
@@ -43,7 +73,7 @@ public class GameEngine {
 
         for (int x = posFromX; x < buildUntilX; ++x)
             for (int y = posFromY; y < buildUntilY; ++y)
-                pg.buildBlock(b, x, y);
+                pg.buildBlock(b);
 
         b.setState(BlockState.UNDER_CONSTRUCTION);
 
@@ -242,6 +272,10 @@ public class GameEngine {
             @Override
             public void run() {
                 pg.setMinutes(pg.getMinutes() + minutesPerSecond);
+
+                for(Game g: getPg().getBuildedGameList()){
+                    g.roundHasPassed(minutesPerSecond);
+                }
 
                 for(Visitor v : pg.getVisitors()) {
                     v.setStayingTime(v.getStayingTime() - minutesPerSecond);

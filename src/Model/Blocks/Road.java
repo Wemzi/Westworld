@@ -1,5 +1,6 @@
 package Model.Blocks;
 
+import Model.Position;
 import View.MainWindow2;
 
 import javax.imageio.ImageIO;
@@ -24,6 +25,19 @@ public class Road extends Block {
         this.buildingCost = 100;
         this.upkeepCost = 0;
         setupImage();
+    }
+
+    public Road(Position p){
+        super(0,10,0,BlockState.FREE, new Position(1,1,false), p);
+        hasGarbageCan=false;
+        isEntrance=false;
+        garbage=0;
+    }
+    public Road(Position p,boolean hasGarbageCan, boolean isEntrance){
+        super(0,10,0,BlockState.FREE, new Position(1,1,false), p);
+        this.hasGarbageCan=hasGarbageCan;
+        this.isEntrance=isEntrance;
+        garbage=0;
     }
 
     //getters setters

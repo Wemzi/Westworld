@@ -17,6 +17,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class Game extends Block implements Queueable{
     private static final HashMap<GameType,BufferedImage> imgMap=new HashMap<>();
+    private static final ArrayList<BufferedImage> movingFerrisWheel=new ArrayList();
     private int ticketCost;
     private final ArrayBlockingQueue<Visitor> queue;
     private ArrayList<Operator> workers;
@@ -149,6 +150,7 @@ public class Game extends Block implements Queueable{
 
     public void roundHasPassed(int minutesPerSecond)
     {
+        changeImg();
         if(workers.size() <= 1 )
         {
             state = BlockState.NOT_OPERABLE;
@@ -257,14 +259,32 @@ public class Game extends Block implements Queueable{
                 return "undefined";
         }
     }
+    private int movingCounter;
+
+    private void changeImg(){
+        if(type==GameType.FERRISWHEEL){
+            movingCounter=(movingCounter+1)%movingFerrisWheel.size();
+            imgMap.replace(type,movingFerrisWheel.get(movingCounter));
+        }
+    }
+
 
     private void setupImage(){
         String imgPath=getImagePath();
         try {
             if(!imgMap.containsKey(type) && !imgPath.equals("undefined")){
-                BufferedImage i= ImageIO.read(new File(imgPath));
-                BufferedImage img=resize(i, size.getX_asPixel(),size.getY_asPixel());
-                imgMap.put(type,img);
+                if(type==GameType.FERRISWHEEL){
+                    BufferedImage img1=resize(ImageIO.read(new File("graphics/ferriswheel1.png")), size.getX_asPixel(),size.getY_asPixel());
+                    BufferedImage img2=resize(ImageIO.read(new File("graphics/ferriswheel2.png")), size.getX_asPixel(),size.getY_asPixel());
+                    movingFerrisWheel.add(img1);
+                    movingFerrisWheel.add(img2);
+                    movingCounter=0;
+                    imgMap.put(type,movingFerrisWheel.get(movingCounter));
+                }else{
+                    BufferedImage i= ImageIO.read(new File(imgPath));
+                    BufferedImage img=resize(i, size.getX_asPixel(),size.getY_asPixel());
+                    imgMap.put(type,img);
+                }
             }
         } catch (IOException e) {
             System.err.println(imgPath+" not found");
