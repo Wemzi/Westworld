@@ -212,16 +212,19 @@ public class GameEngine {
                             System.out.println(v.getPathPositionList());
                         }
                         if (v.isMoving) {
-                            Position nextBlockPosition = v.getPathPositionList().get(v.pathPositionIndex);
-
-                            boolean isArrived = v.getPosition().getX_asPixel() == v.getPathPositionList().get(0).getX_asPixel() &&
-                                    v.getPosition().getY_asPixel() == v.getPathPositionList().get(0).getY_asPixel();
+                            boolean isArrived =  v.getPathPositionList().size()  == 0 || (v.getPosition().getX_asPixel() == v.getPathPositionList().get(0).getX_asPixel() &&
+                                    v.getPosition().getY_asPixel() == v.getPathPositionList().get(0).getY_asPixel());
+                            if(isArrived) {
+                                continue;
+                            }
+                            Position nextBlockPosition = null;
+                                    if(v.getPathPositionList().size() > 0) nextBlockPosition = v.getPathPositionList().get(v.pathPositionIndex);
                             boolean isSamePosition = v.getPosition().getX_asPixel() == nextBlockPosition.getX_asPixel()
                                     && v.getPosition().getY_asPixel() == nextBlockPosition.getY_asPixel();
                             boolean isDifferentPosition = v.getPosition().getX_asPixel() != nextBlockPosition.getX_asPixel()
                                     || v.getPosition().getY_asPixel() != nextBlockPosition.getY_asPixel();
-                            boolean goingRight = nextBlockPosition.getX_asPixel() > v.getPosition().getX_asPixel();
-                            boolean goingLeft = nextBlockPosition.getX_asPixel() < v.getPosition().getX_asPixel();
+                            boolean goingRight = v.getPathPositionList().size()  != 0 && nextBlockPosition.getX_asPixel() > v.getPosition().getX_asPixel();
+                            boolean goingLeft = v.getPathPositionList().size()  != 0  && nextBlockPosition.getX_asPixel() < v.getPosition().getX_asPixel();
                             boolean goingUp = nextBlockPosition.getY_asPixel() > v.getPosition().getY_asPixel();
                             boolean goingDown = nextBlockPosition.getY_asPixel() < v.getPosition().getY_asPixel();
 
