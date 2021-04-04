@@ -28,16 +28,14 @@ public class Road extends Block {
     }
 
     public Road(Position p){
-        super(0,10,0,BlockState.FREE, new Position(1,1,false), p);
-        hasGarbageCan=false;
-        isEntrance=false;
-        garbage=0;
+        this(p,false,false);
     }
     public Road(Position p,boolean hasGarbageCan, boolean isEntrance){
         super(0,10,0,BlockState.FREE, new Position(1,1,false), p);
         this.hasGarbageCan=hasGarbageCan;
         this.isEntrance=isEntrance;
         garbage=0;
+        setupImage();
     }
 
     //getters setters
