@@ -14,7 +14,7 @@ public class GameEngine {
     /* Adattagok */
     private Playground pg;
     private boolean isBuildingPeriod;
-    public static int TIME_1x=30;
+    public static int TIME_1x=5;
 
     /* Konstruktor */
     public GameEngine() {
@@ -155,14 +155,14 @@ public class GameEngine {
 
 
         isBuildingPeriod = false;
-        int minutesPerSecond = setTimerSpeed(10);
+        int minutesPerSecond = setTimerSpeed(5);
 
         Timer visitorTimer = new Timer();
         Timer timer = new Timer();
+        Random rnd = new Random();
         visitorTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                Random rnd = new Random();
                 try {
                     for (Visitor v : pg.getVisitors()) {
                         if(v.isBusy()) continue;
@@ -252,23 +252,23 @@ public class GameEngine {
                             else if (isDifferentPosition) {
 
                                 if (goingRight) {
-                                    v.setPosition(new Position(v.getPosition().getX_asPixel() + minutesPerSecond, v.getPosition().getY_asPixel(), true));
+                                    v.setPosition(new Position(v.getPosition().getX_asPixel() + minutesPerSecond/2, v.getPosition().getY_asPixel(), true));
                                 }
                                 if (goingLeft) {
-                                    v.setPosition(new Position(v.getPosition().getX_asPixel() - minutesPerSecond, v.getPosition().getY_asPixel(), true));
+                                    v.setPosition(new Position(v.getPosition().getX_asPixel() - minutesPerSecond/2, v.getPosition().getY_asPixel(), true));
                                 }
                                 if (goingUp) {
-                                    v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() + minutesPerSecond, true));
+                                    v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() + minutesPerSecond/2, true));
                                 }
                                 if (goingDown) {
-                                    v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() - minutesPerSecond, true));
+                                    v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() - minutesPerSecond/2, true));
                                 }
                             }
                         }
                     }
                 } catch (ConcurrentModificationException e){}
             }
-        },0,100);
+        },0,16);
 
         final int[] vistorsComingPeriod = {5};
         timer.scheduleAtFixedRate(new TimerTask() {

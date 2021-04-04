@@ -180,7 +180,7 @@ public class Playground {
 
         return false;
     }
-
+    //TODO: BUG, ha bal felső koordinátájhoz nem vezet út!
     public boolean isPath(int i, int j, boolean visited[][], Position destination, Visitor visitor) {
         if (isSafe(i, j) &&
                 (blocks[i][j] instanceof Road ||
