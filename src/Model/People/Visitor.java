@@ -50,7 +50,9 @@ public class Visitor extends Person {
         happiness += 5;
         playfulness += 50;
         currentActivityLength = where.getCooldownTime();
-        state = VisitorState.WANNA_TOILET;
+        System.out.println("state = wanna toilet kovi");
+        this.state = VisitorState.WANNA_TOILET;
+        System.out.println("Visitor evett, következő state: " + this.state);
     }
 
     public void toilet(ServiceArea where) {
@@ -65,7 +67,7 @@ public class Visitor extends Person {
 
     // TODO : én beállítom úgy a stateket, hogy akar valamit csinálni, Alex pedig visszaállítja arra, hogy készen van
     public void roundHasPassed(int minutesPerSecond) {
-        if(state.equals(VisitorState.WANNA_LEAVE) || state.equals(VisitorState.WANNA_TOILET))
+        if(state.equals(VisitorState.WANNA_LEAVE))
         {
             return;
         }
@@ -78,8 +80,7 @@ public class Visitor extends Person {
             this.state = VisitorState.WANNA_EAT;
             return;
         }
-        if(playfulness > 50 && hunger < 50)
-        {
+        if(playfulness > 50 && hunger < 50) {
             this.state = VisitorState.WANNA_PLAY;
             return;
         }
@@ -88,7 +89,11 @@ public class Visitor extends Person {
             state = VisitorState.WANNA_LEAVE;
             return;
         }
-        if (this.currentActivityLength == 0) {
+        else {
+            this.stayingTime -= minutesPerSecond;
+        }
+        if (this.currentActivityLength == 0)
+            {
             happiness-= minutesPerSecond;
         }
         else {

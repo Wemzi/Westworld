@@ -10,8 +10,6 @@ import java.util.Objects;
 import static View.MainWindow2.NUM_OF_COLS;
 import static View.MainWindow2.NUM_OF_ROWS;
 
-//TODO: Visitor happiness, befolyásolja a Popularity-t, amikor elmegy a parkból a visitor
-//TODO: Visitor teleportáljon a játékokhoz
 
 public class Playground {
 
@@ -167,7 +165,7 @@ public class Playground {
         for (int i = 0; i < NUM_OF_COLS; i++)
             for (int j = 0; j < NUM_OF_ROWS; j++)
                 if (i == start.getX_asIndex() && j == start.getY_asIndex() && !visited[i][j])
-                    if (isPath(i, j, visited, destination, visitor)) {
+                    if (isPath(i, j, visited, start, destination, visitor)) {
                         visitor.getPathPositionList().add(new Position(i,j,false));
                         return true;
                     }
@@ -180,15 +178,23 @@ public class Playground {
 
         return false;
     }
-
-    public boolean isPath(int i, int j, boolean visited[][], Position destination, Visitor visitor) {
-        if (isSafe(i, j) &&
-                (blocks[i][j] instanceof Road ||
-                        blocks[i][j] instanceof Game
-                                && blocks[i][j].getPos().getX_asIndex() == i && blocks[i][j].getPos().getY_asIndex() == j  ||
-                        blocks[i][j] instanceof ServiceArea
-                                && blocks[i][j].getPos().getX_asIndex() == i && blocks[i][j].getPos().getY_asIndex() == j) &&
-                !visited[i][j]) {
+    //TODO: BUG, ha bal felső koordinátájhoz nem vezet út!
+    public boolean isPath(int i, int j, boolean visited[][], Position start, Position destination, Visitor visitor) {
+        if (isSafe(i, j)
+                && (blocks[i][j] instanceof Road
+                        || blocks[i][j] instanceof Game
+                                && blocks[i][j].getPos().getX_asIndex() == destination.getX_asIndex()
+                                && blocks[i][j].getPos().getY_asIndex() == destination.getY_asIndex()
+                        || blocks[i][j] instanceof ServiceArea
+                                && blocks[i][j].getPos().getX_asIndex() == destination.getX_asIndex()
+                                && blocks[i][j].getPos().getY_asIndex() == destination.getY_asIndex()
+                        || blocks[i][j] instanceof Game
+                                && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
+                                && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex()
+                        || blocks[i][j] instanceof ServiceArea
+                                && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
+                                && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex())
+                && !visited[i][j]) {
 
             visited[i][j] = true;
 
@@ -197,25 +203,25 @@ public class Playground {
                 return true;
             }
 
-            boolean down = isPath(i + 1, j, visited, destination, visitor);
+            boolean down = isPath(i + 1, j, visited, start, destination, visitor);
             if (down){
                 visitor.getPathPositionList().add(new Position(i,j,false));
                 return true;
             }
 
-            boolean up = isPath(i - 1, j, visited, destination, visitor);
+            boolean up = isPath(i - 1, j, visited, start, destination, visitor);
             if (up){
                 visitor.getPathPositionList().add(new Position(i,j,false));
                 return true;
             }
 
-            boolean right = isPath(i, j + 1, visited, destination, visitor);
+            boolean right = isPath(i, j + 1, visited, start, destination, visitor);
             if (right) {
                 visitor.getPathPositionList().add(new Position(i,j,false));
                 return true;
             }
 
-            boolean left = isPath(i, j - 1, visited, destination, visitor);
+            boolean left = isPath(i, j - 1, visited, start, destination, visitor);
             if (left){
                 visitor.getPathPositionList().add(new Position(i,j,false));
                 return true;
