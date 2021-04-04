@@ -50,7 +50,9 @@ public class Visitor extends Person {
         happiness += 5;
         playfulness += 50;
         currentActivityLength = where.getCooldownTime();
-        state = VisitorState.WANNA_TOILET;
+        System.out.println("state = wanna toilet kovi");
+        this.state = VisitorState.WANNA_TOILET;
+        System.out.println("Visitor evett, következő state: " + this.state);
     }
 
     public void toilet(ServiceArea where) {
