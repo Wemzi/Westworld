@@ -27,6 +27,8 @@ public class Game extends Block implements Queueable{
     private int currentActivityTime;
     public GameType type;
 
+    //
+
     @Deprecated
     public Game(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, int ticketCost, int capacity, Position size, Position pos, int cooldownTime) {
         super(buildingCost, upkeepCost, popularityIncrease, state, size, pos);
@@ -96,7 +98,7 @@ public class Game extends Block implements Queueable{
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=60;
             this.capacity=15;
-            this.size= new Position(2, 3,false);
+            this.size= new Position(3, 2,false);
             this.pos = pos;
             this.cooldownTime = 5;
             this.buildingTime = 5 * cooldownTime;

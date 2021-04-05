@@ -65,7 +65,6 @@ public class Visitor extends Person {
         return there;
     }
 
-    // TODO : én beállítom úgy a stateket, hogy akar valamit csinálni, Alex pedig visszaállítja arra, hogy készen van
     public void roundHasPassed(int minutesPerSecond) {
         if(state.equals(VisitorState.WANNA_LEAVE))
         {
