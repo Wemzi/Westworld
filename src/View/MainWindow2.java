@@ -124,6 +124,11 @@ public class MainWindow2 extends JFrame{
             }
         });
 
+        JMenuItem buildemployeeBase = new JMenuItem("Employee Base");
+        buildemployeeBase.addActionListener( e -> {
+            engine.buildBlock(new EmployeeBase)
+        });
+
         JMenuItem timeOneMenuItem = new JMenuItem("Time 1x");
         timeOneMenuItem.addActionListener(new AbstractAction() {
             @Override
