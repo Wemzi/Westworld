@@ -146,8 +146,8 @@ public class ServiceArea extends Block implements Queueable{
     {
         switch(this.type)
         {
-            case BUFFET:return "Monkey Cage";
-            case TOILET: return "Jungle Tree";
+            case BUFFET:return "Buffet";
+            case TOILET: return "Toilet";
             default : return "undefined";
         }
     }
