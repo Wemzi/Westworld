@@ -1,6 +1,6 @@
 before_script:
    - apt-get update -qq
-   - apt-get install openjdk-15-jdk ant junit
+   - apt-get install openjdk-14-jdk ant junit
 
 
 build_program:
