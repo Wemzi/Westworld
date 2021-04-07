@@ -1,10 +1,7 @@
 
 package View;
 
-import Model.Blocks.Block;
-import Model.Blocks.BlockState;
-import Model.Blocks.FreePlace;
-import Model.Blocks.Road;
+import Model.Blocks.*;
 import Model.GameEngine;
 import Model.Position;
 
@@ -124,10 +121,7 @@ public class MainWindow2 extends JFrame{
             }
         });
 
-        JMenuItem buildemployeeBase = new JMenuItem("Employee Base");
-        buildemployeeBase.addActionListener( e -> {
-            engine.buildBlock(new EmployeeBase)
-        });
+
 
         JMenuItem timeOneMenuItem = new JMenuItem("Time 1x");
         timeOneMenuItem.addActionListener(new AbstractAction() {
