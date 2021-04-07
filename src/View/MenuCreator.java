@@ -76,6 +76,18 @@ public class MenuCreator {
         buildMenu.add(buildServiceMenu);
 
         //-----------Egy menu elem kezdete ------------
+        JMenuItem buildemployeeBase = new JMenuItem("Employee Base");
+        buildMenu.add(buildemployeeBase);
+        buildemployeeBase.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Block block = new EmployeeBase(50, 0, 0, BlockState.UNDER_PLACEMENT);
+                parent.startPlaceSelectionMode(block);
+            }
+        });
+        //------------ vege ---------------
+
+        //-----------Egy menu elem kezdete ------------
         JMenuItem roadMenuItem=new JMenuItem("Road");
         buildMenu.add(roadMenuItem);
         roadMenuItem.addActionListener(new AbstractAction() {
