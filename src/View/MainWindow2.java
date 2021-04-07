@@ -1,10 +1,7 @@
 
 package View;
 
-import Model.Blocks.Block;
-import Model.Blocks.BlockState;
-import Model.Blocks.FreePlace;
-import Model.Blocks.Road;
+import Model.Blocks.*;
 import Model.GameEngine;
 import Model.Position;
 
@@ -123,6 +120,8 @@ public class MainWindow2 extends JFrame{
                 System.exit(0);
             }
         });
+
+
 
         JMenuItem timeOneMenuItem = new JMenuItem("Time 1x");
         timeOneMenuItem.addActionListener(new AbstractAction() {
