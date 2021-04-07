@@ -7,9 +7,9 @@ build_program:
     stage: build
     script: 
         - javac src/Main.java
+        - javac.exe -cp junit-4.12.jar;src/ testGame.java
 
 test_program:
     stage: test
     script:
-        -ant compile-test   
-        -ant test
+        java.exe -cp .;junit-4.12.jar;hamcrest-core-1.3.jar;src/ org.junit.runner.JUnitCore testGame
