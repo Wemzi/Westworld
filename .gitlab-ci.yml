@@ -6,8 +6,7 @@ before_script:
 build_program:
     stage: build
     script: 
-        - ant compile
-        - ant jar   
+        - javac src/Main.java
 
 test_program:
     stage: test
