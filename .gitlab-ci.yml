@@ -1,0 +1,16 @@
+before_script:
+   - apt-get update -qq
+   - apt-get install openjdk-15-jdk ant junit
+
+
+build_program:
+    stage: build
+    script: 
+        - ant compile
+        - ant jar   
+
+test_program:
+    stage: test
+    script:
+        -ant compile-test   
+        -ant test
