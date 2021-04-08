@@ -8,8 +8,8 @@ before_script:
 build_program:
     stage: build
     script: 
-        - javac src/Main.java -Dfile.encoding=UTF-8
-        - javac.exe -cp junit-4.12.jar;src/ testGame.java
+        - javac -Dfile.encoding=UTF-8 src/Main.java 
+        - javac -cp junit-4.12.jar;src/ testGame.java
 
 test_program:
     stage: test
