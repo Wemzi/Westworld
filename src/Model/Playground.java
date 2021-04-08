@@ -16,15 +16,15 @@ public class Playground {
     /* Adattagok */
     public Block[][] blocks;
     private ArrayList<Block> buildedObjects;
-    private ArrayList<Game> builedGames;
-    private ArrayList<ServiceArea> builededServices;
+    private final ArrayList<Game> builedGames;
+    private final ArrayList<ServiceArea> builededServices;
 
-    private ArrayList<Visitor> visitors;
+    private final ArrayList<Visitor> visitors;
 
-    private ArrayList<Caterer> cateres;
-    private ArrayList<Cleaner> cleaners;
-    private ArrayList<Operator> operators;
-    private ArrayList<Repairman> repairmen;
+    private final ArrayList<Caterer> cateres;
+    private final ArrayList<Cleaner> cleaners;
+    private final ArrayList<Operator> operators;
+    private final ArrayList<Repairman> repairmen;
 
     private int money;
     private int days, hours, minutes;
@@ -116,15 +116,15 @@ public class Playground {
             ((Caterer) e).workPlace.addWorker((Caterer) e);
             return true;
         } else if(e instanceof Cleaner) {
-            cleaners.add(new Cleaner(new Position(0,0,false), salary));
+            cleaners.add((Cleaner)e);
             return true;
         }
         else if(e instanceof Operator) {
-            operators.add(new Operator(new Position(0,0,false), salary));
+            operators.add((Operator)e);
             return true;
         }
         else if(e instanceof Repairman) {
-            repairmen.add(new Repairman(new Position(0,0,false), salary));
+            repairmen.add((Repairman)e);
             return true;
         }
         else return false;
@@ -160,7 +160,7 @@ public class Playground {
     }
 
     public boolean findRoute(Visitor visitor, Position start, Position destination) {
-        boolean visited[][] = new boolean[NUM_OF_COLS][NUM_OF_ROWS];
+        boolean[][] visited = new boolean[NUM_OF_COLS][NUM_OF_ROWS];
 
         for (int i = 0; i < NUM_OF_COLS; i++)
             for (int j = 0; j < NUM_OF_ROWS; j++)
@@ -173,13 +173,10 @@ public class Playground {
         return false;
     }
     public boolean isSafe(int i, int j) {
-        if (i >= 0 && i < blocks.length && j >= 0 && j < blocks[0].length)
-            return true;
-
-        return false;
+        return i >= 0 && i < blocks.length && j >= 0 && j < blocks[0].length;
     }
     //TODO: BUG, ha bal felső koordinátájhoz nem vezet út!
-    public boolean isPath(int i, int j, boolean visited[][], Position start, Position destination, Visitor visitor) {
+    public boolean isPath(int i, int j, boolean[][] visited, Position start, Position destination, Visitor visitor) {
         if (isSafe(i, j)
                 && (blocks[i][j] instanceof Road
                         || blocks[i][j] instanceof Game
