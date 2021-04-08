@@ -8,7 +8,6 @@ before_script:
 build_program:
     stage: build
     script: 
-        - javac src/Main.java 
         - javac -cp junit-4.12.jar;src/ testGame.java
 
 test_program:
