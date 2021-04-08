@@ -1,3 +1,4 @@
+package tests;
 import Model.Blocks.*;
 import Model.GameEngine;
 import Model.People.Caterer;
