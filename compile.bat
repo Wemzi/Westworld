@@ -1,1 +1,0 @@
-C:\Users\lkcsdvd\.jdks\openjdk-15.0.2\bin\javac.exe -cp junit-4.12.jar;src/ testGame.java
