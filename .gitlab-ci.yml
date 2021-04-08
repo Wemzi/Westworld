@@ -1,3 +1,5 @@
+image: ubuntu:20.04
+
 before_script:
    - apt-get update -qq
    - apt-get install openjdk-14-jdk ant junit
