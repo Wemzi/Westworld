@@ -8,7 +8,7 @@ before_script:
 build_program:
     stage: build
     script: 
-        - javac -target 12 -encoding utf8 -cp junit-4.12.jar:src/ testGame.java
+        - javac -target 14 -encoding utf8 -cp junit-4.12.jar:src/ testGame.java
 
 test_program:
     stage: test
