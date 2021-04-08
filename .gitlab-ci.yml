@@ -13,4 +13,4 @@ build_program:
 test_program:
     stage: test
     script:
-        - java.exe -cp .;junit-4.12.jar;hamcrest-core-1.3.jar;src/ org.junit.runner.JUnitCore testGame
+        - java -cp .;junit-4.12.jar;hamcrest-core-1.3.jar;src/ org.junit.runner.JUnitCore testGame
