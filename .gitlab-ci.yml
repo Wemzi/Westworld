@@ -5,7 +5,7 @@ before_script:
    - apt-get install -yqq openjdk-14-jdk ant junit
 
 
-build_program:
+build_and_test:
     stage: build
     script: 
         - javac --release 14 -encoding utf8 -cp junit-4.12.jar:src/ testGame.java
