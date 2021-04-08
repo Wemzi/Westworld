@@ -8,8 +8,9 @@ before_script:
 build_and_do_unit_tests:
     stage: test
     script: 
-        - javac --release 14 -encoding utf8 -cp junit-4.12.jar:src/ testGame.java
-        - java -cp .:junit-4.12.jar:hamcrest-core-1.3.jar:src/ org.junit.runner.JUnitCore testGame
+        - javac --release 14 -encoding utf8 -cp .:junit-4.12.jar:src/ src/tests/testGame.java
+        - cd src
+        - java -cp .:junit-4.12.jar:hamcrest-core-1.3.jar:src/ org.junit.runner.JUnitCore tests.testGame
 
 
 build_main:
