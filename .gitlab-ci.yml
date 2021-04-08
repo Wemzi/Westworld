@@ -5,9 +5,15 @@ before_script:
     - apt-get install -yqq openjdk-14-jdk ant junit
 
 
-build_and_test:
+build_and_do_unit_tests:
     stage: test
     script: 
         - javac --release 14 -encoding utf8 -cp junit-4.12.jar:src/ testGame.java
         - java -cp .:junit-4.12.jar:hamcrest-core-1.3.jar:src/ org.junit.runner.JUnitCore testGame
+
+
+build_main:
+    stage: test
+    script: 
+        - javac --release 14 -encoding utf8 -cp junit-4.12.jar:src/ src/Main.java
         
