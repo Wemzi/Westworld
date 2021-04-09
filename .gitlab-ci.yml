@@ -16,5 +16,5 @@ build_and_do_unit_tests:
 build_main:
     stage: test
     script: 
-        - javac --release 14 -encoding utf8 -cp junit-4.12.jar:src/ src/Main.java
+        - javac --release 14 -encoding utf8 -cp src/tests/junit-4.12.jar:src/ src/Main.java
         
