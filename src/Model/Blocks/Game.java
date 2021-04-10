@@ -3,10 +3,10 @@ package Model.Blocks;
 import Model.People.Operator;
 import Model.People.Visitor;
 import Model.Position;
-import View.DynamicSpriteManager;
-import View.OneColorSpriteManager;
-import View.OnePicDynamicSpriteManager;
-import View.SpriteManager;
+import View.spriteManagers.DynamicSpriteManager;
+import View.spriteManagers.OneColorSpriteManager;
+import View.spriteManagers.OnePicDynamicSpriteManager;
+import View.spriteManagers.SpriteManager;
 
 import java.awt.*;
 import java.util.List;

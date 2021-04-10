@@ -1,4 +1,4 @@
-package View;
+package View.spriteManagers;
 
 import Model.Position;
 
@@ -17,6 +17,7 @@ public class OnePicDynamicSpriteManager extends SpriteManager {
     private int timeCounter;
 
     public OnePicDynamicSpriteManager(String imgPath, Position blockSize, List<Rectangle> rectangles, int timePeriod) {
+        super(blockSize);
         this.sprites= new LinkedList<>();
         try {
             BufferedImage whole = ImageIO.read(new File(imgPath));

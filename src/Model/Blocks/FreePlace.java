@@ -1,8 +1,8 @@
 package Model.Blocks;
 
 import Model.Position;
-import View.SpriteManager;
-import View.StaticSpriteManager;
+import View.spriteManagers.SpriteManager;
+import View.spriteManagers.StaticSpriteManager;
 
 import java.awt.*;
 import java.util.Objects;

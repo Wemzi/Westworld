@@ -1,4 +1,4 @@
-package View;
+package View.spriteManagers;
 
 import Model.Position;
 
@@ -11,6 +11,7 @@ public class StaticSpriteManager extends SpriteManager {
     private final BufferedImage img;
 
     public StaticSpriteManager(String imgPath, Position blockSize) {
+        super(blockSize);
         BufferedImage i= null;
         try {
             i = ImageIO.read(new File(imgPath));

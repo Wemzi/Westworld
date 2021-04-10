@@ -1,4 +1,4 @@
-package View;
+package View.spriteManagers;
 
 import Model.Position;
 
@@ -16,6 +16,7 @@ public class DynamicSpriteManager extends SpriteManager {
     private int timeCounter;
 
     public DynamicSpriteManager(List<String> spritePathes, Position blockSize,int timePeriod) {
+        super(blockSize);
         this.actualSpriteIndex =0;
         this.sprites = new LinkedList<>();
         for(String path : spritePathes){

@@ -4,9 +4,9 @@ import Model.People.Caterer;
 import Model.People.Employee;
 import Model.People.Visitor;
 import Model.Position;
-import View.OneColorSpriteManager;
-import View.SpriteManager;
-import View.StaticSpriteManager;
+import View.spriteManagers.OneColorSpriteManager;
+import View.spriteManagers.SpriteManager;
+import View.spriteManagers.StaticSpriteManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
