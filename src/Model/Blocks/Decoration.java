@@ -101,6 +101,9 @@ public class Decoration  extends Block {
             case LAKE:
                 spriteMap.put(decorationType,new StaticSpriteManager("graphics/lake.png",getSize()));
                 break;
+            case FLOWERGARDEN:
+                spriteMap.put(decorationType,new StaticSpriteManager("graphics/flowgarden.png",getSize()));
+                break;
             default:
                 spriteMap.put(decorationType,new OneColorSpriteManager(getColor(),getSize()));
                 break;

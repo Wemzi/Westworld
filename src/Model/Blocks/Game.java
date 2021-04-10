@@ -260,11 +260,19 @@ public class Game extends Block implements Queueable{
                 imgMap.put(type,new OnePicDynamicSpriteManager("graphics/rollercoaster.png",size,rectangles,10));
                 break;
             case FERRISWHEEL:
-                List<String> imgPaths= Arrays.asList("graphics/ferriswheel1.png", "graphics/ferriswheel2.png");
+                List<String> imgPaths = Arrays.asList("graphics/ferriswheel1.png", "graphics/ferriswheel2.png");
+                imgMap.put(type,new DynamicSpriteManager(imgPaths,size,5));
+                break;
+            case RODEO:
+                imgPaths = Arrays.asList("graphics/rodeo1.png", "graphics/rodeo2.png");
+                imgMap.put(type,new DynamicSpriteManager(imgPaths,size,5));
+                break;
+            case SHOOTINGGALLERY:
+                imgPaths = Arrays.asList("graphics/shooting_1.png", "graphics/shooting_2.png");
                 imgMap.put(type,new DynamicSpriteManager(imgPaths,size,5));
                 break;
             default:
-                imgMap.put(type,new OneColorSpriteManager(getColor(),getSize()));
+                imgMap.put(type,new OneColorSpriteManager(getColor(),getSize())); break;
         }
     }
 
