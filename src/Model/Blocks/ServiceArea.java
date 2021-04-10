@@ -9,10 +9,8 @@ import View.spriteManagers.SpriteManager;
 import View.spriteManagers.StaticSpriteManager;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class ServiceArea extends Block implements Queueable{
@@ -159,35 +157,20 @@ public class ServiceArea extends Block implements Queueable{
         }
     }
 
-    @Override
-    public void paint(Graphics2D gr) {
-        BufferedImage img=null;
-        if(spriteManagerMap.containsKey(type)){
-            img=spriteManagerMap.get(type).nextSprite();
-        }
-        if(Objects.isNull(img)){
-            gr.setColor(getColor());
-            gr.fillRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
-        }else{
-            gr.drawImage(img,pos.getX_asPixel(),pos.getY_asPixel(),null);
-        }
-        gr.setColor(Color.BLACK);
-        gr.drawRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
-    }
-
     private void setupSprites(){
         if(spriteManagerMap.containsKey(type)){return;}
         switch (this.type) {
             case TOILET:
-                spriteManagerMap.putIfAbsent(ServiceType.TOILET,new StaticSpriteManager("graphics/toilet.png",size));
+                spriteManagerMap.putIfAbsent(type,new StaticSpriteManager("graphics/toilet.png",size));
+                break;
             default:
-                spriteManagerMap.put(type,new OneColorSpriteManager(getColor(),getSize()));
+                spriteManagerMap.put(type,new OneColorSpriteManager(getColor(),getSize()));break;
         }
     }
 
     @Override
     protected SpriteManager getSpriteManager() {
         setupSprites();
-        return null;
+        return spriteManagerMap.get(type);
     }
 }
