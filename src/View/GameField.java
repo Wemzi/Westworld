@@ -66,6 +66,13 @@ public class GameField extends JPanel {
         return new Rectangle(block.pos.getX_asPixel(),block.pos.getY_asPixel(),block.size.getX_asPixel(),block.size.getY_asPixel());
     }
 
+    private static void paintVisitorsSprites(Graphics2D gr,GameEngine gameEngine){
+        ArrayList<Visitor> visitors=new ArrayList(gameEngine.getPg().getVisitors());
+        for(Visitor v : visitors){
+            v.paint(gr);
+        }
+    }
+
     private static void paintVisitors(Graphics2D gr,GameEngine gameEngine){
         int[][] visitorCounter=new int[NUM_OF_COLS][NUM_OF_ROWS];
         for(Visitor v : new ArrayList<>(gameEngine.getPg().getVisitors())){
@@ -92,7 +99,7 @@ public class GameField extends JPanel {
         Graphics2D gr = (Graphics2D) g;
         gr.setBackground(new Color(24, 83, 24));
         paintBlocks(gr,engine);
-        paintVisitors(gr,engine);
+        paintVisitorsSprites(gr,engine);
 
         if(mouseFollowing){
             Point p = getMousePosition();
