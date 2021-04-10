@@ -1,24 +1,22 @@
 package Model.Blocks;
 
 import Model.Position;
+import View.OneColorSpriteManager;
+import View.SpriteManager;
+import View.StaticSpriteManager;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
 
 public class Decoration  extends Block {
     private DecType decorationType;
-    private static final HashMap<DecType,BufferedImage> imgMap=new HashMap<>();
+    private static final HashMap<DecType, SpriteManager> spriteMap=new HashMap<>();
 
     @Deprecated
     public Decoration(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state) {
         super(buildingCost, upkeepCost, popularityIncrease, state);
-        this.decorationType = DecType.BUSH;
-        setupImage();
+        this.decorationType = DecType.JUNGLETREE;
     }
 
     public Decoration(DecType type,Position pos){
@@ -65,8 +63,6 @@ public class Decoration  extends Block {
             this.pos=pos;
         }
         else throw new RuntimeException("Invalid type of decoration!");
-
-        setupImage();
     }
 
     public DecType getDecorationType() {
@@ -95,39 +91,25 @@ public class Decoration  extends Block {
         }
     }
 
-    private String getImagePath(){
-        switch (this.decorationType) {
-            case JUNGLETREE:
-                return "graphics/Tree.png";
-            case LAKE:
-                return "graphics/lake.png";
-            default:
-                return "undefined";
-        }
-    }
-
     private void setupImage(){
-        String imgPath=getImagePath();
-        try {
-            if(!imgMap.containsKey(decorationType) && !imgPath.equals("undefined")){
-                BufferedImage i= ImageIO.read(new File(imgPath));
-                BufferedImage img=resize(i, size.getX_asPixel(),size.getY_asPixel());
-                imgMap.put(decorationType,img);
-            }
-        } catch (IOException e) {
-            System.err.println(imgPath+" not found");
+        if(spriteMap.containsKey(decorationType)){return;}
+        System.out.println(decorationType);
+        switch (decorationType) {
+            case JUNGLETREE:
+                spriteMap.put(decorationType,new StaticSpriteManager("graphics/Tree.png",getSize()));
+                break;
+            case LAKE:
+                spriteMap.put(decorationType,new StaticSpriteManager("graphics/lake.png",getSize()));
+                break;
+            default:
+                spriteMap.put(decorationType,new OneColorSpriteManager(getColor(),getSize()));
+                break;
         }
     }
 
     @Override
-    public void paint(Graphics2D gr) {
-        if(!imgMap.containsKey(decorationType)){
-            gr.setColor(getColor());
-            gr.fillRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
-        }else{
-            gr.drawImage(imgMap.get(decorationType),pos.getX_asPixel(),pos.getY_asPixel(),DEFAULT_BACKGROUNG_COLOR,null);
-        }
-        gr.setColor(Color.BLACK);
-        gr.drawRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
+    protected SpriteManager getSpriteManager() {
+        setupImage();
+        return spriteMap.get(decorationType);
     }
 }

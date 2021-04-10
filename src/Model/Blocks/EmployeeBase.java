@@ -2,18 +2,19 @@ package Model.Blocks;
 
 import Model.People.Caterer;
 import Model.People.Employee;
-import Model.People.Visitor;
-import Model.Position;
+import View.OneColorSpriteManager;
+import View.SpriteManager;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.Objects;
 
 public class EmployeeBase extends Block {
         private ArrayList<Employee> workers;
         private int cooldownTime;
         private int buildingTime;
         private int currentActivityTime;
+        private static SpriteManager spriteManager=null;
 
         public EmployeeBase(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state) {
             super(buildingCost, upkeepCost, popularityIncrease, state);
@@ -77,6 +78,11 @@ public class EmployeeBase extends Block {
             return "Employee Base";
         }
 
+    @Override
+    protected SpriteManager getSpriteManager() {
+        if(Objects.isNull(spriteManager)){spriteManager=new OneColorSpriteManager(getColor(),getSize());}
+        return spriteManager;
+    }
 }
 
 

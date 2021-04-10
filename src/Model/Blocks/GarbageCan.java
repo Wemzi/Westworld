@@ -1,10 +1,14 @@
 package Model.Blocks;
 
 import Model.Position;
+import View.OneColorSpriteManager;
+import View.SpriteManager;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class GarbageCan extends Block{
+    private static SpriteManager spriteManager;
 
     @Override
     public Position getPos() {
@@ -23,4 +27,10 @@ public class GarbageCan extends Block{
 
     @Override
     public String getName(){return "Garbage Can";}
+
+    @Override
+    protected SpriteManager getSpriteManager() {
+        if(Objects.isNull(spriteManager)){spriteManager=new OneColorSpriteManager(getColor(),getSize());}
+        return spriteManager;
+    }
 }

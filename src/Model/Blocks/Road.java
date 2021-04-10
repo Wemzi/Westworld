@@ -1,17 +1,14 @@
 package Model.Blocks;
 
 import Model.Position;
-import View.MainWindow2;
+import View.SpriteManager;
+import View.StaticSpriteManager;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 
 public class Road extends Block {
-    private static BufferedImage img=null;
+    private static SpriteManager spriteManager=null;
     private boolean hasGarbageCan;
     private boolean isEntrance;
     private int garbage;
@@ -24,7 +21,6 @@ public class Road extends Block {
         this.garbage = garbage;
         this.buildingCost = 100;
         this.upkeepCost = 0;
-        setupImage();
     }
 
     public Road(Position p){
@@ -35,7 +31,6 @@ public class Road extends Block {
         this.hasGarbageCan=hasGarbageCan;
         this.isEntrance=isEntrance;
         garbage=0;
-        setupImage();
     }
 
     //getters setters
@@ -82,25 +77,9 @@ public class Road extends Block {
     @Override
     public String getName(){return "Road"; }
 
-    private void setupImage(){
-        String imgPath="graphics/stone.png";
-        try {
-            BufferedImage i= ImageIO.read(new File(imgPath));
-            img=resize(i, MainWindow2.BOX_SIZE,MainWindow2.BOX_SIZE);
-        } catch (IOException e) {
-            System.err.println(imgPath+" not found");
-        }
-    }
-
     @Override
-    public void paint(Graphics2D gr) {
-        if(Objects.isNull(img)){
-            gr.setColor(getColor());
-            gr.fillRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
-        }else{
-            gr.drawImage(img,pos.getX_asPixel(),pos.getY_asPixel(),null);
-        }
-        gr.setColor(Color.BLACK);
-        gr.drawRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
+    protected SpriteManager getSpriteManager() {
+        if(Objects.isNull(spriteManager)){spriteManager=new StaticSpriteManager("graphics/stone.png",getSize());}
+        return spriteManager;
     }
 }

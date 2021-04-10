@@ -1,21 +1,24 @@
 package Model.Blocks;
 
 import Model.Position;
+import View.SpriteManager;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 public abstract class Block {
-    protected static final Color DEFAULT_BACKGROUNG_COLOR=new Color(52, 177, 52);
+    protected static final Color DEFAULT_BACKGROUND_COLOR =new Color(52, 177, 52);
     private static final int MAX_CONDITION=100;
     protected BlockState state;
     protected int buildingCost;
     private int buildingTime;
     protected int upkeepCost;
     protected int condition;
-    public Position size; //3 blokk szeles es 2 blokk magas. Ez egy relative kicsi szam!
-    //public Coord pos; //bal felso eleme hol van
+    public Position size;
 
     @Override
     public boolean equals(Object o) {
@@ -75,8 +78,9 @@ public abstract class Block {
         condition=MAX_CONDITION;
     }
 
+
+
     //Methods:
-    public void showInfoPanel(){}
 
     public Position getPos() {
         return pos;
@@ -141,27 +145,34 @@ public abstract class Block {
     }
 
     public String getName(){
-        //todo implement; Determine the type of this block and return a user-friendly string like "Ferris Wheel"
         return "Block";
     }
 
     abstract public Color getColor();
+    abstract protected SpriteManager getSpriteManager();
 
-    public void paint(Graphics2D gr){
-        gr.setColor(getColor());
-        gr.fillRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
-        gr.setColor(Color.BLACK);
-        gr.drawRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
+    private static BufferedImage workImage;
+    static {
+        try {
+            workImage = ImageIO.read(new File("graphics/work.png"));
+        } catch (IOException e) {
+            System.err.println("graphics/work.png not found");
+        }
     }
 
-    public static BufferedImage resize(BufferedImage img, int newW, int newH) {
-        Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
-        BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+    public void paint(Graphics2D gr){
+        /*
+        if(state==BlockState.UNDER_CONSTRUCTION || state == BlockState.UNDER_REPAIR){
+            //gr.drawImage(SpriteManager.resize(workImage,getSize()),pos.getX_asPixel(),pos.getY_asPixel(),DEFAULT_BACKGROUND_COLOR,null);
+        }else{
+            gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(),DEFAULT_BACKGROUND_COLOR,null);
+        }*/
+        gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(), DEFAULT_BACKGROUND_COLOR,null);
+        drawBorder(gr);
+    }
 
-        Graphics2D g2d = dimg.createGraphics();
-        g2d.drawImage(tmp, 0, 0, null);
-        g2d.dispose();
-
-        return dimg;
+    protected void drawBorder(Graphics2D gr){
+        gr.setColor(Color.BLACK);
+        gr.drawRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());
     }
 }
