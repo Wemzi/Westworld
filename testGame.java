@@ -195,10 +195,10 @@ public class testGame {
         assertTrue(engine.buildBlock(b0));
         assertEquals(engine.getPg().blocks[0][0],b0);
         assertEquals(engine.getPg().blocks[0][1],b0);
+        assertEquals(engine.getPg().blocks[0][2],b0);
         assertEquals(engine.getPg().blocks[1][0],b0);
         assertEquals(engine.getPg().blocks[1][1],b0);
-        assertEquals(engine.getPg().blocks[2][0],b0);
-        assertEquals(engine.getPg().blocks[2][1],b0);
+        assertEquals(engine.getPg().blocks[1][2],b0);
 
 
         Block b1=new Game(GameType.FERRISWHEEL,new Position(0,0,false));
