@@ -195,6 +195,7 @@ public class MainWindow2 extends JFrame{
     private boolean buildBlock(Block b){
         if(b instanceof FreePlace) {
             engine.demolish(b);
+            field.repaint();
             return true;
         }
         boolean l=engine.buildBlock(b);

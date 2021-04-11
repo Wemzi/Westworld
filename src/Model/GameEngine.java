@@ -165,6 +165,17 @@ public class GameEngine {
         visitorTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+
+
+
+                for(Game actual : pg.getBuildedGameList())
+                {
+                    actual.roundHasPassed(minutesPerSecond);
+                }
+                for(ServiceArea actual : pg.getBuildedServiceList())
+                {
+                    actual.roundHasPassed(minutesPerSecond);
+                }
                 try {
                     for (Visitor v : pg.getVisitors()) {
                         //if(v.isBusy()) continue; TODO: Ez így jelenleg buggos, mert sose változik meg az isBusy értéke az első mozgás után!

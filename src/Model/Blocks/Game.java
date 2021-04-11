@@ -162,7 +162,7 @@ public class Game extends Block implements Queueable{
         {
             currentActivityTime-=minutesPerSecond;
         }
-        else if(buildingTime == 0 && !(state.equals(BlockState.USED))) {
+        else if(buildingTime <= 0 && !(state.equals(BlockState.USED))) {
             state = BlockState.FREE;
         }
         else if(state.equals(BlockState.FREE) && queue.remainingCapacity()==0)
