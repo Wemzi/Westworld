@@ -69,7 +69,7 @@ public class ServiceArea extends Block implements Queueable{
     public void addWorker(Caterer o){workers.add(o);}
     public void addVisitor(Visitor v){
         if( this.getState() == BlockState.FREE ) queue.add(v);
-        else throw new RuntimeException("Visitor tried to get into queue, but state of Service Area wasn't 'FREE' ");
+        //else throw new RuntimeException("Visitor tried to get into queue, but state of Service Area wasn't 'FREE' ");
     }
 
     @Override

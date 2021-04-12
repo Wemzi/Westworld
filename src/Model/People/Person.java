@@ -14,7 +14,7 @@ import java.util.List;
 abstract public class Person {
     public static final Position personSize=new Position(MainWindow2.BOX_SIZE/2,MainWindow2.BOX_SIZE/2,true);
     private Position pos;
-    private Direction direction=Direction.NONE;
+    public  Direction direction=Direction.NONE;
     protected int currentActivityLength;
     protected Person(Position startingCoord)
     {

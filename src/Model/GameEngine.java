@@ -243,6 +243,7 @@ public class GameEngine {
                             boolean goingDown = nextBlockPosition.getY_asPixel() < v.getPosition().getY_asPixel();
 
                             if (isArrived) {
+
                                 v.isMoving = false;
                                 v.pathPositionIndex = 0;
                                 ArrayList<Position> copy = v.getPathPositionList();
@@ -268,15 +269,19 @@ public class GameEngine {
                             else if (isDifferentPosition) {
 
                                 if (goingRight) {
+                                    v.direction=Direction.RIGHT;
                                     v.setPosition(new Position(v.getPosition().getX_asPixel() + ((minutesPerSecond/3) + 1), v.getPosition().getY_asPixel(), true));
                                 }
                                 if (goingLeft) {
+                                    v.direction=Direction.LEFT;
                                     v.setPosition(new Position(v.getPosition().getX_asPixel() - ((minutesPerSecond/3) + 1), v.getPosition().getY_asPixel(), true));
                                 }
                                 if (goingUp) {
+                                    v.direction=Direction.UP;
                                     v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() + ((minutesPerSecond/3) + 1), true));
                                 }
                                 if (goingDown) {
+                                    v.direction=Direction.DOWN;
                                     v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() - ((minutesPerSecond/3) + 1), true));
                                 }
                             }
