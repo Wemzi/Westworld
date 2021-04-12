@@ -52,7 +52,7 @@ abstract public class Person {
     }
     protected Color getColor(){return Color.white;};
     abstract protected void roundHasPassed(int minutesPerSecond);
-    public boolean isBusy(){return currentActivityLength!=0;}
+    public boolean isBusy(){return currentActivityLength>0;}
 
     public abstract SpriteManager getSpriteManager();
 

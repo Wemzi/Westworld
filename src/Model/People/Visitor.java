@@ -26,10 +26,10 @@ public class Visitor extends Person {
     public Visitor(Position startingPos) {
         super(startingPos);
         Random rnd = new Random();
-        happiness = rnd.nextInt() % 100;
-        hunger = rnd.nextInt() % 100;
+        happiness = Math.abs(rnd.nextInt() % 100);
+        hunger = Math.abs(rnd.nextInt() % 100);
         playfulness = 50;
-        stayingTime = rnd.nextInt() % 500;
+        stayingTime = Math.abs(rnd.nextInt() % 500);
         isMoving = false;
         pathPositionIndex = 0;
         state = VisitorState.DOESNT_KNOW;
@@ -40,6 +40,7 @@ public class Visitor extends Person {
         happiness += 20;
         hunger += 15;
         currentActivityLength = that.getCooldownTime();
+        state = VisitorState.DOESNT_KNOW;
     }
 
     public void eat(ServiceArea where) {
@@ -50,11 +51,12 @@ public class Visitor extends Person {
         System.out.println("state = wanna toilet kovi");
         this.state = VisitorState.WANNA_TOILET;
         System.out.println("Visitor evett, következő state: " + this.state);
+        System.out.println(this.isBusy());
     }
 
     public void toilet(ServiceArea where) {
         currentActivityLength = where.getCooldownTime();
-        state = VisitorState.WANNA_PLAY;
+        state = VisitorState.DOESNT_KNOW;
     }
 
     public Road throwGarbage(Road there) {
@@ -63,41 +65,45 @@ public class Visitor extends Person {
     }
 
     public void roundHasPassed(int minutesPerSecond) {
-        if(state.equals(VisitorState.WANNA_LEAVE))
+
+        this.hunger += minutesPerSecond/5;
+        this.stayingTime -= minutesPerSecond;
+        currentActivityLength-= minutesPerSecond;
+        if(state != VisitorState.DOESNT_KNOW)
         {
             return;
         }
-        this.hunger += minutesPerSecond;
-        if (hunger < 50) {
+        if(state.equals(VisitorState.WANNA_LEAVE)) {
+            System.out.println("el akarok menni!");
+        }
+        else if (hunger < 50) {
             this.playfulness += minutesPerSecond * 2 ;
         }
-        else
+        else if(hunger > 50 && state == VisitorState.DOESNT_KNOW)
         {
             this.state = VisitorState.WANNA_EAT;
             return;
         }
-        if(playfulness > 50 && hunger < 50) {
+        if(playfulness > 50 && hunger < 50 && state == VisitorState.DOESNT_KNOW) {
             this.state = VisitorState.WANNA_PLAY;
             return;
         }
-        if(stayingTime == 0 )
+        /*
+        if(stayingTime < 0 && state == VisitorState.DOESNT_KNOW )
         {
             state = VisitorState.WANNA_LEAVE;
             return;
         }
-        else {
-            this.stayingTime -= minutesPerSecond;
-        }
-        if (this.currentActivityLength == 0)
+        */
+
+        if (this.currentActivityLength == 0 && state == VisitorState. DOESNT_KNOW)
             {
             happiness-= minutesPerSecond;
-        }
-        else {
-            currentActivityLength-= minutesPerSecond;
         }
         if(currentActivityLength <= 0)
         {
             currentActivityLength = 0;
+            state=VisitorState.DOESNT_KNOW;
         }
         return;
     }
@@ -146,6 +152,21 @@ public class Visitor extends Person {
 
     public void setPlayfulness(int playfulness) {
         this.playfulness = playfulness;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Visitor{" +
+                "currentActivityLength=" + currentActivityLength +
+                ", isMoving=" + isMoving +
+                ", pathPositionIndex=" + pathPositionIndex +
+                ", happiness=" + happiness +
+                ", hunger=" + hunger +
+                ", playfulness=" + playfulness +
+                ", stayingTime=" + stayingTime +
+                ", state=" + state +
+                '}';
     }
 
 
