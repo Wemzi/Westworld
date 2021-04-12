@@ -1,7 +1,10 @@
 
 package View;
 
-import Model.Blocks.*;
+import Model.Blocks.Block;
+import Model.Blocks.BlockState;
+import Model.Blocks.FreePlace;
+import Model.Blocks.Road;
 import Model.GameEngine;
 import Model.Position;
 
