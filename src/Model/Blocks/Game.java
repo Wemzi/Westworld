@@ -108,7 +108,7 @@ public class Game extends Block implements Queueable{
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.ticketCost=20;
             this.capacity=5;
-            this.size= new Position(1, 1,false);
+            this.size= new Position(2, 2,false);
             this.pos = pos;
             this.cooldownTime = 2;
             this.buildingTime = 5 * cooldownTime;
