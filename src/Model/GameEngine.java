@@ -343,7 +343,7 @@ public class GameEngine {
                 rounds[0] = 0;
                 for(Visitor v : pg.getVisitors()) {
                         v.roundHasPassed(minutesPerSecond);
-                        System.out.println(v.toString());
+                        //System.out.println(v.toString());
 
                     v.setStayingTime(v.getStayingTime() - minutesPerSecond);
                     if (v.getStayingTime() == 0) {
