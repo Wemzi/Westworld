@@ -4,17 +4,15 @@ import Model.Blocks.Game;
 import Model.Blocks.Road;
 import Model.Blocks.ServiceArea;
 import Model.Position;
-
-import java.util.ArrayList;
-import java.util.Random;
+import View.spriteManagers.OnePicDynamicSpriteManager;
+import View.spriteManagers.SpriteManager;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class Visitor extends Person {
-    private ArrayList<Position> pathPosition;
-    public boolean isMoving;
-    public int pathPositionIndex;
-
     private int happiness;
     private int hunger;
     private int playfulness;
@@ -32,7 +30,6 @@ public class Visitor extends Person {
         hunger = rnd.nextInt() % 100;
         playfulness = 50;
         stayingTime = rnd.nextInt() % 500;
-        pathPosition = new ArrayList<>();
         isMoving = false;
         pathPositionIndex = 0;
         state = VisitorState.DOESNT_KNOW;
@@ -137,8 +134,6 @@ public class Visitor extends Person {
         return stayingTime;
     }
 
-    public ArrayList<Position> getPathPositionList() { return pathPosition; }
-
 
     @Override
     protected Color getColor() {
@@ -151,5 +146,22 @@ public class Visitor extends Person {
 
     public void setPlayfulness(int playfulness) {
         this.playfulness = playfulness;
+    }
+
+
+    //drawing
+    private static final SpriteManager manager;
+
+    @Override
+    public SpriteManager getSpriteManager() {
+        return manager;
+    }
+
+    static{
+        //manager = new StaticSpriteManager("graphics/visitor.png",personSize);
+        List<Rectangle> rectangles= Arrays.asList(
+                new Rectangle(202,0,202,291)
+        );
+        manager=new OnePicDynamicSpriteManager("graphics/visitor.png",personSize,rectangles,10);
     }
 }

@@ -1,6 +1,8 @@
 package Model.Blocks;
 
+import Model.People.Cleaner;
 import Model.Position;
+import View.spriteManagers.OneColorSpriteManager;
 import View.spriteManagers.SpriteManager;
 import View.spriteManagers.StaticSpriteManager;
 
@@ -8,10 +10,14 @@ import java.awt.*;
 import java.util.Objects;
 
 public class Road extends Block {
-    private static SpriteManager spriteManager=null;
+    public enum GarbageLevel{NONE,FEW,LOT};
+    private static SpriteManager noGarbageSpriteManager =null;
+    private static SpriteManager fewGarbageSpriteManager =null;
+    private static SpriteManager lotGarbageSpriteManager =null;
     private boolean hasGarbageCan;
     private boolean isEntrance;
     private int garbage;
+    public Cleaner cleaner=null;
 
 
     public Road(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, boolean hasGarbageCan, boolean isEntrance, int garbage) {
@@ -53,6 +59,11 @@ public class Road extends Block {
     public int getGarbage() {
         return garbage;
     }
+    public GarbageLevel getGarbageLevel(){
+        if(garbage==0)return GarbageLevel.NONE;
+        if(garbage<33)return GarbageLevel.FEW;
+        return GarbageLevel.LOT;
+    }
 
     public void setGarbage(int garbage) {
         this.garbage = garbage;
@@ -79,7 +90,18 @@ public class Road extends Block {
 
     @Override
     protected SpriteManager getSpriteManager() {
-        if(Objects.isNull(spriteManager)){spriteManager=new StaticSpriteManager("graphics/stone.png",getSize());}
-        return spriteManager;
+        if(Objects.isNull(noGarbageSpriteManager)){
+            noGarbageSpriteManager =new StaticSpriteManager("graphics/stone.png",getSize());
+            fewGarbageSpriteManager =new OneColorSpriteManager(new Color(156, 73, 21),getSize());
+            lotGarbageSpriteManager =new OneColorSpriteManager(new Color(40, 39, 39),getSize());
+        }
+        switch (getGarbageLevel()){
+            case FEW :
+                return fewGarbageSpriteManager;
+            case LOT:
+                return lotGarbageSpriteManager;
+            default:
+                return noGarbageSpriteManager;
+        }
     }
 }
