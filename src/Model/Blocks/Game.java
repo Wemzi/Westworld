@@ -127,8 +127,8 @@ public class Game extends Block implements Queueable{
 
     public void addWorker(Operator o){workers.add(o);}
     public void addVisitor(Visitor v){
-        if( this.getState() == BlockState.FREE ) queue.add(v);
-        else throw new RuntimeException("Visitor tried to get into queue, but state of Game wasn't 'FREE' ");
+        if( this.getState() == BlockState.FREE ) queue.add(v); //todo es ha eppen megy a jatek?
+        //else throw new RuntimeException("Visitor tried to get into queue, but state of Game wasn't 'FREE' ");
     }
 
     public int getCooldownTime() {

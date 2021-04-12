@@ -232,7 +232,7 @@ public class GameEngine {
                             System.out.println("Visitor WC-re megy!");
                         }
                         if (v.isMoving) {
-                            Position nextBlockPosition = v.getPathPositionList().get(v.pathPositionIndex);
+                            Position nextBlockPosition = v.getPathPositionList().get(v.pathPositionIndex); //todo v.pathPositionIndex néha -1
 
                             boolean isArrived =  v.getPathPositionList().size()  == 0 || (v.getPosition().getX_asPixel() == v.getPathPositionList().get(0).getX_asPixel() &&
                                     v.getPosition().getY_asPixel() == v.getPathPositionList().get(0).getY_asPixel());
@@ -246,17 +246,24 @@ public class GameEngine {
                             boolean goingDown = nextBlockPosition.getY_asPixel() < v.getPosition().getY_asPixel();
 
                             if (isArrived) {
+
                                 v.isMoving = false;
                                 v.pathPositionIndex = 0;
                                 ArrayList<Position> copy = v.getPathPositionList();
                                 v.getPathPositionList().removeAll(copy);
 
                                 if(v.getState().equals(VisitorState.WANNA_TOILET) &&  interactwithme != null)
-                                    v.toilet((ServiceArea) interactwithme);
+                                    {v.toilet((ServiceArea) interactwithme);}
                                 else if(v.getState().equals(VisitorState.WANNA_PLAY) && interactwithme != null)
-                                    v.playGame((Game) interactwithme);
+                                    {
+                                        v.playGame((Game) interactwithme);
+                                        ((Game) interactwithme).addVisitor(v);
+                                    }
+
                                 else if(v.getState().equals(VisitorState.WANNA_EAT) && interactwithme != null)
-                                    v.eat( (ServiceArea) interactwithme);
+                                    {   v.eat( (ServiceArea) interactwithme);
+                                        ((ServiceArea) interactwithme).addVisitor(v);
+                                    }
 
                                 v.roundHasPassed(minutesPerSecond);
                                 System.out.println("Visitor megérkezett!");
@@ -268,15 +275,19 @@ public class GameEngine {
                             else if (isDifferentPosition) {
 
                                 if (goingRight) {
+                                    v.direction=Direction.RIGHT;
                                     v.setPosition(new Position(v.getPosition().getX_asPixel() + ((minutesPerSecond/3) + 1), v.getPosition().getY_asPixel(), true));
                                 }
                                 if (goingLeft) {
+                                    v.direction=Direction.LEFT;
                                     v.setPosition(new Position(v.getPosition().getX_asPixel() - ((minutesPerSecond/3) + 1), v.getPosition().getY_asPixel(), true));
                                 }
                                 if (goingUp) {
+                                    v.direction=Direction.UP;
                                     v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() + ((minutesPerSecond/3) + 1), true));
                                 }
                                 if (goingDown) {
+                                    v.direction=Direction.DOWN;
                                     v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() - ((minutesPerSecond/3) + 1), true));
                                 }
                             }
