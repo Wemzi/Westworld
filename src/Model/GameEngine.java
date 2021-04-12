@@ -15,6 +15,7 @@ public class GameEngine {
     private Playground pg;
     private boolean isBuildingPeriod;
     public static int TIME_1x=5;
+    private int minutesPerSecond = TIME_1x;
 
     /* Konstruktor */
     public GameEngine() {
@@ -151,7 +152,6 @@ public class GameEngine {
     public void startDay()  {
         if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return; }
         isBuildingPeriod = false;
-        int minutesPerSecond = 5;
 
         Position entrancePosition = pg.getEntrancePosition();
         pg.getVisitors().add(new Visitor(entrancePosition));
@@ -382,6 +382,6 @@ public class GameEngine {
     }
 
 
-    public  int setTimerSpeed(int minutesPerSecond) { return minutesPerSecond; }
+    public void setTimerSpeed(int setTO) { minutesPerSecond=setTO; }
 
 }
