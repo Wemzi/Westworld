@@ -127,21 +127,21 @@ public class MainWindow2 extends JFrame{
         timeOneMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                engine.setTimerSpeed(GameEngine.TIME_1x);
+                engine.setTimerSpeed(GameEngine.TIME_1X);
             }
         });
         JMenuItem timeTwoMenuItem = new JMenuItem("Time 2x");
         timeTwoMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                engine.setTimerSpeed(GameEngine.TIME_1x*2);
+                engine.setTimerSpeed(GameEngine.TIME_1X*2);
             }
         });
         JMenuItem timeThreeMenuItem = new JMenuItem("Time 3x");
         timeThreeMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                engine.setTimerSpeed(GameEngine.TIME_1x*3);
+                engine.setTimerSpeed(GameEngine.TIME_1X*3);
             }
         });
 

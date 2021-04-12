@@ -14,7 +14,8 @@ public class GameEngine {
     /* Adattagok */
     private Playground pg;
     private boolean isBuildingPeriod;
-    public static int TIME_1x=5;
+    public static int TIME_1X=5;
+    private static int minutesPerSecond=TIME_1X;
 
     /* Konstruktor */
     public GameEngine() {
@@ -151,7 +152,6 @@ public class GameEngine {
     public void startDay()  {
         if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return; }
         isBuildingPeriod = false;
-        int minutesPerSecond = 5;
 
         Position entrancePosition = pg.getEntrancePosition();
         pg.getVisitors().add(new Visitor(entrancePosition));
@@ -178,7 +178,8 @@ public class GameEngine {
                 }
                 try {
                     for (Visitor v : pg.getVisitors()) {
-                        //if(v.isBusy()) continue; TODO: Ez így jelenleg buggos, mert sose változik meg az isBusy értéke az első mozgás után!
+
+                        if(v.isBusy()) continue; //TODO: Ez így jelenleg buggos, mert sose változik meg az isBusy értéke az első mozgás után!
 
                         Position wheretogo = null;
                         Block interactwithme = null;
@@ -193,7 +194,6 @@ public class GameEngine {
                             pg.findRoute(v, v.getPosition(), wheretogo);
                             v.pathPositionIndex = v.getPathPositionList().size()-1;
                             v.isMoving = true;
-                            //System.out.println(v.getPathPositionList());
                             System.out.println("Visitor játszani megy!");
                         }
                         else if (!v.isMoving && v.getState().equals(VisitorState.WANNA_EAT)) {
@@ -210,7 +210,6 @@ public class GameEngine {
                             pg.findRoute(v, v.getPosition(), wheretogo);
                             v.pathPositionIndex = v.getPathPositionList().size() - 1;
                             v.isMoving = true;
-                            //System.out.println(v.getPathPositionList());
                             System.out.println("Visitor enni megy! " + v.getPathPositionList().size());
                         }
                         else if (!v.isMoving && v.getState() == VisitorState.WANNA_TOILET) {
@@ -228,12 +227,10 @@ public class GameEngine {
                             pg.findRoute(v, v.getPosition(), wheretogo);
                             v.pathPositionIndex = v.getPathPositionList().size()-1;
                             v.isMoving = true;
-                            //System.out.println(v.getPathPositionList());
                             System.out.println("Visitor WC-re megy!");
                         }
                         if (v.isMoving) {
-                            Position nextBlockPosition = v.getPathPositionList().get(v.pathPositionIndex); //todo v.pathPositionIndex néha -1
-
+                            Position nextBlockPosition = v.getPathPositionList().get(v.pathPositionIndex);
                             boolean isArrived =  v.getPathPositionList().size()  == 0 || (v.getPosition().getX_asPixel() == v.getPathPositionList().get(0).getX_asPixel() &&
                                     v.getPosition().getY_asPixel() == v.getPathPositionList().get(0).getY_asPixel());
                             boolean isSamePosition = v.getPosition().getX_asPixel() == nextBlockPosition.getX_asPixel()
@@ -246,27 +243,23 @@ public class GameEngine {
                             boolean goingDown = nextBlockPosition.getY_asPixel() < v.getPosition().getY_asPixel();
 
                             if (isArrived) {
-
                                 v.isMoving = false;
                                 v.pathPositionIndex = 0;
                                 ArrayList<Position> copy = v.getPathPositionList();
                                 v.getPathPositionList().removeAll(copy);
 
-                                if(v.getState().equals(VisitorState.WANNA_TOILET) &&  interactwithme != null)
-                                    {v.toilet((ServiceArea) interactwithme);}
-                                else if(v.getState().equals(VisitorState.WANNA_PLAY) && interactwithme != null)
-                                    {
-                                        v.playGame((Game) interactwithme);
-                                        ((Game) interactwithme).addVisitor(v);
-                                    }
+                                if(v.getState().equals(VisitorState.WANNA_TOILET) &&  interactwithme != null){
+                                    v.toilet((ServiceArea) interactwithme);
+                                     System.out.println("kaksizott!");}
+                                else if(v.getState().equals(VisitorState.WANNA_PLAY) && interactwithme != null) {
+                                    v.playGame((Game) interactwithme);
+                                    System.out.println("játszott!");
+                                }
+                                else if(v.getState().equals(VisitorState.WANNA_EAT) && interactwithme != null){
+                                    v.eat( (ServiceArea) interactwithme);
+                                    System.out.println("evett!");
+                                }
 
-                                else if(v.getState().equals(VisitorState.WANNA_EAT) && interactwithme != null)
-                                    {   v.eat( (ServiceArea) interactwithme);
-                                        ((ServiceArea) interactwithme).addVisitor(v);
-                                    }
-
-                                v.roundHasPassed(minutesPerSecond);
-                                System.out.println("Visitor megérkezett!");
                             }
 
                             if (isSamePosition) {
@@ -275,19 +268,15 @@ public class GameEngine {
                             else if (isDifferentPosition) {
 
                                 if (goingRight) {
-                                    v.direction=Direction.RIGHT;
                                     v.setPosition(new Position(v.getPosition().getX_asPixel() + ((minutesPerSecond/3) + 1), v.getPosition().getY_asPixel(), true));
                                 }
                                 if (goingLeft) {
-                                    v.direction=Direction.LEFT;
                                     v.setPosition(new Position(v.getPosition().getX_asPixel() - ((minutesPerSecond/3) + 1), v.getPosition().getY_asPixel(), true));
                                 }
                                 if (goingUp) {
-                                    v.direction=Direction.UP;
                                     v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() + ((minutesPerSecond/3) + 1), true));
                                 }
                                 if (goingDown) {
-                                    v.direction=Direction.DOWN;
                                     v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() - ((minutesPerSecond/3) + 1), true));
                                 }
                             }
@@ -297,7 +286,7 @@ public class GameEngine {
             }
         },0,16);
 
-        final int[] rounds = {0,0};
+        int[] rounds = {0,0};
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -311,9 +300,8 @@ public class GameEngine {
                 }
                 rounds[0] = 0;
                 for(Visitor v : pg.getVisitors()) {
-                    if(rounds[1] >= 10) {
                         v.roundHasPassed(minutesPerSecond);
-                    }
+                        System.out.println(v.toString());
 
                     v.setStayingTime(v.getStayingTime() - minutesPerSecond);
                     if (v.getStayingTime() == 0) {
@@ -382,6 +370,8 @@ public class GameEngine {
     }
 
 
-    public  int setTimerSpeed(int minutesPerSecond) { return minutesPerSecond; }
+    public  int getTimerSpeed(int minutesPerSecond) { return minutesPerSecond; }
+
+    public  void setTimerSpeed(int minutesPerSecond) { this.minutesPerSecond = minutesPerSecond; }
 
 }

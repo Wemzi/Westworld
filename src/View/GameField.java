@@ -44,12 +44,6 @@ public class GameField extends JPanel {
         for(Block b : gameEngine.getPg().getBuildedObjectList()){
                 if(b!=null){
                     b.paint(gr);
-                    /*
-                    gr.setColor(b.getColor());
-                    gr.fillRect(b.pos.getX_asPixel(),b.pos.getY_asPixel(),b.size.getX_asPixel(),b.size.getY_asPixel());
-                    gr.setColor(Color.BLACK);
-                    gr.drawRect(b.pos.getX_asPixel(),b.pos.getY_asPixel(),b.size.getX_asPixel(),b.size.getY_asPixel());*/
-
                     if(b instanceof Road && ((Road) b).isHasGarbageCan()){
                         gr.setColor(Color.GREEN);
                         gr.fillRect(b.pos.getX_asPixel(),b.pos.getY_asPixel(),b.size.getX_asPixel()/4,b.size.getY_asPixel()/4);
