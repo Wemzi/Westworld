@@ -44,7 +44,7 @@ public class ServiceArea extends Block implements Queueable{
             state = BlockState.UNDER_CONSTRUCTION;
             this.menuCost = 15;
             this.capacity = 50;
-            this.size=new Position(3,1,false);
+            this.size=new Position(2,1,false);
             workers = new ArrayList<>();
             queue = new ArrayBlockingQueue<>(this.capacity);
             this.cooldownTime=10;
@@ -58,7 +58,7 @@ public class ServiceArea extends Block implements Queueable{
             state = BlockState.UNDER_CONSTRUCTION;
             this.menuCost = 3;
             this.capacity = 25;
-            this.size=new Position(1,2,false);
+            this.size=new Position(1,3,false);
             workers = new ArrayList<>();
             queue = new ArrayBlockingQueue<>(this.capacity);
             this.cooldownTime=10;
@@ -122,7 +122,7 @@ public class ServiceArea extends Block implements Queueable{
         {
             currentActivityTime-=minutesPerSecond;
         }
-        else if(buildingTime == 0 && !(state.equals(BlockState.USED))) {
+        else if(buildingTime <= 0 && !(state.equals(BlockState.USED))) {
             state = BlockState.FREE;
         }
         if(state.equals(BlockState.UNDER_REPAIR))
