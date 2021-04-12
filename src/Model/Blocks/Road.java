@@ -2,7 +2,6 @@ package Model.Blocks;
 
 import Model.People.Cleaner;
 import Model.Position;
-import View.spriteManagers.OneColorSpriteManager;
 import View.spriteManagers.SpriteManager;
 import View.spriteManagers.StaticSpriteManager;
 
@@ -14,6 +13,8 @@ public class Road extends Block {
     private static SpriteManager noGarbageSpriteManager =null;
     private static SpriteManager fewGarbageSpriteManager =null;
     private static SpriteManager lotGarbageSpriteManager =null;
+    private static SpriteManager garbageCanSpriteManager =null;
+    private static SpriteManager entranceSpriteManager =null;
     private boolean hasGarbageCan;
     private boolean isEntrance;
     private int garbage;
@@ -92,9 +93,13 @@ public class Road extends Block {
     protected SpriteManager getSpriteManager() {
         if(Objects.isNull(noGarbageSpriteManager)){
             noGarbageSpriteManager =new StaticSpriteManager("graphics/stone.png",getSize());
-            fewGarbageSpriteManager =new OneColorSpriteManager(new Color(156, 73, 21),getSize());
-            lotGarbageSpriteManager =new OneColorSpriteManager(new Color(40, 39, 39),getSize());
+            fewGarbageSpriteManager =new StaticSpriteManager("graphics/stoneg1.png",getSize());
+            lotGarbageSpriteManager =new StaticSpriteManager("graphics/stoneg2.png",getSize());
+            garbageCanSpriteManager =new StaticSpriteManager("graphics/stonegarbagecan.png",getSize());
+            entranceSpriteManager =new StaticSpriteManager("graphics/stoneentrance.png",getSize());
         }
+        if(hasGarbageCan){return garbageCanSpriteManager ;}
+        if(isEntrance){return entranceSpriteManager ;}
         switch (getGarbageLevel()){
             case FEW :
                 return fewGarbageSpriteManager;

@@ -1,7 +1,6 @@
 package View;
 
 import Model.Blocks.Block;
-import Model.Blocks.Road;
 import Model.GameEngine;
 import Model.People.Employee;
 import Model.People.Visitor;
@@ -43,11 +42,12 @@ public class GameField extends JPanel {
         for(Block b : gameEngine.getPg().getBuildedObjectList()){
                 if(b!=null){
                     b.paint(gr);
+                    /*
                     if(b instanceof Road && ((Road) b).isHasGarbageCan()){
                         gr.setColor(Color.GREEN);
                         gr.fillRect(b.pos.getX_asPixel(),b.pos.getY_asPixel(),b.size.getX_asPixel()/4,b.size.getY_asPixel()/4);
 
-                    }
+                    }*/
                     drawBlockLabel(b,gr);
                 }
         }
