@@ -1,5 +1,6 @@
 package Model.People;
 
+import Model.Blocks.Block;
 import Model.Direction;
 import Model.Position;
 import View.MainWindow2;
@@ -16,6 +17,7 @@ abstract public class Person {
     private ArrayList<Position> pathPosition=new ArrayList<>();
     public boolean isMoving;
     public int pathPositionIndex;
+    public Block goal;
 
 
     protected Person(Position startingCoord)
@@ -50,8 +52,50 @@ abstract public class Person {
     {
         pos= that;
     }
-    protected Color getColor(){return Color.white;};
+    protected Color getColor(){return Color.white;}
+    public void round(int minutesPerSecond){
+        if (isMoving) {
+            if(pathPositionIndex==-1){
+                System.err.println("v.pathPositionIndex==-1"); return; // todo found out why
+            }
+            Position nextBlockPosition = getPathPositionList().get(pathPositionIndex);
+
+            boolean isArrived =  getPathPositionList().size()  == 0 || (getPosition().getX_asPixel() == getPathPositionList().get(0).getX_asPixel() &&
+                    getPosition().getY_asPixel() == getPathPositionList().get(0).getY_asPixel());
+            boolean isSamePosition = getPosition().getX_asPixel() == nextBlockPosition.getX_asPixel()
+                    && getPosition().getY_asPixel() == nextBlockPosition.getY_asPixel();
+            boolean isDifferentPosition = getPosition().getX_asPixel() != nextBlockPosition.getX_asPixel()
+                    || getPosition().getY_asPixel() != nextBlockPosition.getY_asPixel();
+            if(getPathPositionList().size()  != 0 && nextBlockPosition.getX_asPixel() > getPosition().getX_asPixel()){
+                direction=Direction.RIGHT;
+            }else if(getPathPositionList().size()  != 0  && nextBlockPosition.getX_asPixel() < getPosition().getX_asPixel()){
+                direction=Direction.LEFT;
+            }else if( nextBlockPosition.getY_asPixel() > getPosition().getY_asPixel()){
+                direction=Direction.UP;
+            }else if(nextBlockPosition.getY_asPixel() < getPosition().getY_asPixel()){
+                direction=Direction.DOWN;
+            }
+
+            if (isSamePosition) {
+                pathPositionIndex--;
+            }
+            else if (isDifferentPosition) {
+                moveTo(direction,((minutesPerSecond/3) + 1));
+            }
+
+            if (isArrived) {
+                arrived();
+                //roundHasPassed(minutesPerSecond);
+                //System.out.println("Visitor megérkezett!");
+            }
+
+
+
+        }
+        roundHasPassed(minutesPerSecond);
+    }
     abstract protected void roundHasPassed(int minutesPerSecond);
+    void arrived(){}
     public boolean isBusy(){return currentActivityLength!=0;}
 
     public abstract SpriteManager getSpriteManager();

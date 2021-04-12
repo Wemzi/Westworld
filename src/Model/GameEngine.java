@@ -168,7 +168,7 @@ public class GameEngine {
 
         Position entrancePosition = pg.getEntrancePosition();
         pg.getVisitors().add(new Visitor(entrancePosition));
-        pg.getVisitors().get(0).roundHasPassed(minutesPerSecond);
+        pg.getVisitors().get(0).round(minutesPerSecond);
 
 
 
@@ -204,11 +204,11 @@ public class GameEngine {
                 //manage employees
                 try{
                     for(Cleaner cleaner : pg.getCleaners()){
-                        cleaner.roundHasPassed(minutesPerSecond);
+                        cleaner.round(minutesPerSecond);
                     }
 
                     for(Repairman repairman : pg.getRepairmen()){
-                        repairman.roundHasPassed(minutesPerSecond);
+                        repairman.round(minutesPerSecond);
                     }
 
                 } catch (ConcurrentModificationException e){}
@@ -218,59 +218,13 @@ public class GameEngine {
                     for (Visitor v : pg.getVisitors()) {
                         //if(v.isBusy()) continue; TODO: Ez így jelenleg buggos, mert sose változik meg az isBusy értéke az első mozgás után!
 
-                        Position wheretogo = null;
-                        Block interactwithme = null;
 
-                        if (!v.isMoving && v.getState().equals(VisitorState.WANNA_PLAY)) {
-                            ArrayList<Game> GameList = pg.getBuildedGameList();
-                            if (GameList.size() == 0) break;
-
-                            interactwithme = GameList.get(Math.abs((rnd.nextInt())) % GameList.size());
-                            wheretogo = interactwithme.getPos();
-
-                            pg.findRoute(v, v.getPosition(), wheretogo);
-                            v.pathPositionIndex = v.getPathPositionList().size()-1;
-                            v.isMoving = true;
-                            //System.out.println("Visitor játszani megy!");
-                        }
-                        else if (!v.isMoving && v.getState().equals(VisitorState.WANNA_EAT)) {
-                            ArrayList<ServiceArea> SvList = pg.getBuildedServiceList();
-                            if (SvList.size() == 0) break;
-                            for (ServiceArea svarea : SvList) {
-                                if (svarea.getType().equals(ServiceType.BUFFET)) {
-                                    wheretogo = svarea.getPos();
-                                    interactwithme = svarea;
-                                    break;
-                                }
-                            }
-                            if (wheretogo == null) break;
-                            pg.findRoute(v, v.getPosition(), wheretogo);
-                            v.pathPositionIndex = v.getPathPositionList().size() - 1;
-                            v.isMoving = true;
-                            //System.out.println(v.getPathPositionList());
-                            //System.out.println("Visitor enni megy! " + v.getPathPositionList().size());
-                        }
-                        else if (!v.isMoving && v.getState() == VisitorState.WANNA_TOILET) {
-                            ArrayList<ServiceArea> SvList = pg.getBuildedServiceList();
-                            if (SvList.size() == 0) break;
-                            for(ServiceArea svarea : SvList)
-                            {
-                                if(svarea.getType().equals(ServiceType.TOILET)) {
-                                    wheretogo = svarea.getPos();
-                                    interactwithme = svarea;
-                                    break;
-                                }
-                            }
-                            if(wheretogo == null) break;
-                            pg.findRoute(v, v.getPosition(), wheretogo);
-                            v.pathPositionIndex = v.getPathPositionList().size()-1;
-                            v.isMoving = true;
-                            //System.out.println(v.getPathPositionList());
-                            //System.out.println("Visitor WC-re megy!");
-                        }
 
 
                         //move people
+                        v.round(minutesPerSecond);
+                        if(!v.isMoving){v.findGoal(pg);}
+                        /*
                         if (v.isMoving) {
                             if(v.pathPositionIndex==-1){
                                 System.err.println("v.pathPositionIndex==-1"); return; // todo found out why
@@ -324,7 +278,7 @@ public class GameEngine {
                             else if (isDifferentPosition) {
                                 v.moveTo(v.direction,((minutesPerSecond/3) + 1));
                             }
-                        }
+                        }*/
                     }
 
 
@@ -348,7 +302,7 @@ public class GameEngine {
                 rounds[0] = 0;
                 for(Visitor v : pg.getVisitors()) {
                     if(rounds[1] >= 10) {
-                        v.roundHasPassed(minutesPerSecond);
+                        v.round(minutesPerSecond);
                     }
 
                     v.setStayingTime(v.getStayingTime() - minutesPerSecond);
@@ -369,7 +323,7 @@ public class GameEngine {
                     pg.setHours(pg.getHours()+1);
 
                     pg.getVisitors().add(new Visitor(entrancePosition));
-                    pg.getVisitors().get(pg.getVisitors().size()-1).roundHasPassed(minutesPerSecond);
+                    pg.getVisitors().get(pg.getVisitors().size()-1).round(minutesPerSecond);
                 }
                 if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban
                     pg.setMinutes(0);
