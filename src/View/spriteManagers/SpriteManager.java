@@ -19,12 +19,13 @@ public abstract class SpriteManager {
             try {
                 workingPic=ImageIO.read(new File("graphics/work.png"));
             } catch (IOException e) {
-                System.err.println(" not found");
+                System.err.println("graphics/work.png not found");
+                workingPic=null;
             }
         }
 
         this.blockSize=blockSize;
-        if(!picMap.containsKey(blockSize)){picMap.put(blockSize,SpriteManager.resize(workingPic,blockSize));}
+        if(!picMap.containsKey(blockSize) && !Objects.isNull(workingPic)){picMap.put(blockSize,SpriteManager.resize(workingPic,blockSize));}
     }
 
     public abstract BufferedImage nextSprite();
