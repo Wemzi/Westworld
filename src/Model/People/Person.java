@@ -1,6 +1,5 @@
 package Model.People;
 
-import Model.Blocks.Block;
 import Model.Direction;
 import Model.Position;
 import View.MainWindow2;
@@ -14,7 +13,7 @@ import java.util.List;
 abstract public class Person {
     public static final Position personSize=new Position(MainWindow2.BOX_SIZE/2,MainWindow2.BOX_SIZE/2,true);
     private Position pos;
-    public  Direction direction=Direction.NONE;
+    public Direction direction=Direction.NONE;
     protected int currentActivityLength;
     protected Person(Position startingCoord)
     {
@@ -22,9 +21,25 @@ abstract public class Person {
         currentActivityLength = 0;
     }
 
-    private void moveTo(Block to)
+    public void moveTo(Direction d,int pixel )
     {
-        pos = to.getPos();
+        if(pixel<=0){throw new IllegalArgumentException("@param pixel must be >0");}
+        switch (d){
+            case RIGHT:
+                setPosition(new Position(pos.getX_asPixel() + pixel,pos.getY_asPixel(), true));
+                break;
+            case LEFT:
+                setPosition(new Position(pos.getX_asPixel() - pixel,pos.getY_asPixel(), true));
+                break;
+            case UP:
+                setPosition(new Position(pos.getX_asPixel(), pos.getY_asPixel() + pixel, true));
+                break;
+            case DOWN:
+                setPosition(new Position(pos.getX_asPixel(), pos.getY_asPixel() - pixel, true));
+                break;
+            case NONE: break;
+        }
+        direction=d;
     }
     public Position getPosition() {return pos;}
     public void setPosition(Position that)
