@@ -81,7 +81,7 @@ public class MenuCreator {
         buildemployeeBase.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Block block = new EmployeeBase(50, 0, 0, BlockState.UNDER_PLACEMENT);
+                Block block = new EmployeeBase(new Position(0,0,false));
                 parent.startPlaceSelectionMode(block);
             }
         });

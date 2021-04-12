@@ -1,7 +1,10 @@
 
 package View;
 
-import Model.Blocks.*;
+import Model.Blocks.Block;
+import Model.Blocks.BlockState;
+import Model.Blocks.FreePlace;
+import Model.Blocks.Road;
 import Model.GameEngine;
 import Model.Position;
 
@@ -127,21 +130,21 @@ public class MainWindow2 extends JFrame{
         timeOneMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                engine.setTimerSpeed(GameEngine.TIME_1X);
+                engine.setTimerSpeed(GameEngine.TIME_1x);
             }
         });
         JMenuItem timeTwoMenuItem = new JMenuItem("Time 2x");
         timeTwoMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                engine.setTimerSpeed(GameEngine.TIME_1X*2);
+                engine.setTimerSpeed(GameEngine.TIME_1x*2);
             }
         });
         JMenuItem timeThreeMenuItem = new JMenuItem("Time 3x");
         timeThreeMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                engine.setTimerSpeed(GameEngine.TIME_1X*3);
+                engine.setTimerSpeed(GameEngine.TIME_1x*3);
             }
         });
 

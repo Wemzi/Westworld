@@ -2,6 +2,7 @@ package Model.Blocks;
 
 import Model.People.Caterer;
 import Model.People.Employee;
+import Model.Position;
 import View.spriteManagers.OneColorSpriteManager;
 import View.spriteManagers.SpriteManager;
 
@@ -16,9 +17,10 @@ public class EmployeeBase extends Block {
         private int currentActivityTime;
         private static SpriteManager spriteManager=null;
 
-        public EmployeeBase(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state) {
-            super(buildingCost, upkeepCost, popularityIncrease, state);
+        public EmployeeBase(Position p) {
+            super(100,0,0,BlockState.FREE);
             this.workers = new ArrayList<Employee>();
+            this.pos=p;
         }
 
         public void addWorker(Caterer o){workers.add(o);

@@ -159,7 +159,7 @@ public class Playground {
         return false;
     }
 
-    public boolean findRoute(Visitor visitor, Position start, Position destination) {
+    public boolean findRoute(Person visitor, Position start, Position destination) {
         boolean[][] visited = new boolean[NUM_OF_COLS][NUM_OF_ROWS];
 
         for (int i = 0; i < NUM_OF_COLS; i++)
@@ -176,7 +176,7 @@ public class Playground {
         return i >= 0 && i < blocks.length && j >= 0 && j < blocks[0].length;
     }
     //TODO: BUG, ha bal felső koordinátájhoz nem vezet út!
-    public boolean isPath(int i, int j, boolean[][] visited, Position start, Position destination, Visitor visitor) {
+    public boolean isPath(int i, int j, boolean[][] visited, Position start, Position destination, Person visitor) {
         if (isSafe(i, j)
                 && (blocks[i][j] instanceof Road
                         || blocks[i][j] instanceof Game
@@ -235,6 +235,24 @@ public class Playground {
         if(e instanceof Repairman){return getRepairmen();}
 
         return null;
+    }
+
+    public Cleaner getFreeCleaner(){
+        for(Cleaner c :getCleaners() ){
+            if(Objects.isNull(c.whatSheCleans)){
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Employee> getEmployees(){
+        ArrayList<Employee> r =new ArrayList<Employee>();
+        r.addAll(getCateres());
+        r.addAll(getCleaners());
+        r.addAll(getOperators());
+        r.addAll(getRepairmen());
+        return r;
     }
 
 

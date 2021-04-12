@@ -50,6 +50,8 @@ public class BlockInfoDialog extends JDialog {
         }else if(block instanceof Road){
             panel.add(new JLabel("Has garbage can: "+((Road) block).isHasGarbageCan()));
             panel.add(new JLabel("Entrance: "+((Road) block).isEntrance()));
+            panel.add(new JLabel("Garbage: "+((Road) block).getGarbage()));
+            panel.add(new JLabel("Garbage level: "+((Road) block).getGarbageLevel()));
         }
     }
 

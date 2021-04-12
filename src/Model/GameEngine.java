@@ -14,8 +14,8 @@ public class GameEngine {
     /* Adattagok */
     private Playground pg;
     private boolean isBuildingPeriod;
-    public static int TIME_1X=5;
-    private static int minutesPerSecond=TIME_1X;
+    public static int TIME_1x=5;
+    private int minutesPerSecond = TIME_1x;
 
     /* Konstruktor */
     public GameEngine() {
@@ -39,7 +39,10 @@ public class GameEngine {
         buildBlock(new Road(new Position(7,5,false)));
         buildBlock(new Road(new Position(8,5,false)));
         buildBlock(new Road(new Position(9,5,false)));
-        buildBlock(new Road(new Position(10,5,false)));
+        //buildBlock(new Road(new Position(10,5,false)));
+        Road dirtyRoad=new Road(new Position(10,5,false));
+        dirtyRoad.setGarbage(40);
+        buildBlock(dirtyRoad);
         buildBlock(new Road(new Position(10,6,false)));
         buildBlock(new Road(new Position(10,7,false)));
         buildBlock(new Road(new Position(10,8,false)));
@@ -47,7 +50,17 @@ public class GameEngine {
         buildBlock(new Road(new Position(10,10,false)));
         buildBlock(new Road(new Position(10,11,false),false,true));
 
+        buildBlock(new Game(GameType.FERRISWHEEL,new Position(6,6,false)));
+        buildBlock(new Game(GameType.ROLLERCOASTER,new Position(11,8,false)));
+        buildBlock(new ServiceArea(ServiceType.BUFFET,new Position(6,2,false)));
+        buildBlock(new ServiceArea(ServiceType.TOILET,new Position(9,8,false)));
+        buildBlock(new EmployeeBase(new Position(4,4,false)));
+
         pg.entrancePosition = new Position(5,0,false);
+
+        //hire
+        Cleaner cl=new Cleaner(new Position(4,4,false),10);
+        pg.hire(cl);
     }
 
 
@@ -166,16 +179,41 @@ public class GameEngine {
             @Override
             public void run() {
 
-
-
-                for(Game actual : pg.getBuildedGameList())
-                {
-                    actual.roundHasPassed(minutesPerSecond);
+                //manage blocks
+                for(Block b : pg.getBuildedObjectList()){
+                    if(b instanceof Game){
+                        ((Game) b).roundHasPassed(minutesPerSecond);
+                    }else if(b instanceof ServiceArea){
+                        ((ServiceArea) b).roundHasPassed(minutesPerSecond);
+                    }else if(b instanceof Road){
+                        Road road=((Road) b);
+                        Road.GarbageLevel garbageLevel =road.getGarbageLevel();
+                        if(garbageLevel== Road.GarbageLevel.LOT && Objects.isNull(road.cleaner)){
+                            Cleaner cleaner=pg.getFreeCleaner();
+                            if(!Objects.isNull(cleaner)){
+                                road.cleaner=cleaner;
+                                cleaner.clean(road);
+                                pg.findRoute(cleaner,cleaner.getPosition(),road.getPos());
+                                cleaner.pathPositionIndex = cleaner.getPathPositionList().size()-1;
+                                cleaner.isMoving = true;
+                            }
+                        }
+                    }
                 }
-                for(ServiceArea actual : pg.getBuildedServiceList())
-                {
-                    actual.roundHasPassed(minutesPerSecond);
-                }
+
+                //manage employees
+                try{
+                    for(Cleaner cleaner : pg.getCleaners()){
+                        cleaner.roundHasPassed(minutesPerSecond);
+                    }
+
+                    for(Repairman repairman : pg.getRepairmen()){
+                        repairman.roundHasPassed(minutesPerSecond);
+                    }
+
+                } catch (ConcurrentModificationException e){}
+
+                //manage visitors
                 try {
                     for (Visitor v : pg.getVisitors()) {
 
@@ -210,7 +248,8 @@ public class GameEngine {
                             pg.findRoute(v, v.getPosition(), wheretogo);
                             v.pathPositionIndex = v.getPathPositionList().size() - 1;
                             v.isMoving = true;
-                            System.out.println("Visitor enni megy! " + v.getPathPositionList().size());
+                            //System.out.println(v.getPathPositionList());
+                            //System.out.println("Visitor enni megy! " + v.getPathPositionList().size());
                         }
                         else if (!v.isMoving && v.getState() == VisitorState.WANNA_TOILET) {
                             ArrayList<ServiceArea> SvList = pg.getBuildedServiceList();
@@ -227,9 +266,16 @@ public class GameEngine {
                             pg.findRoute(v, v.getPosition(), wheretogo);
                             v.pathPositionIndex = v.getPathPositionList().size()-1;
                             v.isMoving = true;
-                            System.out.println("Visitor WC-re megy!");
+                            //System.out.println(v.getPathPositionList());
+                            //System.out.println("Visitor WC-re megy!");
                         }
+
+
+                        //move people
                         if (v.isMoving) {
+                            if(v.pathPositionIndex==-1){
+                                System.err.println("v.pathPositionIndex==-1"); return; // todo found out why
+                            }
                             Position nextBlockPosition = v.getPathPositionList().get(v.pathPositionIndex);
                             boolean isArrived =  v.getPathPositionList().size()  == 0 || (v.getPosition().getX_asPixel() == v.getPathPositionList().get(0).getX_asPixel() &&
                                     v.getPosition().getY_asPixel() == v.getPathPositionList().get(0).getY_asPixel());
@@ -237,10 +283,16 @@ public class GameEngine {
                                     && v.getPosition().getY_asPixel() == nextBlockPosition.getY_asPixel();
                             boolean isDifferentPosition = v.getPosition().getX_asPixel() != nextBlockPosition.getX_asPixel()
                                     || v.getPosition().getY_asPixel() != nextBlockPosition.getY_asPixel();
-                            boolean goingRight = v.getPathPositionList().size()  != 0 && nextBlockPosition.getX_asPixel() > v.getPosition().getX_asPixel();
-                            boolean goingLeft = v.getPathPositionList().size()  != 0  && nextBlockPosition.getX_asPixel() < v.getPosition().getX_asPixel();
-                            boolean goingUp = nextBlockPosition.getY_asPixel() > v.getPosition().getY_asPixel();
-                            boolean goingDown = nextBlockPosition.getY_asPixel() < v.getPosition().getY_asPixel();
+                            if(v.getPathPositionList().size()  != 0 && nextBlockPosition.getX_asPixel() > v.getPosition().getX_asPixel()){
+                                v.direction=Direction.RIGHT;
+                            }else if(v.getPathPositionList().size()  != 0  && nextBlockPosition.getX_asPixel() < v.getPosition().getX_asPixel()){
+                                v.direction=Direction.LEFT;
+                            }else if( nextBlockPosition.getY_asPixel() > v.getPosition().getY_asPixel()){
+                                v.direction=Direction.UP;
+                            }else if(nextBlockPosition.getY_asPixel() < v.getPosition().getY_asPixel()){
+                                v.direction=Direction.DOWN;
+                            }
+
 
                             if (isArrived) {
                                 v.isMoving = false;
@@ -260,25 +312,15 @@ public class GameEngine {
                                     System.out.println("evett!");
                                 }
 
+                                v.roundHasPassed(minutesPerSecond);
+                                //System.out.println("Visitor megérkezett!");
                             }
 
                             if (isSamePosition) {
                                 v.pathPositionIndex--;
                             }
                             else if (isDifferentPosition) {
-
-                                if (goingRight) {
-                                    v.setPosition(new Position(v.getPosition().getX_asPixel() + ((minutesPerSecond/3) + 1), v.getPosition().getY_asPixel(), true));
-                                }
-                                if (goingLeft) {
-                                    v.setPosition(new Position(v.getPosition().getX_asPixel() - ((minutesPerSecond/3) + 1), v.getPosition().getY_asPixel(), true));
-                                }
-                                if (goingUp) {
-                                    v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() + ((minutesPerSecond/3) + 1), true));
-                                }
-                                if (goingDown) {
-                                    v.setPosition(new Position(v.getPosition().getX_asPixel(), v.getPosition().getY_asPixel() - ((minutesPerSecond/3) + 1), true));
-                                }
+                                v.moveTo(v.direction,((minutesPerSecond/3) + 1));
                             }
                         }
                     }
@@ -301,7 +343,7 @@ public class GameEngine {
                 rounds[0] = 0;
                 for(Visitor v : pg.getVisitors()) {
                         v.roundHasPassed(minutesPerSecond);
-                        System.out.println(v.toString());
+                        //System.out.println(v.toString());
 
                     v.setStayingTime(v.getStayingTime() - minutesPerSecond);
                     if (v.getStayingTime() == 0) {
@@ -352,13 +394,19 @@ public class GameEngine {
         }
         System.out.println("endPayOff msg: Építmények upkepp costjai ki lettek fizetve!");
 
-        for(Caterer caterer : pg.getCateres())          money -= caterer.getSalary();
-        for(Cleaner cleaner : pg.getCleaners())         money -= cleaner.getSalary();
-        for(Operator operator : pg.getOperators())      money -= operator.getSalary();
-        for(Repairman repairman : pg.getRepairmen())    money -= repairman.getSalary();
+        money -= getSalaries();
         System.out.println("endPayOff msg: Alkalmazottak ki lettek fizetve!");
 
         pg.setMoney(money);
+    }
+
+    public int getSalaries(){
+        int sum=0;
+        for(Caterer caterer : pg.getCateres())          sum += caterer.getSalary();
+        for(Cleaner cleaner : pg.getCleaners())         sum += cleaner.getSalary();
+        for(Operator operator : pg.getOperators())      sum += operator.getSalary();
+        for(Repairman repairman : pg.getRepairmen())    sum += repairman.getSalary();
+        return sum;
     }
 
 

@@ -2,8 +2,12 @@ package Model.People;
 
 import Model.Blocks.ServiceArea;
 import Model.Position;
+import View.spriteManagers.OnePicDynamicSpriteManager;
+import View.spriteManagers.SpriteManager;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class Caterer extends Employee {
     public ServiceArea workPlace;
@@ -42,4 +46,20 @@ public class Caterer extends Employee {
 
     @Override
     protected Color getColor(){return Color.gray;};
+
+    //drawing
+    private static final SpriteManager manager;
+
+    @Override
+    public SpriteManager getSpriteManager() {
+        return manager;
+    }
+
+    static{
+        //manager = new StaticSpriteManager("graphics/visitor.png",personSize);
+        List<Rectangle> rectangles= Arrays.asList(
+                new Rectangle(202,0,202,291)
+        );
+        manager=new OnePicDynamicSpriteManager("graphics/caterer.png",personSize,rectangles,10);
+    }
 }

@@ -37,6 +37,7 @@ public class ServiceArea extends Block implements Queueable{
         this.type=type;
         if(type==ServiceType.BUFFET)
         {
+            this.pos=pos;
             buildingTime = 30;
             buildingCost = 100;
             upkeepCost = 10;
@@ -51,6 +52,7 @@ public class ServiceArea extends Block implements Queueable{
         }
         else if(type==ServiceType.TOILET)
         {
+            this.pos=pos;
             buildingTime = 30;
             buildingCost = 75;
             upkeepCost = 10;

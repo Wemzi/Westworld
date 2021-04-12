@@ -3,6 +3,7 @@ package View;
 import Model.Blocks.Block;
 import Model.Blocks.Road;
 import Model.GameEngine;
+import Model.People.Employee;
 import Model.People.Visitor;
 import Model.Playground;
 import Model.Position;
@@ -12,8 +13,6 @@ import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-
-import static View.MainWindow2.*;
 
 /**
  *
@@ -49,8 +48,6 @@ public class GameField extends JPanel {
                         gr.fillRect(b.pos.getX_asPixel(),b.pos.getY_asPixel(),b.size.getX_asPixel()/4,b.size.getY_asPixel()/4);
 
                     }
-
-
                     drawBlockLabel(b,gr);
                 }
         }
@@ -60,29 +57,17 @@ public class GameField extends JPanel {
         return new Rectangle(block.pos.getX_asPixel(),block.pos.getY_asPixel(),block.size.getX_asPixel(),block.size.getY_asPixel());
     }
 
-    private static void paintVisitorsSprites(Graphics2D gr,GameEngine gameEngine){
+    private static void paintVisitors(Graphics2D gr, GameEngine gameEngine){
         ArrayList<Visitor> visitors=new ArrayList(gameEngine.getPg().getVisitors());
         for(Visitor v : visitors){
             v.paint(gr);
         }
     }
 
-    private static void paintVisitors(Graphics2D gr,GameEngine gameEngine){
-        int[][] visitorCounter=new int[NUM_OF_COLS][NUM_OF_ROWS];
-        for(Visitor v : new ArrayList<>(gameEngine.getPg().getVisitors())){
-            visitorCounter[v.getPosition().getX_asIndex()][v.getPosition().getY_asIndex()]++;
-            gr.setColor(Color.magenta);
-            gr.fillOval(v.getPosition().getX_asPixel()+ BOX_SIZE/3,v.getPosition().getY_asPixel()+ BOX_SIZE/3, BOX_SIZE/3, BOX_SIZE/3);
-        }
-
-        for(int i=0;i<NUM_OF_COLS;i++){
-            for(int j=0;j<NUM_OF_ROWS;j++){
-                if(visitorCounter[i][j]<2){continue;}
-                Block b=gameEngine.getPg().getBlocks()[i][j];
-                gr.setColor(Color.BLACK);
-                Rectangle r=new Rectangle(b.pos.getX_asPixel(),b.pos.getY_asPixel(),BOX_SIZE,BOX_SIZE);
-                centerString(gr,r,String.valueOf(visitorCounter[i][j]));
-            }
+    private static void paintEmployees(Graphics2D gr, GameEngine gameEngine){
+        ArrayList<Employee> visitors=new ArrayList(gameEngine.getPg().getEmployees());
+        for(Employee v : visitors){
+            v.paint(gr);
         }
     }
 
@@ -93,7 +78,8 @@ public class GameField extends JPanel {
         Graphics2D gr = (Graphics2D) g;
         gr.setBackground(new Color(24, 83, 24));
         paintBlocks(gr,engine);
-        paintVisitorsSprites(gr,engine);
+        paintVisitors(gr,engine);
+        paintEmployees(gr,engine);
 
         if(mouseFollowing){
             Point p = getMousePosition();
