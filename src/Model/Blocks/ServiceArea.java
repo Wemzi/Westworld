@@ -165,8 +165,10 @@ public class ServiceArea extends Block implements Queueable{
             case TOILET:
                 spriteManagerMap.putIfAbsent(type,new StaticSpriteManager("graphics/toilet.png",size));
                 break;
+            case BUFFET:
+                spriteManagerMap.putIfAbsent(type,new StaticSpriteManager("graphics/buffet.png",size));
             default:
-                spriteManagerMap.put(type,new OneColorSpriteManager(getColor(),getSize()));break;
+                spriteManagerMap.putIfAbsent(type,new OneColorSpriteManager(getColor(),getSize()));break;
         }
     }
 
