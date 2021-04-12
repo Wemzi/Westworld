@@ -147,6 +147,12 @@ public class Game extends Block implements Queueable{
         else throw new RuntimeException("You can't run the game cause it's not free!");
     }
 
+    public void fillwithWorkers()
+    {
+        workers.add(new Operator(new Position(this.getPos().getX_asIndex(),this.getPos().getY_asIndex(),true),25));
+        workers.add(new Operator(new Position(this.getPos().getX_asIndex(),this.getPos().getY_asIndex(),true),25));
+    }
+
     public void roundHasPassed(int minutesPerSecond)
     {
         if(workers.size() <= 1 )
@@ -164,6 +170,7 @@ public class Game extends Block implements Queueable{
         }
         else if(buildingTime <= 0 && !(state.equals(BlockState.USED))) {
             state = BlockState.FREE;
+            fillwithWorkers();
         }
         else if(state.equals(BlockState.FREE) && queue.remainingCapacity()==0)
         {
