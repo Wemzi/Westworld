@@ -1,6 +1,9 @@
 package Model.People;
 
+import Model.Blocks.Block;
+import Model.Blocks.EmployeeBase;
 import Model.Blocks.Road;
+import Model.Playground;
 import Model.Position;
 import View.spriteManagers.OnePicDynamicSpriteManager;
 import View.spriteManagers.SpriteManager;
@@ -9,9 +12,10 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class Cleaner extends Employee {
-    public Road whatSheCleans;
+    private Road whatSheCleans;
 
     public Cleaner(Position startingPos, int salary)
     {
@@ -21,25 +25,44 @@ public class Cleaner extends Employee {
     public void clean(Road b )
     {
         whatSheCleans =b;
-        currentActivityLength = 25000;
-        System.out.println("Clean!");
+        currentActivityLength = b.getGarbage()*100;
+        System.out.println("Lets clean!");
     }
 
     public void roundHasPassed(int minutesPerSecond)
     {
-        if(currentActivityLength == 0)
-        {
-            if(!Objects.isNull(whatSheCleans)){
-                System.out.println("Cleaned");
+        if(currentActivityLength>0){currentActivityLength-= minutesPerSecond;}
+
+        if(!Objects.isNull(whatSheCleans)){
+            //whatSheCleans.setGarbage(whatSheCleans.getGarbage()-minutesPerSecond);
+            //System.out.println("Cleaned a little");
+            if(currentActivityLength <= 0){
                 whatSheCleans.setGarbage(0);
                 whatSheCleans=null;
+                System.out.println("All cleaned");
             }
         }
-        else
-        {
-            currentActivityLength-= minutesPerSecond;
+
+    }
+
+    @Override
+    public void findGoal(Random rnd, Playground pg) {
+        goal=pg.getBlockByPosition(new Position(5,0,false));
+        for(Block b :pg.getBuildedObjectList()){
+            if(b instanceof EmployeeBase){
+                goal=b;
+            }
         }
-        return;
+    }
+
+    @Override
+    public void arrived(int minutesPerSecond) {
+        if(goal instanceof Road){
+            Road r = (Road) goal;
+            r.cleaner=this;
+            this.clean(r);
+        }
+        super.arrived(minutesPerSecond);
     }
 
     @Override

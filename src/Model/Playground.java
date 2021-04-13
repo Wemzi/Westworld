@@ -239,7 +239,7 @@ public class Playground {
 
     public Cleaner getFreeCleaner(){
         for(Cleaner c :getCleaners() ){
-            if(Objects.isNull(c.whatSheCleans)){
+            if(Objects.isNull(c.goal)){
                 return c;
             }
         }

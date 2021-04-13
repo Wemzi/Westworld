@@ -3,11 +3,14 @@ package Model.People;
 import Model.Blocks.Game;
 import Model.Blocks.Road;
 import Model.Blocks.ServiceArea;
+import Model.Blocks.ServiceType;
+import Model.Playground;
 import Model.Position;
 import View.spriteManagers.OnePicDynamicSpriteManager;
 import View.spriteManagers.SpriteManager;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -18,6 +21,9 @@ public class Visitor extends Person {
     private int playfulness;
     private int stayingTime;
     private VisitorState state;
+
+
+
     // TODO: add a new value that defines how long are they staying. make it changeable.
     // TODO: cyclical waiting at a game for example
     // TODO: change playfulness and hunger in time
@@ -62,6 +68,71 @@ public class Visitor extends Person {
     public Road throwGarbage(Road there) {
         there.setGarbage(there.getGarbage() + 2);
         return there;
+    }
+
+    @Override
+    public void findGoal(Random rnd, Playground pg) {
+        if(isMoving){return;}
+        if ( getState().equals(VisitorState.WANNA_PLAY)) {
+            ArrayList<Game> GameList = pg.getBuildedGameList();
+            if (GameList.size() == 0) return;
+
+            goal = GameList.get(Math.abs((rnd.nextInt())) % GameList.size());
+
+            System.out.println("Visitor játszani megy!");
+        }
+        else if ( getState().equals(VisitorState.WANNA_EAT)) {
+            ArrayList<ServiceArea> SvList = pg.getBuildedServiceList();
+            if (SvList.size() == 0) return;
+            for (ServiceArea svarea : SvList) {
+                if (svarea.getType().equals(ServiceType.BUFFET)) {
+                    goal = svarea;
+                    break;
+                }
+            }
+            //System.out.println(v.getPathPositionList());
+            //System.out.println("Visitor enni megy! " + v.getPathPositionList().size());
+        }
+        else if (getState() == VisitorState.WANNA_TOILET) {
+            ArrayList<ServiceArea> SvList = pg.getBuildedServiceList();
+            if (SvList.size() == 0) return;
+            for(ServiceArea svarea : SvList)
+            {
+                if(svarea.getType().equals(ServiceType.TOILET)) {
+                    goal = svarea;
+                    break;
+                }
+            }
+            //System.out.println(v.getPathPositionList());
+            //System.out.println("Visitor WC-re megy!");
+        }
+    }
+
+
+    @Override
+    public void arrived(int minutesPerSecond){
+        System.out.println("Visitor megérkezett!");
+        isMoving = false;
+        pathPositionIndex = 0;
+        ArrayList<Position> copy = getPathPositionList();
+        getPathPositionList().removeAll(copy);
+
+        if(getState().equals(VisitorState.WANNA_TOILET) &&  goal != null){
+            toilet((ServiceArea) goal);
+            System.out.println("kaksizott!");}
+        else if(getState().equals(VisitorState.WANNA_PLAY) && goal != null) {
+            playGame((Game) goal);
+            System.out.println("játszott!");
+        }
+        else if(getState().equals(VisitorState.WANNA_EAT) && goal != null){
+            eat( (ServiceArea) goal);
+            System.out.println("evett!");
+        }
+
+        goal=null;
+
+        roundHasPassed(minutesPerSecond);
+
     }
 
     public void roundHasPassed(int minutesPerSecond) {
