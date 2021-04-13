@@ -311,7 +311,7 @@ public class GameEngine {
 
     public int getSalaries(){
         int sum=0;
-        for(Caterer caterer : pg.getCateres())          sum += caterer.getSalary();
+        for(Caterer caterer : pg.getCaterers())          sum += caterer.getSalary();
         for(Cleaner cleaner : pg.getCleaners())         sum += cleaner.getSalary();
         for(Operator operator : pg.getOperators())      sum += operator.getSalary();
         for(Repairman repairman : pg.getRepairmen())    sum += repairman.getSalary();
