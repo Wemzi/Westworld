@@ -14,8 +14,8 @@ public class GameEngine {
     /* Adattagok */
     private Playground pg;
     private boolean isBuildingPeriod;
-    public static int TIME_1x=5;
-    private int minutesPerSecond = TIME_1x;
+    public static final int TIME_1x=5;
+    private static int minutesPerSecond = TIME_1x;
 
     /* Konstruktor */
     public GameEngine() {
@@ -74,7 +74,7 @@ public class GameEngine {
      *          true, ha építés végbement
      */
     public boolean buildBlock(Block b) {
-        //if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
+        if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
 
         if(b instanceof GarbageCan){return buildBin(b.pos);}
         if(pg.getMoney() < b.getBuildingCost()) return false;
@@ -102,6 +102,7 @@ public class GameEngine {
     }
 
     public void demolish(Block b) {
+        if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return; }
         int posFromX = b.getPos().getX_asIndex();
         int posFromY = b.getPos().getY_asIndex();
         int demolishUntilX = posFromX + b.getSize().getX_asIndex();
@@ -216,12 +217,9 @@ public class GameEngine {
                 //manage visitors
                 try {
                     for (Visitor v : pg.getVisitors()) {
-
-                        if(v.isBusy()) continue; //TODO: Ez így jelenleg buggos, mert sose változik meg az isBusy értéke az első mozgás után!
-
+                        if(v.isBusy()) continue;
                         Position wheretogo = null;
                         Block interactwithme = null;
-
                         if (!v.isMoving && v.getState().equals(VisitorState.WANNA_PLAY)) {
                             ArrayList<Game> GameList = pg.getBuildedGameList();
                             if (GameList.size() == 0) break;
@@ -274,7 +272,7 @@ public class GameEngine {
                         //move people
                         if (v.isMoving) {
                             if(v.pathPositionIndex==-1){
-                                System.err.println("v.pathPositionIndex==-1"); return; // todo found out why
+                                System.err.println("v.pathPositionIndex==-1"); return; // todo find out why
                             }
                             Position nextBlockPosition = v.getPathPositionList().get(v.pathPositionIndex);
                             boolean isArrived =  v.getPathPositionList().size()  == 0 || (v.getPosition().getX_asPixel() == v.getPathPositionList().get(0).getX_asPixel() &&

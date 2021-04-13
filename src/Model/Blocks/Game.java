@@ -149,22 +149,21 @@ public class Game extends Block implements Queueable{
 
     public void fillwithWorkers()
     {
-        workers.add(new Operator(new Position(this.getPos().getX_asIndex(),this.getPos().getY_asIndex(),true),25));
-        workers.add(new Operator(new Position(this.getPos().getX_asIndex(),this.getPos().getY_asIndex(),true),25));
+        workers.add(new Operator(new Position(this.getPos().getX_asIndex(),this.getPos().getY_asIndex(),true),25,this));
+        workers.add(new Operator(new Position(this.getPos().getX_asIndex(),this.getPos().getY_asIndex(),true),25,this));
     }
 
     public void roundHasPassed(int minutesPerSecond)
     {
-        if(workers.size() <= 1 )
+        if(workers.size() == 0 )
         {
             state = BlockState.NOT_OPERABLE;
-            return;
         }
         if(state.equals(BlockState.UNDER_CONSTRUCTION))
         {
             buildingTime-=minutesPerSecond;
         }
-        if(state.equals(BlockState.USED))
+        if(state.equals(BlockState.USED) && workers.size() > 0 )
         {
             currentActivityTime-=minutesPerSecond;
         }
@@ -172,7 +171,7 @@ public class Game extends Block implements Queueable{
             state = BlockState.FREE;
             fillwithWorkers();
         }
-        else if(state.equals(BlockState.FREE) && queue.remainingCapacity()==0)
+        else if(state.equals(BlockState.FREE) && queue.remainingCapacity()>0 && workers.size() > 0)
         {
             workers.get(0).operate();
         }
@@ -180,7 +179,7 @@ public class Game extends Block implements Queueable{
         {
             currentActivityTime -= minutesPerSecond;
         }
-        if(state.equals(BlockState.UNDER_REPAIR) && currentActivityTime <= 0 )
+        if(state.equals(BlockState.UNDER_REPAIR) && currentActivityTime <= 0 && workers.size() > 0 )
         {
             state = BlockState.FREE;
             currentActivityTime = 0;
