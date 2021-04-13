@@ -21,7 +21,7 @@ public class Cleaner extends Employee {
     public void clean(Road b )
     {
         whatSheCleans =b;
-        currentActivityLength = 25000;
+        currentActivityLength = 20;
         System.out.println("Clean!");
     }
 

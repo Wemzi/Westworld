@@ -18,13 +18,14 @@ public class Playground {
     private ArrayList<Block> buildedObjects;
     private final ArrayList<Game> builedGames;
     private final ArrayList<ServiceArea> builededServices;
-
+    private final ArrayList<EmployeeBase> buildedEmployeeBases;
     private final ArrayList<Visitor> visitors;
 
     private final ArrayList<Caterer> cateres;
     private final ArrayList<Cleaner> cleaners;
     private final ArrayList<Operator> operators;
     private final ArrayList<Repairman> repairmen;
+
 
     private int money;
     private int days, hours, minutes;
@@ -43,6 +44,7 @@ public class Playground {
         cleaners            = new ArrayList<>();
         operators           = new ArrayList<>();
         repairmen           = new ArrayList<>();
+        buildedEmployeeBases= new ArrayList<>();
 
 
 
@@ -70,6 +72,8 @@ public class Playground {
     public void demolishBlock(FreePlace block, int posX, int posY) {
         blocks[posX][posY] = block;
     }
+
+
 
     /**
      * Megkapjuk a blockot, annak a pozíció és size alapján kiszámítjuk mettől meddig tart, majd végigmegyünk
@@ -229,7 +233,7 @@ public class Playground {
     }
 
     public ArrayList getEmployeesLike(Employee e){
-        if(e instanceof Caterer){return getCateres();}
+        if(e instanceof Caterer){return getCaterers();}
         if(e instanceof Cleaner){return getCleaners();}
         if(e instanceof Operator){return getOperators();}
         if(e instanceof Repairman){return getRepairmen();}
@@ -248,7 +252,7 @@ public class Playground {
 
     public ArrayList<Employee> getEmployees(){
         ArrayList<Employee> r =new ArrayList<Employee>();
-        r.addAll(getCateres());
+        r.addAll(getCaterers());
         r.addAll(getCleaners());
         r.addAll(getOperators());
         r.addAll(getRepairmen());
@@ -273,7 +277,7 @@ public class Playground {
     public ArrayList<ServiceArea> getBuildedServiceList()   { return builededServices; }
 
     public ArrayList<Visitor> getVisitors()                 { return visitors; }
-    public ArrayList<Caterer> getCateres()                  { return cateres; }
+    public ArrayList<Caterer> getCaterers()                  { return cateres; }
     public ArrayList<Cleaner> getCleaners()                 { return cleaners; }
     public ArrayList<Operator> getOperators()               { return operators; }
     public ArrayList<Repairman> getRepairmen()              { return repairmen; }
@@ -284,6 +288,22 @@ public class Playground {
     public void setMinutes(int minutes)                     { this.minutes = minutes; }
     public void setPopularity(double popularity)            { this.popularity = popularity; }
     public void setBuildedObjects(ArrayList<Block> buildedObjects) { this.buildedObjects = buildedObjects; }
+
+    public ArrayList<Block> getBuildedObjects() {
+        return buildedObjects;
+    }
+
+    public ArrayList<Game> getBuiledGames() {
+        return builedGames;
+    }
+
+    public ArrayList<ServiceArea> getBuilededServices() {
+        return builededServices;
+    }
+
+    public ArrayList<EmployeeBase> getBuildedEmployeeBases() {
+        return buildedEmployeeBases;
+    }
 
     public String dateToString() {
         return  " Day: " + this.days +

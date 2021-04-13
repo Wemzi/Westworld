@@ -11,13 +11,6 @@ import java.util.List;
 
 public class Operator extends Employee {
     private Game operateThis;
-
-    @Deprecated
-    public Operator(Position startingPos, int salary)
-    {
-        super(startingPos,salary);
-    }
-
     public Operator(Position startingPos, int salary, Game operateThis)
     {
         super(startingPos,salary);
@@ -45,6 +38,10 @@ public class Operator extends Employee {
             currentActivityLength = 0;
         }
         return;
+    }
+
+    public Game getWorkPlace() {
+        return operateThis;
     }
 
     @Override

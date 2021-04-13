@@ -78,7 +78,7 @@ public class testGame {
         pg.buildBlock(buffet,0,0);
 
         //before hire
-        assertEquals(0, pg.getCateres().size());
+        assertEquals(0, pg.getCaterers().size());
         assertEquals(0,buffet.getWorkers().size());
 
         //hire
@@ -86,8 +86,8 @@ public class testGame {
         pg.hire(c);
 
         //after hire
-        assertEquals(1, pg.getCateres().size());
-        assertEquals(c, pg.getCateres().get(0));
+        assertEquals(1, pg.getCaterers().size());
+        assertEquals(c, pg.getCaterers().get(0));
         assertEquals(1,buffet.getWorkers().size());
     }
 
@@ -99,7 +99,7 @@ public class testGame {
         pg.buildBlock(buffet,0,0);
 
         //before hire
-        assertEquals(0, pg.getCateres().size());
+        assertEquals(0, pg.getCaterers().size());
         assertEquals(0,buffet.getWorkers().size());
 
         //hire
@@ -107,15 +107,15 @@ public class testGame {
         pg.hire(c);
 
         //after hire
-        assertEquals(1, pg.getCateres().size());
-        assertEquals(c, pg.getCateres().get(0));
+        assertEquals(1, pg.getCaterers().size());
+        assertEquals(c, pg.getCaterers().get(0));
         assertEquals(1,buffet.getWorkers().size());
 
         //fire
         pg.fire(c);
 
         //afterFire
-        assertEquals(0, pg.getCateres().size());
+        assertEquals(0, pg.getCaterers().size());
         assertEquals(0,buffet.getWorkers().size());
     }
 
