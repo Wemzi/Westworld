@@ -72,9 +72,9 @@ abstract public class Person {
             }else if(getPathPositionList().size()  != 0  && nextBlockPosition.getX_asPixel() < getPosition().getX_asPixel()){
                 direction=Direction.LEFT;
             }else if( nextBlockPosition.getY_asPixel() > getPosition().getY_asPixel()){
-                direction=Direction.UP;
-            }else if(nextBlockPosition.getY_asPixel() < getPosition().getY_asPixel()){
                 direction=Direction.DOWN;
+            }else if(nextBlockPosition.getY_asPixel() < getPosition().getY_asPixel()){
+                direction=Direction.UP;
             }
 
 
@@ -99,10 +99,10 @@ abstract public class Person {
             case LEFT:
                 setPosition(new Position(pos.getX_asPixel() - pixel,pos.getY_asPixel(), true));
                 break;
-            case UP:
+            case DOWN:
                 setPosition(new Position(pos.getX_asPixel(), pos.getY_asPixel() + pixel, true));
                 break;
-            case DOWN:
+            case UP:
                 setPosition(new Position(pos.getX_asPixel(), pos.getY_asPixel() - pixel, true));
                 break;
             case NONE: break;
