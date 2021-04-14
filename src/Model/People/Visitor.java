@@ -4,18 +4,18 @@ import Model.Blocks.Game;
 import Model.Blocks.Road;
 import Model.Blocks.ServiceArea;
 import Model.Blocks.ServiceType;
+import Model.Direction;
 import Model.Playground;
 import Model.Position;
-import View.spriteManagers.OnePicDynamicSpriteManager;
 import View.spriteManagers.SpriteManager;
+import View.spriteManagers.StaticPicturePartManager;
 
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Visitor extends Person {
@@ -246,18 +246,20 @@ public class Visitor extends Person {
 
 
     //drawing
-    private static final SpriteManager manager;
+    private static final HashMap<Direction,SpriteManager> spriteManagerMap;
 
     @Override
     public SpriteManager getSpriteManager() {
-        return manager;
+        return spriteManagerMap.get(direction);
     }
 
     static{
-        //manager = new StaticSpriteManager("graphics/visitor.png",personSize);
-        List<Rectangle> rectangles= Arrays.asList(
-                new Rectangle(202,0,202,291)
-        );
-        manager=new OnePicDynamicSpriteManager("graphics/visitor.png",personSize,rectangles,10);
+        spriteManagerMap=new HashMap<>();
+        String imgPath="graphics/visitor.png";
+        spriteManagerMap.put(Direction.NONE,new StaticPicturePartManager(imgPath,personSize,new Rectangle(202,0,202,291)));
+        spriteManagerMap.put(Direction.DOWN,new StaticPicturePartManager(imgPath,personSize,new Rectangle(202,0,202,291)));
+        spriteManagerMap.put(Direction.LEFT,new StaticPicturePartManager(imgPath,personSize,new Rectangle(0,0,202,291)));
+        spriteManagerMap.put(Direction.RIGHT,new StaticPicturePartManager(imgPath,personSize,new Rectangle(404,0,202,291)));
+        spriteManagerMap.put(Direction.UP,new StaticPicturePartManager(imgPath,personSize,new Rectangle(606,0,202,291)));
     }
 }

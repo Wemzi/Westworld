@@ -46,9 +46,6 @@ public class OnePicDynamicSpriteManager extends SpriteManager {
         return sprites.get(actualSpriteIndex);
     }
 
-    private BufferedImage cropImage(BufferedImage src, Rectangle rect) {
-        BufferedImage dest = src.getSubimage(rect.x,rect.y, rect.width, rect.height);
-        return dest;
-    }
+
 
 }

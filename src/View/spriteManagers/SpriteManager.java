@@ -44,4 +44,9 @@ public abstract class SpriteManager {
 
         return dimg;
     }
+
+    BufferedImage cropImage(BufferedImage src, Rectangle rect) {
+        BufferedImage dest = src.getSubimage(rect.x,rect.y, rect.width, rect.height);
+        return dest;
+    }
 }

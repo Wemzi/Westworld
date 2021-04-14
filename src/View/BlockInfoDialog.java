@@ -44,7 +44,7 @@ public class BlockInfoDialog extends JDialog {
             panel.add(new JLabel("Cooldown time: "+((ServiceArea) block).getCooldownTime()));
             panel.add(new JLabel("Workers: "+Objects.requireNonNullElse(((ServiceArea) block).getWorkers(),new ArrayList<>()).size()));
 
-            panel.add(addCatererModificationRow((ServiceArea) block,engine));
+            if(((ServiceArea) block).getType()==ServiceType.BUFFET){panel.add(addCatererModificationRow((ServiceArea) block,engine));}
         }else if(block instanceof Decoration){
             panel.add(new JLabel("Type: "+((Decoration) block).getDecorationType()));
         }else if(block instanceof Road){
