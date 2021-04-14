@@ -2,40 +2,17 @@ package View.spriteManagers;
 
 import Model.Position;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Objects;
 
 public abstract class SpriteManager {
-    private static BufferedImage workingPic;
-    private static HashMap<Position,BufferedImage> picMap=new HashMap<>();
-    private final Position blockSize;
+
     protected boolean isStopped=true;
 
-    protected SpriteManager(Position blockSize) {
-        if(Objects.isNull(workingPic)){
-            try {
-                workingPic=ImageIO.read(new File("graphics/work.png"));
-            } catch (IOException e) {
-                System.err.println("graphics/work.png not found");
-                workingPic=null;
-            }
-        }
-
-        this.blockSize=blockSize;
-        if(!picMap.containsKey(blockSize) && !Objects.isNull(workingPic)){picMap.put(blockSize,SpriteManager.resize(workingPic,blockSize));}
-    }
 
     public void start(){isStopped=false;}
     public void stop(){isStopped=true;}
     public abstract BufferedImage nextSprite();
-    public BufferedImage nextPausedSprite(){
-        return picMap.get(blockSize);
-    }
 
     public static BufferedImage resize(BufferedImage img, Position newSize){return resize(img,newSize.getX_asPixel(), newSize.getY_asPixel());}
     public static BufferedImage resize(BufferedImage img, int newW, int newH) {
@@ -50,7 +27,6 @@ public abstract class SpriteManager {
     }
 
     BufferedImage cropImage(BufferedImage src, Rectangle rect) {
-        BufferedImage dest = src.getSubimage(rect.x,rect.y, rect.width, rect.height);
-        return dest;
+        return src.getSubimage(rect.x,rect.y, rect.width, rect.height);
     }
 }

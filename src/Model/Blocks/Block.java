@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Objects;
 
 public abstract class Block {
@@ -51,6 +52,7 @@ public abstract class Block {
         condition=100;
         size=new Position(1,1,false);
         popularityIncrease = 0;
+        setupSprites();
     }
 
     public Block(Position p){
@@ -66,21 +68,21 @@ public abstract class Block {
         this.size = size;
         this.pos = pos;
         condition=MAX_CONDITION;
+        setupSprites();
     }
 
     public Block(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state) {
-        this.buildingCost = buildingCost;
-        this.upkeepCost = upkeepCost;
-        this.popularityIncrease = popularityIncrease;
-        this.state = state;
-        this.size = new Position(1,1,false);
-        this.pos = new Position(0,0,true);
-        condition=MAX_CONDITION;
+        this(buildingCost,upkeepCost,popularityIncrease,state,new Position(1,1,false),new Position(0,0,true));
     }
 
 
 
     //Methods:
+    public void build(){
+        //now its instantly builds itself
+        //todo building time for blocks
+        state=BlockState.FREE;
+    }
     public void startDay(){getSpriteManager().start();}
     public void endDay(){getSpriteManager().stop();}
 
@@ -150,28 +152,45 @@ public abstract class Block {
         return "Block";
     }
 
+    //painting
     abstract public Color getColor();
     abstract protected SpriteManager getSpriteManager();
 
-    private static BufferedImage workImage;
-    static {
+    private static BufferedImage workingPic;
+    private static final HashMap<Position,BufferedImage> workingPicMap =new HashMap<>();
+
+    static{
         try {
-            workImage = ImageIO.read(new File("graphics/work.png"));
+            workingPic=ImageIO.read(new File("graphics/work.png"));
         } catch (IOException e) {
             System.err.println("graphics/work.png not found");
         }
+
+    }
+
+    private void setupSprites(){
+        if(!workingPicMap.containsKey(getSize()) && !Objects.isNull(workingPic)){
+            workingPicMap.put(getSize(),SpriteManager.resize(workingPic,getSize()));}
     }
 
     public void paint(Graphics2D gr){
-
-        if(/*state==BlockState.UNDER_CONSTRUCTION ||*/ state == BlockState.UNDER_REPAIR){
-            //gr.drawImage(getSpriteManager().nextPausedSprite(),pos.getX_asPixel(),pos.getY_asPixel(),DEFAULT_BACKGROUND_COLOR,null);
-            gr.drawImage(getSpriteManager().nextPausedSprite(),pos.getX_asPixel(),pos.getY_asPixel(),null);
-        }else{
-            //gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(),DEFAULT_BACKGROUND_COLOR,null);
-            gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(),null);
+        switch (state){
+            default:
+                gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(),null);
+                break;
+            case UNDER_CONSTRUCTION:
+            case UNDER_REPAIR:
+                gr.drawImage(workingPicMap.get(getPos()),pos.getX_asPixel(),pos.getY_asPixel(),null);
+                break;
+            case USED:
+                getSpriteManager().start();
+                gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(),null);
+                break;
+            case FREE:
+                getSpriteManager().stop();
+                gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(),null);
+                break;
         }
-        //gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(), DEFAULT_BACKGROUND_COLOR,null);
         drawBorder(gr);
     }
 

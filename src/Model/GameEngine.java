@@ -71,33 +71,33 @@ public class GameEngine {
      * Metódus segítségével megépítjük a blockot és behlyezzük a mátrxiba.
      * Először leellenőrizzük, hogy építhető-e size-ja szerint, ha igen megépítjük.
      * Végül hozzáadunk egy példányt a megépített block-ok listájába a szimuláció érdekében.
-     * @param b megépítendő block
+     * @param toBuild megépítendő block
      * @return  false, ha egyik blockban nem freeplace van
      *          true, ha építés végbement
      */
-    public boolean buildBlock(Block b) {
+    public boolean buildBlock(Block toBuild) {
         //if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
 
-        if(b instanceof GarbageCan){return buildBin(b.pos);}
-        if(pg.getMoney() < b.getBuildingCost()) return false;
-        if(!(pg.isBuildable(b))) return false;
+        if(toBuild instanceof GarbageCan){return buildBin(toBuild.pos);}
+        if(pg.getMoney() < toBuild.getBuildingCost()) return false;
+        if(!(pg.isBuildable(toBuild))) return false;
 
-        int posFromX = b.getPos().getX_asIndex();
-        int posFromY = b.getPos().getY_asIndex();
-        int buildUntilX = posFromX + b.getSize().getX_asIndex();
-        int buildUntilY = posFromY + b.getSize().getY_asIndex();
+        int posFromX = toBuild.getPos().getX_asIndex();
+        int posFromY = toBuild.getPos().getY_asIndex();
+        int buildUntilX = posFromX + toBuild.getSize().getX_asIndex();
+        int buildUntilY = posFromY + toBuild.getSize().getY_asIndex();
 
         for (int x = posFromX; x < buildUntilX; ++x)
             for (int y = posFromY; y < buildUntilY; ++y)
-                pg.buildBlock(b,x,y);
+                pg.buildBlock(toBuild,x,y);
 
-        b.setState(BlockState.UNDER_CONSTRUCTION);
 
-        pg.setMoney(pg.getMoney()-b.getBuildingCost());
-        pg.getBuildedObjectList().add(b);
+        pg.setMoney(pg.getMoney()-toBuild.getBuildingCost());
+        pg.getBuildedObjectList().add(toBuild);
+        toBuild.build();
 
-        if(b instanceof Game)               pg.getBuildedGameList().add((Game) b);
-        else if(b instanceof ServiceArea)   { pg.getBuildedServiceList().add((ServiceArea) b);
+        if(toBuild instanceof Game)               pg.getBuildedGameList().add((Game) toBuild);
+        else if(toBuild instanceof ServiceArea)   { pg.getBuildedServiceList().add((ServiceArea) toBuild);
             System.out.println("Bekerült az objekt");}
 
         return true;

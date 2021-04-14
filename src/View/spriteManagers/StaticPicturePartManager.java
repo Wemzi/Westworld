@@ -12,7 +12,6 @@ public class StaticPicturePartManager extends SpriteManager{
     private final BufferedImage img;
 
     public StaticPicturePartManager(String imgPath, Position blockSize, Rectangle imgPart) {
-        super(blockSize);
         BufferedImage i= null;
         try {
             i = ImageIO.read(new File(imgPath));

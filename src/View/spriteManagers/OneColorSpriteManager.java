@@ -10,7 +10,6 @@ public class OneColorSpriteManager extends SpriteManager {
     private final BufferedImage img;
 
     public OneColorSpriteManager(Color c, Position blockSize) {
-        super(blockSize);
         img = new BufferedImage(blockSize.getX_asPixel(), blockSize.getY_asPixel(), ColorSpace.TYPE_RGB);
         Graphics2D graphics = img.createGraphics();
 
