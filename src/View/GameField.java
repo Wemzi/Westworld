@@ -1,15 +1,19 @@
 package View;
 
 import Model.Blocks.Block;
+import Model.Blocks.FreePlace;
 import Model.GameEngine;
 import Model.People.Employee;
 import Model.People.Visitor;
 import Model.Position;
+import View.spriteManagers.SpriteManager;
+import View.spriteManagers.StaticSpriteManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
@@ -19,6 +23,8 @@ import java.util.ArrayList;
 public class GameField extends JPanel {
     private final GameEngine engine;
 
+    private BufferedImage background;
+
     private boolean mouseFollowing=false;
     private Block toBuild;
 
@@ -26,6 +32,7 @@ public class GameField extends JPanel {
         setPreferredSize(new Dimension(600, 600));
         setBorder(BorderFactory.createLineBorder(Color.black));
         this.engine=engine;
+        makeBackgroundImage();
     }
 
     public void disableMouseFollowing() {
@@ -38,8 +45,10 @@ public class GameField extends JPanel {
     }
 
     private static void paintBlocks(Graphics2D gr,GameEngine gameEngine){
+
         for(Block b : gameEngine.getPg().getBuildedObjectList()){
                 if(b!=null){
+                    if(b instanceof FreePlace){continue;}
                     b.paint(gr);
                     /*
                     if(b instanceof Road && ((Road) b).isHasGarbageCan()){
@@ -70,12 +79,29 @@ public class GameField extends JPanel {
         }
     }
 
+    private void drawBackground(Graphics2D gr){
+        gr.drawImage(background,0,0,null);
+    }
+
+    private void makeBackgroundImage(){
+        SpriteManager sp=new StaticSpriteManager("graphics/grass.png",new Position(1,1,false));
+        background = new BufferedImage(MainWindow2.BOX_SIZE*MainWindow2.NUM_OF_COLS, MainWindow2.BOX_SIZE*MainWindow2.NUM_OF_ROWS, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D bgGraphics = background.createGraphics();
+        for (int i = 0; i < MainWindow2.NUM_OF_COLS; i++) {
+            for (int j = 0; j < MainWindow2.NUM_OF_ROWS; j++) {
+                bgGraphics.drawImage(sp.nextSprite(), i*MainWindow2.BOX_SIZE, j*MainWindow2.BOX_SIZE, null);
+            }
+        }
+        bgGraphics.dispose();
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D gr = (Graphics2D) g;
-        gr.setBackground(new Color(24, 83, 24));
+        //gr.setBackground(new Color(24, 83, 24));
+        drawBackground(gr);
         paintBlocks(gr,engine);
         paintVisitors(gr,engine);
         paintEmployees(gr,engine);

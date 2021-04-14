@@ -64,6 +64,7 @@ public class Playground {
      */
     public boolean buildBlock(Block block, int posX, int posY) {
         if(!(blocks[posX][posY] instanceof FreePlace) && !Objects.isNull(blocks[posX][posY])) return false;
+        buildedObjects.remove(blocks[posX][posY]);
         blocks[posX][posY] = block;
         return true;
     }
