@@ -42,7 +42,7 @@ public class Visitor extends Person {
     }
 
     public void playGame(Game that) {
-        playfulness -= 100;
+        playfulness -= 60;
         happiness += 20;
         hunger += 15;
         currentActivityLength = that.getCooldownTime();
@@ -55,7 +55,6 @@ public class Visitor extends Person {
         playfulness += 50;
         currentActivityLength = where.getCooldownTime();
         this.state = VisitorState.WANNA_TOILET;
-        System.out.println(this.isBusy());
     }
 
     public void toilet(ServiceArea where) {
@@ -70,7 +69,7 @@ public class Visitor extends Person {
 
     @Override
     public void findGoal(Random rnd, Playground pg) {
-        if(isMoving || state == VisitorState.DOESNT_KNOW){return;}
+        if(isMoving || isBusy()){return;}
         if ( getState().equals(VisitorState.WANNA_PLAY)) {
             ArrayList<Game> GameList = pg.getBuildedGameList();
             if (GameList.size() == 0) return;
@@ -158,6 +157,10 @@ public class Visitor extends Person {
         if(playfulness > 50 && hunger < 50 && state == VisitorState.DOESNT_KNOW) {
             this.state = VisitorState.WANNA_PLAY;
             return;
+        }
+        if(playfulness < 0)
+        {
+            playfulness = 0;
         }
         /*
         if(stayingTime < 0 && state == VisitorState.DOESNT_KNOW )

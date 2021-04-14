@@ -169,7 +169,7 @@ public class GameEngine {
 
         Position entrancePosition = pg.getEntrancePosition();
         pg.getVisitors().add(new Visitor(entrancePosition));
-        pg.getVisitors().get(0).roundHasPassed(minutesPerSecond);
+        //pg.getVisitors().get(0).roundHasPassed(minutesPerSecond);
 
 
 
@@ -271,8 +271,8 @@ public class GameEngine {
                     pg.setMinutes(0);
                     pg.setHours(pg.getHours()+1);
 
-                    pg.getVisitors().add(new Visitor(entrancePosition));
-                    pg.getVisitors().get(pg.getVisitors().size()-1).roundHasPassed(minutesPerSecond);
+                    //pg.getVisitors().add(new Visitor(entrancePosition));
+                    //pg.getVisitors().get(pg.getVisitors().size()-1).roundHasPassed(minutesPerSecond);
                 }
                 if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban
                     pg.setMinutes(0);
