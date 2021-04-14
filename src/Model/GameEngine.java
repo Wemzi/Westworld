@@ -1,7 +1,9 @@
 package Model;
 
 import Model.Blocks.*;
-import Model.People.*;
+import Model.People.Cleaner;
+import Model.People.Employee;
+import Model.People.Visitor;
 
 import java.util.*;
 
@@ -138,6 +140,7 @@ public class GameEngine {
      */
     public boolean buildBin(Position p){
         if(pg.blocks[p.getX_asIndex()][p.getY_asIndex()] instanceof Road){
+            if(((Road) pg.blocks[p.getX_asIndex()][p.getY_asIndex()]).isEntrance()){return false;}// bejaratnal ne legyen kuka
             if(!(((Road) pg.blocks[p.getX_asIndex()][p.getY_asIndex()]).isHasGarbageCan())) {
                 ((Road) pg.blocks[p.getX_asIndex()][p.getY_asIndex()]).setHasGarbageCan(true);
                 System.out.println("Kuka lehelyezve!");
@@ -300,15 +303,11 @@ public class GameEngine {
 
     }
 
-    public int getSalaries(){
-        int sum=0;
-        for(Caterer caterer : pg.getCaterers())          sum += caterer.getSalary();
-        for(Cleaner cleaner : pg.getCleaners())         sum += cleaner.getSalary();
-        for(Operator operator : pg.getOperators())      sum += operator.getSalary();
-        for(Repairman repairman : pg.getRepairmen())    sum += repairman.getSalary();
-        return sum;
-    }
-
+    public int getRepairmanSalaries(){return pg.getRepairmen().stream().mapToInt(Employee::getSalary).sum(); }
+    public int getCatererSalaries(){return pg.getCaterers().stream().mapToInt(Employee::getSalary).sum(); }
+    public int getOperatorSalaries(){return pg.getOperators().stream().mapToInt(Employee::getSalary).sum(); }
+    public int getClenanerSalaries(){return pg.getCleaners().stream().mapToInt(Employee::getSalary).sum(); }
+    public int getSalaries(){return getClenanerSalaries() + getOperatorSalaries() + getRepairmanSalaries() + getCatererSalaries(); }
 
     /* Getterek / Setterek */
     public Playground getPg() { return pg; }

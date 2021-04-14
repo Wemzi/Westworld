@@ -108,11 +108,12 @@ public class MainWindow2 extends JFrame{
         new MenuCreator(buildMenu,this).inflate();
 
         //management dialog
-        ManagementDialog managementDialog=new ManagementDialog(this,engine);
+        MainWindow2 owner=this;
         JMenuItem managementMenuItem = new JMenuItem("Management");
         managementMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                ManagementDialog managementDialog=new ManagementDialog(owner,engine);
                 managementDialog.setVisible(true);
             }
         });

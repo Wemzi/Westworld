@@ -87,7 +87,7 @@ public class Playground {
      *          False literálisan, ha valamelyik helyen nem freeplace van
      *          True ha az összesen helyen freeplace van
      */
-    public boolean isBuildable(Block block){ //todo implement for Entrance
+    public boolean isBuildable(Block block){
         int blockFromX = block.getPos().getX_asIndex();
         int blockFromY = block.getPos().getY_asIndex();
 
@@ -97,6 +97,7 @@ public class Playground {
 
         if(block instanceof GarbageCan){
             if(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof Road){
+                if(((Road) blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()]).isEntrance()){return false;}
                 return !((Road) blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()]).isHasGarbageCan();
             }
             return false;
@@ -125,56 +126,41 @@ public class Playground {
         return true;
     }
 
-    public boolean hire(Employee e) {
-        int salary = e.getSalary();
-        if(money < salary) return false;
-
+    public void hire(Employee e) {
         if(e instanceof Caterer) {
             cateres.add((Caterer) e);
             ((Caterer) e).workPlace.addWorker((Caterer) e);
-            return true;
         } else if(e instanceof Cleaner) {
             cleaners.add((Cleaner)e);
-            return true;
         }
         else if(e instanceof Operator) {
             operators.add((Operator)e);
-            return true;
         }
         else if(e instanceof Repairman) {
             repairmen.add((Repairman)e);
-            return true;
+            System.out.println("Hired a repairman");
         }
-        else return false;
     }
 
-    public boolean fire(Employee e){
+    public void fire(Employee e){
         if(e instanceof Caterer) {
-            if (cateres.size() > 0) {
-                cateres.remove(cateres.size() - 1);
-                ((Caterer) e).workPlace.getWorkers().remove(e);
-                return true;
-            } else { return false; }
+            cateres.remove(e);
+            ((Caterer) e).workPlace.getWorkers().remove(e);
         }
         else if(e instanceof Cleaner) {
-            if(cleaners.size() > 0) {
-                cleaners.remove(cleaners.size()-1);
-                return true;
-            } else { return false; }
+            Cleaner cl =getFreeCleaner();
+            if(!Objects.isNull(cl)) {
+                cleaners.remove(cl);
+            }else{
+                System.err.println("No free cleaner to remove!");
+            }
         }
         else if(e instanceof Operator) {
-            if(operators.size() > 0) {
-                operators.remove(operators.size()-1);
-                return true;
-            } else { return false; }
+            operators.remove(e);
         }
         else if(e instanceof Repairman) {
-            if(repairmen.size() > 0) {
-                repairmen.remove(repairmen.size()-1);
-                return true;
-            } else { return false; }
+            repairmen.remove(e);
         }
-        return false;
     }
 
     public boolean findRoute(Person visitor, Position start, Position destination) {

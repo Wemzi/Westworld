@@ -3,6 +3,9 @@ package View;
 import Model.Blocks.*;
 import Model.GameEngine;
 import Model.People.Caterer;
+import Model.People.Cleaner;
+import Model.People.Employee;
+import Model.People.Repairman;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -52,6 +55,10 @@ public class BlockInfoDialog extends JDialog {
             panel.add(new JLabel("Entrance: "+((Road) block).isEntrance()));
             panel.add(new JLabel("Garbage: "+((Road) block).getGarbage()));
             panel.add(new JLabel("Garbage level: "+((Road) block).getGarbageLevel()));
+        }else if(block instanceof EmployeeBase){
+            panel.add(createEmployeePanel("Cleaner",engine,new Cleaner(block.getPos(),10)));
+            //panel.add(createEmployeePanel("Operator",engine,new Operator(block.getPos(),10,null)));
+            panel.add(createEmployeePanel("Repairman",engine,new Repairman(block.getPos(),10)));
         }
     }
 
@@ -92,6 +99,37 @@ public class BlockInfoDialog extends JDialog {
                 }
                 engine.getPg().fire(block.getWorkers().get(0));
                 label.setText("Caterer: "+block.getWorkers().size());
+            }
+        });
+
+        rowPanel.add(minusButton);
+        rowPanel.add(plusButton);
+        return rowPanel;
+    }
+
+    private static JPanel createEmployeePanel(String name, GameEngine engine, Employee employee){
+        JPanel rowPanel=new JPanel();
+        rowPanel.setLayout(new BoxLayout(rowPanel,BoxLayout.LINE_AXIS));
+
+        JLabel label=new JLabel(name+": "+engine.getPg().getEmployeesLike(employee).size());
+        label.setBorder(new EmptyBorder(10,10,20,20));
+        rowPanel.add(label);
+        JButton minusButton=new JButton("-");
+        JButton plusButton=new JButton("+");
+
+        plusButton.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                engine.getPg().hire(employee);
+                label.setText(name+": "+engine.getPg().getEmployeesLike(employee).size());
+            }
+        });
+
+        minusButton.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                engine.getPg().fire(employee);
+                label.setText(name+": "+engine.getPg().getEmployeesLike(employee).size());
             }
         });
 
