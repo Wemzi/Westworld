@@ -13,7 +13,7 @@ public class Road extends Block {
     private static SpriteManager noGarbageSpriteManager =null;
     private static SpriteManager fewGarbageSpriteManager =null;
     private static SpriteManager lotGarbageSpriteManager =null;
-    private static SpriteManager garbageCanSpriteManager =null;
+    protected static SpriteManager garbageCanSpriteManager =null;
     private static SpriteManager entranceSpriteManager =null;
     private boolean hasGarbageCan;
     private boolean isEntrance;

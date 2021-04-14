@@ -1,23 +1,23 @@
 package Model.Blocks;
 
 import Model.Position;
-import View.spriteManagers.OneColorSpriteManager;
 import View.spriteManagers.SpriteManager;
 
 import java.awt.*;
-import java.util.Objects;
 
-public class GarbageCan extends Block{
+public class GarbageCan extends Road{
     private static SpriteManager spriteManager;
 
-    @Override
-    public Position getPos() {
-        return pos;
+    public GarbageCan(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, boolean hasGarbageCan, boolean isEntrance, int garbage) {
+        super(buildingCost, upkeepCost, popularityIncrease, state, hasGarbageCan, isEntrance, garbage);
     }
 
-    @Override
-    public void setPos(Position pos) {
-        this.pos = pos;
+    public GarbageCan(Position p) {
+        super(p);
+    }
+
+    public GarbageCan(Position p,  boolean isEntrance) {
+        super(p, true, isEntrance);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class GarbageCan extends Block{
 
     @Override
     protected SpriteManager getSpriteManager() {
-        if(Objects.isNull(spriteManager)){spriteManager=new OneColorSpriteManager(getColor(),getSize());}
-        return spriteManager;
+        super.getSpriteManager();
+        return garbageCanSpriteManager;
     }
 }
