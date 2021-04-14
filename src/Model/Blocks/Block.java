@@ -52,7 +52,6 @@ public abstract class Block {
         condition=100;
         size=new Position(1,1,false);
         popularityIncrease = 0;
-        setupSprites();
     }
 
     public Block(Position p){
@@ -68,7 +67,6 @@ public abstract class Block {
         this.size = size;
         this.pos = pos;
         condition=MAX_CONDITION;
-        setupSprites();
     }
 
     public Block(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state) {
@@ -81,6 +79,7 @@ public abstract class Block {
     public void build(){
         //now its instantly builds itself
         //todo building time for blocks
+        setupSprites();
         state=BlockState.FREE;
     }
     public void startDay(){getSpriteManager().start();}
@@ -180,7 +179,7 @@ public abstract class Block {
                 break;
             case UNDER_CONSTRUCTION:
             case UNDER_REPAIR:
-                gr.drawImage(workingPicMap.get(getPos()),pos.getX_asPixel(),pos.getY_asPixel(),null);
+                gr.drawImage(workingPicMap.get(getSize()),pos.getX_asPixel(),pos.getY_asPixel(),null);
                 break;
             case USED:
                 getSpriteManager().start();
