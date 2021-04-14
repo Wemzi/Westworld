@@ -154,6 +154,7 @@ public class GameEngine {
     public void startDay()  {
         if(!(pg.getHours() == 8)) { System.err.println("A nap már elkezdődött!"); return; }
         isBuildingPeriod = false;
+        pg.getBuildedObjectList().forEach(Block::startDay);
 
         Position entrancePosition = pg.getEntrancePosition();
         pg.getVisitors().add(new Visitor(entrancePosition));
@@ -284,17 +285,19 @@ public class GameEngine {
      * További szimulációs lépések itt lesznek majd implementálhatók
      */
     public void endDayPayOff() {
+        pg.getBuildedObjectList().forEach(Block::endDay);
         int money = pg.getMoney();
         for(Block b : pg.getBuildedObjectList()) {
             money -= b.getUpkeepCost();
             b.setCondition(b.getCondition()-1);
         }
-        System.out.println("endPayOff msg: Építmények upkepp costjai ki lettek fizetve!");
+        System.out.println("endPayOff msg: Építmények upkeep costjai ki lettek fizetve!");
 
         money -= getSalaries();
         System.out.println("endPayOff msg: Alkalmazottak ki lettek fizetve!");
 
         pg.setMoney(money);
+
     }
 
     public int getSalaries(){

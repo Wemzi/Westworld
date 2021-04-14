@@ -34,6 +34,7 @@ public class DynamicSpriteManager extends SpriteManager {
 
     @Override
     public BufferedImage nextSprite() {
+        if(isStopped){return sprites.get(actualSpriteIndex);}
         if(timeCounter>0){
             timeCounter--;
         }else{

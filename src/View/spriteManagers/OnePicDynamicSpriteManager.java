@@ -35,6 +35,7 @@ public class OnePicDynamicSpriteManager extends SpriteManager {
 
     @Override
     public BufferedImage nextSprite() {
+        if(isStopped){return sprites.get(actualSpriteIndex);}
         if(timeCounter>0){
             timeCounter--;
         }else{
@@ -45,7 +46,5 @@ public class OnePicDynamicSpriteManager extends SpriteManager {
         }
         return sprites.get(actualSpriteIndex);
     }
-
-
 
 }

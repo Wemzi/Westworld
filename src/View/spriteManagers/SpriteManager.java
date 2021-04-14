@@ -14,6 +14,8 @@ public abstract class SpriteManager {
     private static BufferedImage workingPic;
     private static HashMap<Position,BufferedImage> picMap=new HashMap<>();
     private final Position blockSize;
+    protected boolean isStopped=true;
+
     protected SpriteManager(Position blockSize) {
         if(Objects.isNull(workingPic)){
             try {
@@ -28,6 +30,8 @@ public abstract class SpriteManager {
         if(!picMap.containsKey(blockSize) && !Objects.isNull(workingPic)){picMap.put(blockSize,SpriteManager.resize(workingPic,blockSize));}
     }
 
+    public void start(){isStopped=false;}
+    public void stop(){isStopped=true;}
     public abstract BufferedImage nextSprite();
     public BufferedImage nextPausedSprite(){
         return picMap.get(blockSize);
