@@ -9,6 +9,9 @@ import View.MainWindow2;
 import View.spriteManagers.SpriteManager;
 
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -52,7 +55,6 @@ abstract public class Person {
 
         //todo megerkeztunk, akkor valamit csinalni is kene
         goal=null;
-        roundHasPassed(minutesPerSecond);
         System.out.println("Person megérkezett!");
     }
 
@@ -89,6 +91,27 @@ abstract public class Person {
             }
     }
 
+    public String getRandomName()
+    {
+        Random rnd = new Random();
+        int nameindex = Math.abs(rnd.nextInt()%18000);
+        BufferedReader reader;
+        String ret = "";
+        try {
+            reader = new BufferedReader(new FileReader(
+                    "src/Model/People/names.txt"));
+            String line = reader.readLine();
+            for(int idx=0; idx < nameindex;idx++) {
+                line = reader.readLine();
+            }
+            ret = reader.readLine();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
     public void moveTo(Direction d,int pixel )
     {
         if(pixel<=0){throw new IllegalArgumentException("@param pixel must be >0");}
@@ -117,7 +140,7 @@ abstract public class Person {
     }
     protected Color getColor(){return Color.white;};
     abstract protected void roundHasPassed(int minutesPerSecond);
-    public boolean isBusy(){return currentActivityLength>0 || isMoving;}
+    public boolean isBusy(){return currentActivityLength>0;}
 
     public abstract SpriteManager getSpriteManager();
 

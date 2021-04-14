@@ -10,6 +10,9 @@ import View.spriteManagers.OnePicDynamicSpriteManager;
 import View.spriteManagers.SpriteManager;
 
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,17 +24,14 @@ public class Visitor extends Person {
     private int playfulness;
     private int stayingTime;
     private VisitorState state;
+    private String name;
 
 
-
-    // TODO: add a new value that defines how long are they staying. make it changeable.
     // TODO: cyclical waiting at a game for example
-    // TODO: change playfulness and hunger in time
-    // TODO: they shouldnt interrupt their actions
-    // TODO: generate random numbers
     public Visitor(Position startingPos) {
         super(startingPos);
         Random rnd = new Random();
+        name = getRandomName();
         happiness = Math.abs(rnd.nextInt() % 100);
         hunger = Math.abs(rnd.nextInt() % 100);
         playfulness = 50;
@@ -54,9 +54,7 @@ public class Visitor extends Person {
         happiness += 5;
         playfulness += 50;
         currentActivityLength = where.getCooldownTime();
-        System.out.println("state = wanna toilet kovi");
         this.state = VisitorState.WANNA_TOILET;
-        System.out.println("Visitor evett, következő state: " + this.state);
         System.out.println(this.isBusy());
     }
 
@@ -72,7 +70,7 @@ public class Visitor extends Person {
 
     @Override
     public void findGoal(Random rnd, Playground pg) {
-        if(isMoving){return;}
+        if(isMoving || state == VisitorState.DOESNT_KNOW){return;}
         if ( getState().equals(VisitorState.WANNA_PLAY)) {
             ArrayList<Game> GameList = pg.getBuildedGameList();
             if (GameList.size() == 0) return;
@@ -128,18 +126,20 @@ public class Visitor extends Person {
             eat( (ServiceArea) goal);
             System.out.println("evett!");
         }
-
         goal=null;
-
-        roundHasPassed(minutesPerSecond);
 
     }
 
-    public void roundHasPassed(int minutesPerSecond) {
 
+
+    public void roundHasPassed(int minutesPerSecond) {
+        System.out.println(toString());
         this.hunger += minutesPerSecond/5;
         this.stayingTime -= minutesPerSecond;
-        currentActivityLength-= minutesPerSecond;
+        if(!isMoving)
+        {
+            currentActivityLength-= minutesPerSecond;
+        }
         if(state != VisitorState.DOESNT_KNOW)
         {
             return;
@@ -229,7 +229,8 @@ public class Visitor extends Person {
     @Override
     public String toString() {
         return "Visitor{" +
-                "currentActivityLength=" + currentActivityLength +
+                "neve: " + name +
+                " currentActivityLength=" + currentActivityLength +
                 ", isMoving=" + isMoving +
                 ", pathPositionIndex=" + pathPositionIndex +
                 ", happiness=" + happiness +

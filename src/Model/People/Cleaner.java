@@ -31,7 +31,7 @@ public class Cleaner extends Employee {
 
     public void roundHasPassed(int minutesPerSecond)
     {
-        if(currentActivityLength>0){currentActivityLength-= minutesPerSecond;}
+        if(currentActivityLength>0 ){currentActivityLength-= minutesPerSecond;}
 
         if(!Objects.isNull(whatSheCleans)){
             //whatSheCleans.setGarbage(whatSheCleans.getGarbage()-minutesPerSecond);
@@ -47,10 +47,11 @@ public class Cleaner extends Employee {
 
     @Override
     public void findGoal(Random rnd, Playground pg) {
-        goal=pg.getBlockByPosition(new Position(5,0,false));
+        goal=pg.getBlockByPosition(new Position(4,4,false));
         for(Block b :pg.getBuildedObjectList()){
             if(b instanceof EmployeeBase){
                 goal=b;
+                System.out.println("megvan az employeebase");
             }
         }
     }
