@@ -105,7 +105,7 @@ public class MenuCreator {
         garbageCanMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Block block=new GarbageCan();
+                Block block=new GarbageCan(new Position(0,0,false));
                 parent.startPlaceSelectionMode(block);
             }
         });

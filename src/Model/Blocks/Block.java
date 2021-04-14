@@ -163,9 +163,11 @@ public abstract class Block {
     public void paint(Graphics2D gr){
 
         if(/*state==BlockState.UNDER_CONSTRUCTION ||*/ state == BlockState.UNDER_REPAIR){
-            gr.drawImage(getSpriteManager().nextPausedSprite(),pos.getX_asPixel(),pos.getY_asPixel(),DEFAULT_BACKGROUND_COLOR,null);
+            //gr.drawImage(getSpriteManager().nextPausedSprite(),pos.getX_asPixel(),pos.getY_asPixel(),DEFAULT_BACKGROUND_COLOR,null);
+            gr.drawImage(getSpriteManager().nextPausedSprite(),pos.getX_asPixel(),pos.getY_asPixel(),null);
         }else{
-            gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(),DEFAULT_BACKGROUND_COLOR,null);
+            //gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(),DEFAULT_BACKGROUND_COLOR,null);
+            gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(),null);
         }
         //gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(), DEFAULT_BACKGROUND_COLOR,null);
         drawBorder(gr);

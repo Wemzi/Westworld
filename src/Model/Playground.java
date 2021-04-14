@@ -66,11 +66,15 @@ public class Playground {
      */
     public boolean buildBlock(Block block, int posX, int posY) {
         if(!(blocks[posX][posY] instanceof FreePlace) && !Objects.isNull(blocks[posX][posY])) return false;
+        buildedObjects.remove(blocks[posX][posY]);
         blocks[posX][posY] = block;
         return true;
     }
-    public void demolishBlock(FreePlace block, int posX, int posY) {
-        blocks[posX][posY] = block;
+    public void demolishBlock(int posX, int posY)
+    {
+        FreePlace freeplaceBlock = new FreePlace(0,0,0,BlockState.FREE);
+        freeplaceBlock.setPos(new Position(posX,posY,false));
+        blocks[posX][posY] = freeplaceBlock;
     }
 
 
@@ -87,10 +91,9 @@ public class Playground {
         int blockFromX = block.getPos().getX_asIndex();
         int blockFromY = block.getPos().getY_asIndex();
 
-
         if(blockFromX<0 || blockFromX >=NUM_OF_COLS ||blockFromY<0 || blockFromY >=NUM_OF_ROWS ){return false;} //Nincs a fieldben
 
-        if(Objects.isNull(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()])){return true;}
+        if(Objects.isNull(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()])){return true;} //Nincs ott semmi -> epitheto
 
         if(block instanceof GarbageCan){
             if(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof Road){
@@ -98,6 +101,17 @@ public class Playground {
             }
             return false;
         }
+        if(block instanceof Road && ((Road) block).isEntrance()){
+            int x=block.getPos().getX_asIndex();
+            int y=block.getPos().getY_asIndex();
+            Block replaceThis=blocks[x][y];
+
+            if(!(replaceThis instanceof Road || replaceThis instanceof FreePlace ) ){ return false;}// nem Road, nem FreePlace van ott
+            if(replaceThis instanceof Road && ((Road) replaceThis).isEntrance()){return false;} //mar entrance
+
+            return x == 0 || y == 0 || x == NUM_OF_COLS - 1 || y == NUM_OF_ROWS - 1; //ha a palya szelen van akkor lehet bejarat
+        }
+
         if(!(blocks[block.getPos().getX_asIndex()][block.getPos().getY_asIndex()] instanceof FreePlace) ) return false;
 
 

@@ -48,7 +48,7 @@ public class testGame {
     public void buildBlock_demolishFreePlace(){
         Position p=new Position(0,0,false);
         FreePlace freePl=new FreePlace(p);
-        pg.demolishBlock(freePl,0,0);
+        pg.demolishBlock(0,0);
         assertTrue(pg.blocks[0][0] instanceof FreePlace);
     }
 
@@ -222,7 +222,7 @@ public class testGame {
         assertEquals(engine.getPg().blocks[0][0],b);
 
         //demolish
-        engine.demolish(b);
+        engine.demolish(b.getPos());
         assertTrue(engine.getPg().blocks[0][0] instanceof FreePlace);
     }
 }

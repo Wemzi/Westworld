@@ -101,43 +101,31 @@ public class GameEngine {
         return true;
     }
 
-    public void demolish(Block b) {
-        //if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return; }
-        int posFromX = b.getPos().getX_asIndex();
-        int posFromY = b.getPos().getY_asIndex();
-        int demolishUntilX = posFromX + b.getSize().getX_asIndex();
-        int demolishUntilY = posFromY + b.getSize().getY_asIndex();
+    public void demolish(Position deleteBlockHere) {
 
-        Block demolishedBlock = pg.getBlockByPosition(new Position(posFromX,posFromY,false));
+        //if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return; }
+        int posFromX = deleteBlockHere.getX_asIndex();
+        int posFromY = deleteBlockHere.getY_asIndex();
+        Block toDelete = pg.getBlocks()[posFromX][posFromY];
+        if(toDelete instanceof FreePlace){
+            System.err.println("Cannot delete a FreePlace!"); return;
+        }
+
+        int demolishUntilX = posFromX + toDelete.getSize().getX_asIndex();
+        int demolishUntilY = posFromY + toDelete.getSize().getY_asIndex();
 
         for(int x=posFromX; x<demolishUntilX; ++x) {
             for(int y=posFromY; y<demolishUntilY; ++y) {
-                FreePlace freeplaceBlock = new FreePlace(0,0,0,BlockState.FREE);
-                freeplaceBlock.setPos(new Position(x,y,false));
-                pg.demolishBlock(freeplaceBlock, x, y);
-            }
-        }
-        for(Block removedObject : pg.getBuildedObjectList()) {
-            if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
-                pg.getBuildedObjectList().remove(removedObject);
-                break;
+                pg.demolishBlock( x, y);
             }
         }
 
-        if(demolishedBlock instanceof Game) {
-            for(Block removedObject : pg.getBuildedGameList()) {
-                if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
-                    pg.getBuildedGameList().remove(b);
-                    break;
-                }
-            }
-        } else if (demolishedBlock instanceof ServiceArea) {
-            for(Block removedObject : pg.getBuildedServiceList()) {
-                if(posFromX == removedObject.getPos().getX_asIndex() && posFromY == removedObject.getPos().getY_asIndex()) {
-                    pg.getBuildedServiceList().remove(b);
-                    break;
-                }
-            }
+        pg.getBuildedObjectList().remove(toDelete);
+
+        if(toDelete instanceof Game) {
+            pg.getBuildedGameList().remove(toDelete);
+        } else if (toDelete instanceof ServiceArea) {
+            pg.getBuildedServiceList().remove(toDelete);
         }
 
     }
