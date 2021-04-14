@@ -4,7 +4,6 @@ import Model.Blocks.Block;
 import Model.GameEngine;
 import Model.People.Employee;
 import Model.People.Visitor;
-import Model.Playground;
 import Model.Position;
 
 import javax.swing.*;
@@ -58,14 +57,14 @@ public class GameField extends JPanel {
     }
 
     private static void paintVisitors(Graphics2D gr, GameEngine gameEngine){
-        ArrayList<Visitor> visitors=new ArrayList(gameEngine.getPg().getVisitors());
+        ArrayList<Visitor> visitors=new ArrayList<>(gameEngine.getPg().getVisitors());
         for(Visitor v : visitors){
             v.paint(gr);
         }
     }
 
     private static void paintEmployees(Graphics2D gr, GameEngine gameEngine){
-        ArrayList<Employee> visitors=new ArrayList(gameEngine.getPg().getEmployees());
+        ArrayList<Employee> visitors=new ArrayList<>(gameEngine.getPg().getEmployees());
         for(Employee v : visitors){
             v.paint(gr);
         }
@@ -86,19 +85,18 @@ public class GameField extends JPanel {
             if(p!=null){
                 Position where=Position.useMagicGravity(new Position(p.x,p.y,true));
                 toBuild.pos=where;
-                setPreviewColor(toBuild,gr,engine.getPg());
-                gr.fillRect(where.getX_asPixel(),where.getY_asPixel(), toBuild.size.getX_asPixel(), toBuild.size.getY_asPixel() );
+
+                if(engine.getPg().isBuildable(toBuild)){
+                    toBuild.paint(gr);
+                }else{
+                    gr.setColor(Color.BLACK);
+                    gr.fillRect(where.getX_asPixel(),where.getY_asPixel(), toBuild.size.getX_asPixel(), toBuild.size.getY_asPixel() );
+                }
+
             }
         }
     }
 
-    private static void setPreviewColor(Block toBuild, Graphics2D gr, Playground pg){
-            if(pg.isBuildable(toBuild)){
-                gr.setColor(toBuild.getColor());
-            }else{
-                gr.setColor(Color.BLACK);
-            }
-    }
 
     private static void drawBlockLabel(Block block, Graphics2D gr){
         /*
