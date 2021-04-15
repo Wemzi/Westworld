@@ -174,7 +174,7 @@ public class GameEngine {
 
                 ArrayList<Block> copy= new ArrayList<>(pg.getBuildedObjectList());
                 try{
-                    //manage blocks
+                    //manage block
 
                     for(Block b :copy){
                         if(b instanceof Game){
@@ -184,7 +184,7 @@ public class GameEngine {
                         }else if(b instanceof Road){
                             Road road=((Road) b);
                             Road.GarbageLevel garbageLevel =road.getGarbageLevel();
-                            if(garbageLevel== Road.GarbageLevel.LOT && Objects.isNull(road.cleaner)){
+                            if((garbageLevel== Road.GarbageLevel.FEW || garbageLevel == Road.GarbageLevel.LOT) && Objects.isNull(road.cleaner)){
                                 Cleaner cleaner=pg.getFreeCleaner();
                                 if(!Objects.isNull(cleaner)){
                                     road.cleaner=cleaner;
@@ -196,7 +196,7 @@ public class GameEngine {
                     }
 
 
-                    //manage people
+                    //manage cleaners
                     for (Cleaner v : pg.getCleaners()) {
                         v.roundHasPassed(minutesPerSecond);
                         if(Objects.isNull(v.goal) && !v.isBusy()){
@@ -211,7 +211,6 @@ public class GameEngine {
 
 
                     for (Visitor v : pg.getVisitors()) {
-
                             if(Objects.isNull(v.goal)){
                                 v.findGoal(rnd,pg);
                                 if(!Objects.isNull(v.goal)){
@@ -246,7 +245,15 @@ public class GameEngine {
                         v.roundHasPassed(minutesPerSecond);
                         //System.out.println(v.toString());
 
-                    v.setStayingTime(v.getStayingTime() - minutesPerSecond);
+                    int throwgarbage = Math.abs(rnd.nextInt() % 100);
+                    if(throwgarbage > 93)
+                    {
+                        Block possibleroad = pg.getBlockByPosition(v.getPosition());
+                        if(possibleroad instanceof Road)
+                        {
+                            ((Road) possibleroad).setGarbage(((Road) possibleroad).getGarbage()+15);
+                        }
+                    }
                     if (v.getStayingTime() == 0) {
                         pg.getVisitors().remove(v);
                         if (v.getHappiness() >= 50) {
@@ -263,8 +270,8 @@ public class GameEngine {
                     pg.setMinutes(0);
                     pg.setHours(pg.getHours()+1);
 
-                    //pg.getVisitors().add(new Visitor(entrancePosition));
-                    //pg.getVisitors().get(pg.getVisitors().size()-1).roundHasPassed(minutesPerSecond);
+                    pg.getVisitors().add(new Visitor(entrancePosition));
+                    pg.getVisitors().get(pg.getVisitors().size()-1).roundHasPassed(minutesPerSecond);
                 }
                 if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban
                     pg.setMinutes(0);

@@ -21,7 +21,6 @@ abstract public class Person {
     private Position pos;
     public Direction direction=Direction.NONE;
     protected int currentActivityLength;
-
     public ArrayList<Position> pathPosition=new ArrayList<>();
     public boolean isMoving;
     public int pathPositionIndex;

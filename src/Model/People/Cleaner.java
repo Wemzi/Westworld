@@ -10,6 +10,7 @@ import View.spriteManagers.SpriteManager;
 import View.spriteManagers.StaticPicturePartManager;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
@@ -47,9 +48,14 @@ public class Cleaner extends Employee {
 
     @Override
     public void findGoal(Random rnd, Playground pg) {
-        goal=pg.getBlockByPosition(new Position(4,4,false));
         for(Block b :pg.getBuildedObjectList()){
-            if(b instanceof EmployeeBase){
+            if(b instanceof Road && ((Road) b).getGarbageLevel() != Road.GarbageLevel.NONE)
+            {
+                goal = b;
+                System.out.println("KOSZOS AZ EGESZ HOBELEVANC");
+                return;
+            }
+            else if(b instanceof EmployeeBase){
                 goal=b;
                 System.out.println("megvan az employeebase");
             }
