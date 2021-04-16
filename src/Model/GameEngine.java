@@ -56,7 +56,7 @@ public class GameEngine {
         buildBlock(new Game(GameType.ROLLERCOASTER,new Position(11,8,false)));
         buildBlock(new ServiceArea(ServiceType.BUFFET,new Position(6,2,false)));
         buildBlock(new ServiceArea(ServiceType.TOILET,new Position(9,8,false)));
-        buildBlock(new EmployeeBase(new Position(4,4,false)));
+        buildBlock(new EmployeeBase(new Position(11,5,false)));
 
         pg.entrancePosition = new Position(5,0,false);
 
@@ -99,6 +99,7 @@ public class GameEngine {
         if(toBuild instanceof Game)               pg.getBuildedGameList().add((Game) toBuild);
         else if(toBuild instanceof ServiceArea)   { pg.getBuildedServiceList().add((ServiceArea) toBuild);
             System.out.println("Bekerült az objekt");}
+        else if(toBuild instanceof EmployeeBase) {pg.getBuildedEmployeeBases().add((EmployeeBase)toBuild);}
 
         return true;
     }
@@ -175,7 +176,7 @@ public class GameEngine {
                 ArrayList<Block> copy= new ArrayList<>(pg.getBuildedObjectList());
                 try{
                     //manage block
-
+                    boolean everyCleanerHasJob = false;
                     for(Block b :copy){
                         if(b instanceof Game){
                             ((Game) b).roundHasPassed(minutesPerSecond);
@@ -186,6 +187,10 @@ public class GameEngine {
                             Road.GarbageLevel garbageLevel =road.getGarbageLevel();
                             if((garbageLevel== Road.GarbageLevel.FEW || garbageLevel == Road.GarbageLevel.LOT) && Objects.isNull(road.cleaner)){
                                 Cleaner cleaner=pg.getFreeCleaner();
+                                if(Objects.isNull(pg.getFreeCleaner()))
+                                {
+                                    everyCleanerHasJob = true;
+                                }
                                 if(!Objects.isNull(cleaner)){
                                     road.cleaner=cleaner;
                                     cleaner.goal=road;
@@ -194,20 +199,33 @@ public class GameEngine {
                             }
                         }
                     }
+                    // send cleaners back to base
+                    if(!everyCleanerHasJob)
+                    {
+                        ArrayList<EmployeeBase> bases = pg.getBuildedEmployeeBases();
+                        Cleaner cleaner = pg.getFreeCleaner();
+                        while(!Objects.isNull(cleaner))
+                        {
+                            if(!Objects.isNull(cleaner)){
+                                cleaner.goal= bases.get(Math.abs(rnd.nextInt()%bases.size()));
+                                cleaner.setupRoute(pg);
+                            }
+                            cleaner = pg.getFreeCleaner();
+                        }
+                    }
 
 
                     //manage cleaners
                     for (Cleaner v : pg.getCleaners()) {
-                        v.roundHasPassed(minutesPerSecond);
                         if(Objects.isNull(v.goal) && !v.isBusy()){
-                            v.findGoal(rnd,pg);
-                            if(!Objects.isNull(v.goal)){
-                                v.setupRoute(pg);
-                            }
-                        }else{
-                            if(v.isMoving){v.move(minutesPerSecond);}
+                            v.findGoal(rnd, pg);
                         }
-                    }
+                        if(!Objects.isNull(v.goal) && !v.isMoving) {
+                            v.setupRoute(pg);
+                        }
+                        else if(v.isMoving){v.move(minutesPerSecond);}
+                        }
+
 
 
                     for (Visitor v : pg.getVisitors()) {
@@ -256,13 +274,13 @@ public class GameEngine {
                     }
                     if (v.getStayingTime() == 0) {
                         pg.getVisitors().remove(v);
-                        if (v.getHappiness() >= 50) {
-                            pg.setPopularity(pg.getPopularity() + 1);
-                        } else {
-                            pg.setPopularity(pg.getPopularity() - 1);
-                        }
                         break;
                     }
+                }
+
+                for(Cleaner c : pg.getCleaners())
+                {
+                    c.roundHasPassed(minutesPerSecond);
                 }
                 rounds[1] = 0;
 
