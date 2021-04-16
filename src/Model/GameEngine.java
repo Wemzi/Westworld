@@ -220,10 +220,10 @@ public class GameEngine {
                         if(Objects.isNull(v.goal) && !v.isBusy()){
                             v.findGoal(rnd, pg);
                         }
-                        if(!Objects.isNull(v.goal) && !v.isMoving) {
+                        if(!Objects.isNull(v.goal) && !v.isMoving && !v.isBusy()) {
                             v.setupRoute(pg);
                         }
-                        else if(v.isMoving){v.move(minutesPerSecond);}
+                        else if(v.isMoving && !v.isBusy()){v.move(minutesPerSecond);}
                         }
 
 

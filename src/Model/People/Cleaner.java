@@ -56,13 +56,13 @@ public class Cleaner extends Employee {
     @Override
     public void findGoal(Random rnd, Playground pg) {
         for(Block b :pg.getBuildedObjectList()){
-            if(b instanceof Road && ((Road) b).getGarbageLevel() != Road.GarbageLevel.NONE)
+            if(b instanceof Road && ((Road) b).getGarbageLevel() != Road.GarbageLevel.NONE && ! isBusy())
             {
                 goal = b;
                 System.out.println("KOSZOS AZ EGESZ HOBELEVANC");
                 return;
             }
-            else if(b instanceof EmployeeBase){
+            else if(b instanceof EmployeeBase && !isBusy()){
                 goal=b;
                 System.out.println("megvan az employeebase");
             }

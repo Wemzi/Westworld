@@ -55,7 +55,6 @@ abstract public class Person {
 
         //todo megerkeztunk, akkor valamit csinalni is kene
         goal=null;
-        System.out.println("Person megérkezett!");
     }
 
     public void move(int minutesPerSecond){
