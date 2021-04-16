@@ -189,6 +189,9 @@ public class Playground {
                         || blocks[i][j] instanceof ServiceArea
                                 && blocks[i][j].getPos().getX_asIndex() == destination.getX_asIndex()
                                 && blocks[i][j].getPos().getY_asIndex() == destination.getY_asIndex()
+                        || blocks[i][j] instanceof EmployeeBase
+                                && blocks[i][j].getPos().getX_asIndex() == destination.getX_asIndex()
+                                && blocks[i][j].getPos().getY_asIndex() == destination.getY_asIndex()
                         || blocks[i][j] instanceof Game
                                 && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
                                 && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex()
@@ -196,8 +199,8 @@ public class Playground {
                                 && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
                                 && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex()
                         || blocks[i][j] instanceof EmployeeBase
-                            && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
-                            && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex())
+                                && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
+                                && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex())
                         && !visited[i][j]) {
 
             visited[i][j] = true;
