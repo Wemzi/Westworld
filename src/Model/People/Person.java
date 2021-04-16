@@ -21,7 +21,6 @@ abstract public class Person {
     private Position pos;
     public Direction direction=Direction.NONE;
     protected int currentActivityLength;
-
     public ArrayList<Position> pathPosition=new ArrayList<>();
     public boolean isMoving;
     public int pathPositionIndex;
@@ -39,9 +38,10 @@ abstract public class Person {
     public void setupRoute(Playground pg){
 
         if(Objects.isNull(goal)) return;
-        if(this instanceof Cleaner && !(goal instanceof Road)){return;}
+        //if(this instanceof Cleaner && !(goal instanceof Road)){return;}
         if(!pg.findRoute(this, getPosition(), goal.getPos())){
             System.err.println("No available route");
+            return;
         }
         pathPositionIndex = getPathPositionList().size()-1;
         isMoving = true;

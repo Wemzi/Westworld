@@ -194,8 +194,11 @@ public class Playground {
                                 && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex()
                         || blocks[i][j] instanceof ServiceArea
                                 && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
-                                && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex())
-                && !visited[i][j]) {
+                                && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex()
+                        || blocks[i][j] instanceof EmployeeBase
+                            && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
+                            && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex())
+                        && !visited[i][j]) {
 
             visited[i][j] = true;
 
