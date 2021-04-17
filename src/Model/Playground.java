@@ -238,6 +238,27 @@ public class Playground {
         return false;
     }
 
+
+
+    public boolean isGarbageCanNearby(Position pos)
+    {   int posXorigin = pos.getX_asIndex();
+        int posYorigin = pos.getY_asIndex();
+        int posX = pos.getX_asIndex()-2;
+        boolean ret = false;
+        while(posX<posXorigin+2 ) {
+            int posY = pos.getY_asIndex()-2;
+            while (posY < posYorigin + 2) {
+                Block b = blocks[Math.abs(posX)][Math.abs(posY)];
+                if (b instanceof Road && ((Road) b).isHasGarbageCan()){ret=true;}
+                posY++;
+                System.out.println("posX: " + posX + " posY:"+ posY );
+            }
+            posX++;
+        }
+        System.out.println(ret);
+        return ret;
+    }
+
     public ArrayList getEmployeesLike(Employee e){
         if(e instanceof Caterer){return getCaterers();}
         if(e instanceof Cleaner){return getCleaners();}
