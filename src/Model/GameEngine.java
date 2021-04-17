@@ -53,7 +53,7 @@ public class GameEngine {
         buildBlock(new Road(new Position(10,10,false)));
         buildBlock(new Road(new Position(10,11,false),false,true));
         Game repairme = new Game(GameType.FERRISWHEEL,new Position(6,6,false));
-        repairme.setCondition(0);
+        repairme.setCondition(10);
         buildBlock(repairme);
         //buildBlock(new Game(GameType.ROLLERCOASTER,new Position(11,8,false)));
         buildBlock(new ServiceArea(ServiceType.BUFFET,new Position(6,2,false)));

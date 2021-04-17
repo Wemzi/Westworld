@@ -71,6 +71,10 @@ public abstract class Block {
                 if(currentActivityTime==0){activityFinished();
                 }else{decreaseCurrentActivityTime(minutesPerSecond);}
             break;
+            case FREE:
+                if(needRepair()){
+                    setState(BlockState.NOT_OPERABLE);
+                }
             default:
                 break;
         }
@@ -91,7 +95,7 @@ public abstract class Block {
 
     protected void decreaseCurrentActivityTime(int value){
         if(value <=0){throw new IllegalArgumentException("pozitiv szam kene");}
-        if(currentActivityTime==0){throw new IllegalStateException("Nincsen folyamatban semmi. BlockState: " + getState().toString());}
+        //if(currentActivityTime==0){throw new IllegalStateException("Nincsen folyamatban semmi. BlockState: " + getState().toString());}
         if(currentActivityTime>value){
             currentActivityTime-=value;
         }else{
@@ -155,6 +159,10 @@ public abstract class Block {
 
     public void setPopularityIncrease(double popularityIncrease) {
         this.popularityIncrease = popularityIncrease;
+    }
+
+    public boolean needRepair(){
+        return condition<20;
     }
 
     public String toString() {

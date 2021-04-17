@@ -143,10 +143,6 @@ public class Game extends Block implements Queueable{
     public void roundHasPassed(int minutesPerSecond)
     {
         super.roundHasPassed(minutesPerSecond);
-        if(condition<0)
-        {
-            condition = 0;
-        }
         switch (getState()){
             case USED:
                 if(currentActivityTime==0){
@@ -154,6 +150,7 @@ public class Game extends Block implements Queueable{
                 }else{decreaseCurrentActivityTime(minutesPerSecond);}
                 break;
             case FREE:
+                if(needRepair()){setState(BlockState.NOT_OPERABLE);break;}
                 startGame();
                 break;
         }
@@ -206,9 +203,9 @@ public class Game extends Block implements Queueable{
             //case UNDER_PLACEMENT: throw new IllegalArgumentException("Cannot change state to UNDER_PLACEMENT");
             case NOT_OPERABLE:
                 if(getState()!=BlockState.FREE || getState()!=BlockState.USED){return false;} break;
-            case FREE://todo repair check
+            case FREE:
                 if(getState()==BlockState.UNDER_CONSTRUCTION){fillWithWorkers();
-                }else if(workers.size()==0 || currentActivityTime!=0 ){return false;}
+                }else if(workers.size()==0 || currentActivityTime!=0 || needRepair() ){return false;}
                 break;
         }
         state=to;

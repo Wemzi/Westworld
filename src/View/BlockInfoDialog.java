@@ -89,6 +89,7 @@ public class BlockInfoDialog extends JDialog implements LiveDataPanel{
         panel.add("Position: "+block.getPos());
         panel.add("Popularity increase: "+block.getPopularityIncrease());
         panel.add("Current activity time: "+block.getCurrentActivityTime());
+        panel.add("Condition: "+block.getCondition());
 
         return panel;
     }

@@ -12,7 +12,6 @@ import View.spriteManagers.StaticPicturePartManager;
 
 import java.awt.*;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.Random;
 
 public class Repairman extends Employee {
@@ -42,7 +41,7 @@ public class Repairman extends Employee {
     @Override
     public void findGoal(Random rnd, Playground pg) {
         for(Block b :pg.getBuildedGameList()){
-            if(b instanceof Game && ((Game) b).getCondition() < 0 && ! isBusy())
+            if(b instanceof Game && ((Game) b).needRepair() && ! isBusy())
             {
                 goal = b;
                 System.out.println("megyek javitani");
