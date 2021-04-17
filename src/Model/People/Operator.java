@@ -47,6 +47,11 @@ public class Operator extends Employee {
     @Override
     protected Color getColor(){return Color.cyan;};
 
+    @Override
+    public String getPersonClass() {
+        return "Operator";
+    }
+
     //drawing
     private static final SpriteManager manager;
 

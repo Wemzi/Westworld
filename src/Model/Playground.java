@@ -333,6 +333,20 @@ public class Playground {
         return buildedEmployeeBases;
     }
 
+    /**
+     *
+     * @return Visitors and Employees except Operators
+     */
+    public ArrayList<Person> getPeople(){
+        ArrayList<Person> people=new ArrayList<>();
+        people.addAll(getVisitors());
+        people.addAll(getCaterers());
+        people.addAll(getRepairmen());
+        people.addAll(getCleaners());
+        //people.addAll(getOperators());
+        return people;
+    }
+
     public String dateToString() {
         return  " Day: " + this.days +
                 " Hour: " + this.hours +

@@ -38,6 +38,11 @@ public class Repairman extends Employee {
     }
 
     @Override
+    public String getPersonClass() {
+        return "Repairman";
+    }
+
+    @Override
     protected Color getColor(){return Color.yellow;};
 
     //drawing

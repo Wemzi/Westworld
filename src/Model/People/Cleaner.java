@@ -78,6 +78,19 @@ public class Cleaner extends Employee {
         super.arrived(minutesPerSecond);
     }
 
+    public Road getWhatSheCleans() {
+        return whatSheCleans;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getPersonClass() {
+        return "Cleaner";
+    }
+
     @Override
     protected Color getColor(){return Color.MAGENTA;};
 

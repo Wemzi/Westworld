@@ -221,6 +221,14 @@ public class Visitor extends Person {
         return stayingTime;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getPersonClass() {
+        return "Visitor";
+    }
 
     @Override
     protected Color getColor() {

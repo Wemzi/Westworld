@@ -6,14 +6,13 @@ import Model.Blocks.BlockState;
 import Model.Blocks.FreePlace;
 import Model.Blocks.Road;
 import Model.GameEngine;
+import Model.People.Person;
 import Model.Position;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
+import java.util.LinkedList;
 
 /**
  *
@@ -31,6 +30,7 @@ public class MainWindow2 extends JFrame{
     private boolean isPlaceSelectionMode=false;
     private Block toBuild;
     private boolean isShowInfoMode=true;
+    private final LinkedList<LiveDataPanel> liveDataPanels;
 
     private final Timer timer;
 
@@ -46,6 +46,7 @@ public class MainWindow2 extends JFrame{
 
         engine=new GameEngine();
         field=new GameField(engine);
+        liveDataPanels=new LinkedList<LiveDataPanel>();
         timer=new Timer(1000/FPS, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -56,6 +57,7 @@ public class MainWindow2 extends JFrame{
                 if(engine.isBuildingPeriod() != startDayButton.isEnabled()){
                     startDayButton.setEnabled(engine.isBuildingPeriod());
                 }
+                liveDataPanels.forEach(LiveDataPanel::refreshData);
 
                 field.repaint();
             }
@@ -236,13 +238,39 @@ public class MainWindow2 extends JFrame{
 
     public void onFieldClick(MouseEvent e){
         Position clickedHere=new Position(e.getX(),e.getY(),true);
-        if(isShowInfoMode && !isPlaceSelectionMode && MouseEvent.BUTTON1==e.getButton()){
-            Block selectedBlock=engine.getPg().blocks[clickedHere.getX_asIndex()][clickedHere.getY_asIndex()];
-            if(selectedBlock !=null){
-                BlockInfoDialog blockInfoDialog = new BlockInfoDialog(this,selectedBlock);
+        if(isShowInfoMode && !isPlaceSelectionMode && MouseEvent.BUTTON1==e.getButton()) {
+            Block selectedBlock = engine.getPg().blocks[clickedHere.getX_asIndex()][clickedHere.getY_asIndex()];
+            if (selectedBlock != null) {
+                BlockInfoDialog blockInfoDialog = new BlockInfoDialog(this, selectedBlock);
                 blockInfoDialog.setVisible(true);
-            }else{
+                liveDataPanels.add(blockInfoDialog);
+                blockInfoDialog.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        super.windowClosing(e);
+                        liveDataPanels.remove(blockInfoDialog);
+                    }
+                });
+            } else {
                 System.out.println("Block is null");
+            }
+        }else if(isShowInfoMode && !isPlaceSelectionMode && MouseEvent.BUTTON3==e.getButton()){
+            for(Person person : engine.getPg().getPeople()){
+                if(person.getPosition().getX_asIndex() == clickedHere.getX_asIndex() &&
+                        person.getPosition().getY_asIndex() == clickedHere.getY_asIndex()
+                ){
+                    VisitorInfoDialog infoDialog= new VisitorInfoDialog(this,person);
+                    infoDialog.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosing(WindowEvent e) {
+                            super.windowClosing(e);
+                            liveDataPanels.remove(infoDialog);
+                        }
+                    });
+                    liveDataPanels.add(infoDialog);
+                    infoDialog.setVisible(true);
+                    //System.out.println(v.getPosition().getX_asIndex() + " "+ v.getPosition().getY_asIndex());
+                }
             }
         }else if(isPlaceSelectionMode){
             if(MouseEvent.BUTTON1==e.getButton() || MouseEvent.NOBUTTON == e.getButton() && toBuild instanceof Road){//Left-click

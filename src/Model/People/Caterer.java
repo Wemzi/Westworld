@@ -47,6 +47,11 @@ public class Caterer extends Employee {
     @Override
     protected Color getColor(){return Color.gray;};
 
+    @Override
+    public String getPersonClass() {
+        return "Caterer";
+    }
+
     //drawing
     private static final SpriteManager manager;
 

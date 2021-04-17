@@ -1,7 +1,6 @@
 package Model.People;
 
 import Model.Blocks.Block;
-import Model.Blocks.Road;
 import Model.Direction;
 import Model.Playground;
 import Model.Position;
@@ -139,6 +138,7 @@ abstract public class Person {
     }
     protected Color getColor(){return Color.white;};
     abstract protected void roundHasPassed(int minutesPerSecond);
+    public abstract String getPersonClass();
     public boolean isBusy(){return currentActivityLength>0;}
 
     public abstract SpriteManager getSpriteManager();

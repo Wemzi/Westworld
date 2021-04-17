@@ -9,15 +9,22 @@ import Model.People.Repairman;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.List;
+import java.util.*;
 
-public class BlockInfoDialog extends JDialog {
+public class BlockInfoDialog extends JDialog implements LiveDataPanel{
+    private JPanel mainPanel;
+    private MainWindow2 owner;
+    private Block block;
 
     public BlockInfoDialog(MainWindow2 owner, Block block) {
         super(owner, block.getName());
-        JPanel mainPanel=new JPanel();
+        this.owner=owner;
+        this.block=block;
+
+        mainPanel=new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
         mainPanel.setBorder(new EmptyBorder(20,20,20,20));
 
@@ -28,49 +35,62 @@ public class BlockInfoDialog extends JDialog {
         pack();
     }
 
-    private static void createContent(JPanel panel, Block block,GameEngine engine){
-        addUnifiedBlockInfoContent(panel,block);
+    private static ArrayList<String> getData(Block block,GameEngine engine){
+        ArrayList<String> retList=new ArrayList<>(getUnifiedBlockInfoContent(block));
         if(block instanceof Game){
-
-            panel.add(new JLabel("Type: "+((Game) block).type));
-            panel.add(new JLabel("Ticket cost: "+((Game) block).getTicketCost()));
-            panel.add(new JLabel("Queue size: "+Objects.requireNonNullElse(((Game) block).getQueue(),new ArrayList<>()).size()));
-            panel.add(new JLabel("Capacity: "+((Game) block).getCapacity()));
-            panel.add(new JLabel("Cooldown time: "+((Game) block).getCooldownTime()));
-            panel.add(new JLabel("Workers: "+Objects.requireNonNullElse(((Game) block).getWorkers(),new ArrayList<>()).size()));
+            retList.add("Type: "+((Game) block).type);
+            retList.add("Ticket cost: "+((Game) block).getTicketCost());
+            retList.add("Queue size: "+Objects.requireNonNullElse(((Game) block).getQueue(),new ArrayList<>()).size());
+            retList.add("Playing visitors: "+Objects.requireNonNullElse(((Game) block).getPlayingVisitors(),new ArrayList<>()).size());
+            retList.add("Capacity: "+((Game) block).getCapacity());
+            retList.add("Cooldown time: "+((Game) block).getCooldownTime());
+            retList.add("Workers: "+Objects.requireNonNullElse(((Game) block).getWorkers(),new ArrayList<>()).size());
 
         }else if(block instanceof ServiceArea){
-            panel.add(new JLabel("Type: "+((ServiceArea) block).getType()));
-            panel.add(new JLabel("Ticket cost: "+((ServiceArea) block).getTicketCost()));
-            panel.add(new JLabel("Queue size: "+Objects.requireNonNullElse(((ServiceArea) block).getQueue(),new ArrayList<>()).size()));
-            panel.add(new JLabel("Capacity: "+((ServiceArea) block).getCapacity()));
-            panel.add(new JLabel("Cooldown time: "+((ServiceArea) block).getCooldownTime()));
-            panel.add(new JLabel("Workers: "+Objects.requireNonNullElse(((ServiceArea) block).getWorkers(),new ArrayList<>()).size()));
+            retList.add("Type: "+((ServiceArea) block).getType());
+            retList.add("Ticket cost: "+((ServiceArea) block).getTicketCost());
+            retList.add("Queue size: "+Objects.requireNonNullElse(((ServiceArea) block).getQueue(),new ArrayList<>()).size());
+            retList.add("Capacity: "+((ServiceArea) block).getCapacity());
+            retList.add("Cooldown time: "+((ServiceArea) block).getCooldownTime());
+            retList.add("Workers: "+Objects.requireNonNullElse(((ServiceArea) block).getWorkers(),new ArrayList<>()).size());
 
-            if(((ServiceArea) block).getType()==ServiceType.BUFFET){panel.add(addCatererModificationRow((ServiceArea) block,engine));}
         }else if(block instanceof Decoration){
-            panel.add(new JLabel("Type: "+((Decoration) block).getDecorationType()));
+            retList.add("Type: "+((Decoration) block).getDecorationType());
         }else if(block instanceof Road){
-            panel.add(new JLabel("Has garbage can: "+((Road) block).isHasGarbageCan()));
-            panel.add(new JLabel("Entrance: "+((Road) block).isEntrance()));
-            panel.add(new JLabel("Garbage: "+((Road) block).getGarbage()));
-            panel.add(new JLabel("Garbage level: "+((Road) block).getGarbageLevel()));
-        }else if(block instanceof EmployeeBase){
+            retList.add("Has garbage can: "+((Road) block).isHasGarbageCan());
+            retList.add("Entrance: "+((Road) block).isEntrance());
+            retList.add("Garbage: "+((Road) block).getGarbage());
+            retList.add("Garbage level: "+((Road) block).getGarbageLevel());
+        }
+        return retList;
+    }
+
+    private static void createContent(JPanel panel, Block block,GameEngine engine){
+        for(String str : getData(block,engine)){
+            panel.add(new JLabel(str));
+        }
+
+        if(block instanceof ServiceArea && ((ServiceArea) block).getType()==ServiceType.BUFFET){panel.add(addCatererModificationRow((ServiceArea) block,engine));}
+        if(block instanceof EmployeeBase){
             panel.add(createEmployeePanel("Cleaner",engine,new Cleaner(block.getPos(),10)));
             //panel.add(createEmployeePanel("Operator",engine,new Operator(block.getPos(),10,null)));
             panel.add(createEmployeePanel("Repairman",engine,new Repairman(block.getPos(),10)));
         }
     }
 
-    private static void addUnifiedBlockInfoContent(JPanel panel, Block block){
-        panel.add(new JLabel("Class: "+block.getName()));
-        panel.add(new JLabel("State: "+block.getState()));
-        panel.add(new JLabel("Building cost: "+block.getBuildingCost()));
-        panel.add(new JLabel("Upkeep cost: "+block.getUpkeepCost()));
-        panel.add(new JLabel("Size: "+block.getSize()));
-        panel.add(new JLabel("Position: "+block.getPos()));
-        panel.add(new JLabel("Popularity increase: "+block.getPopularityIncrease()));
-        panel.add(new JLabel("Current activity time: "+block.getCurrentActivityTime()));
+    private static LinkedList<String> getUnifiedBlockInfoContent(Block block){
+        LinkedList<String> panel= new LinkedList<>();
+
+        panel.add("Class: "+block.getName());
+        panel.add("State: "+block.getState());
+        panel.add("Building cost: "+block.getBuildingCost());
+        panel.add("Upkeep cost: "+block.getUpkeepCost());
+        panel.add("Size: "+block.getSize());
+        panel.add("Position: "+block.getPos());
+        panel.add("Popularity increase: "+block.getPopularityIncrease());
+        panel.add("Current activity time: "+block.getCurrentActivityTime());
+
+        return panel;
     }
 
     private static JPanel addCatererModificationRow(ServiceArea block,GameEngine engine){
@@ -137,5 +157,15 @@ public class BlockInfoDialog extends JDialog {
         rowPanel.add(minusButton);
         rowPanel.add(plusButton);
         return rowPanel;
+    }
+
+    @Override
+    public void refreshData() {
+        List<Component> l = Arrays.asList(mainPanel.getComponents());
+        ArrayList<String> data=getData(block,owner.engine);
+        for(int i=0;i<l.size() && i<data.size();i++){
+            ((JLabel) l.get(i)).setText(data.get(i));
+        }
+        mainPanel.validate();
     }
 }

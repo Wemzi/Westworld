@@ -242,6 +242,9 @@ public class Game extends Block implements Queueable{
         this.buildingTime = buildingTime;
     }
 
+    public ArrayBlockingQueue<Visitor> getPlayingVisitors() {
+        return playingVisitors;
+    }
 
     @Override
     public String toString() {
