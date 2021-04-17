@@ -3,6 +3,7 @@ package Model;
 import Model.Blocks.*;
 import Model.People.Cleaner;
 import Model.People.Employee;
+import Model.People.Repairman;
 import Model.People.Visitor;
 
 import java.util.*;
@@ -51,8 +52,9 @@ public class GameEngine {
         buildBlock(new Road(new Position(10,9,false)));
         buildBlock(new Road(new Position(10,10,false)));
         buildBlock(new Road(new Position(10,11,false),false,true));
-
-        buildBlock(new Game(GameType.FERRISWHEEL,new Position(6,6,false)));
+        Game repairme = new Game(GameType.FERRISWHEEL,new Position(6,6,false));
+        repairme.setCondition(0);
+        buildBlock(repairme);
         //buildBlock(new Game(GameType.ROLLERCOASTER,new Position(11,8,false)));
         buildBlock(new ServiceArea(ServiceType.BUFFET,new Position(6,2,false)));
         buildBlock(new ServiceArea(ServiceType.TOILET,new Position(9,8,false)));
@@ -62,7 +64,9 @@ public class GameEngine {
 
         //hire
         Cleaner cl=new Cleaner(new Position(5,0,false),10);
+        Repairman re=new Repairman(new Position(5,0,false),10);
         pg.hire(cl);
+        pg.hire(re);
     }
 
 
@@ -223,6 +227,17 @@ public class GameEngine {
                         }
                         else if(v.isMoving && !v.isBusy()){v.move(minutesPerSecond);}
                         }
+
+                    //manage repairmen
+                    for (Repairman v : pg.getRepairmen()) {
+                        if(Objects.isNull(v.goal) && !v.isBusy()){
+                            v.findGoal(rnd, pg);
+                        }
+                        if(!Objects.isNull(v.goal) && !v.isMoving && !v.isBusy()) {
+                            v.setupRoute(pg);
+                        }
+                        else if(v.isMoving && !v.isBusy()){v.move(minutesPerSecond);}
+                    }
 
 
 

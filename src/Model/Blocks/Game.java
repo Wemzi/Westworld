@@ -1,6 +1,7 @@
 package Model.Blocks;
 
 import Model.People.Operator;
+import Model.People.Repairman;
 import Model.People.Visitor;
 import Model.Position;
 import View.spriteManagers.DynamicSpriteManager;
@@ -23,6 +24,9 @@ public class Game extends Block implements Queueable{
     private ArrayList<Operator> workers;
     private final int capacity;
     private int cooldownTime;
+    private int buildingTime;
+    private int currentActivityTime;
+    public Repairman repairer;
     public GameType type;
     private static final int MIN_VISITOR_TO_START=2;
 
@@ -139,6 +143,10 @@ public class Game extends Block implements Queueable{
     public void roundHasPassed(int minutesPerSecond)
     {
         super.roundHasPassed(minutesPerSecond);
+        if(condition<0)
+        {
+            condition = 0;
+        }
         switch (getState()){
             case USED:
                 if(currentActivityTime==0){
@@ -149,6 +157,7 @@ public class Game extends Block implements Queueable{
                 startGame();
                 break;
         }
+
 
     }
 
