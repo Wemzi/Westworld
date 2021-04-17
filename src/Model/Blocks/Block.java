@@ -103,8 +103,8 @@ public abstract class Block {
         }
     }
 
-    public void startDay(){getSpriteManager().start();}
-    public void endDay(){getSpriteManager().stop();}
+    public void startDay(){}
+    public void endDay(){}
 
     public Position getPos() {
         return pos;

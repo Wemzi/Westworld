@@ -10,13 +10,15 @@ import View.spriteManagers.OnePicDynamicSpriteManager;
 import View.spriteManagers.SpriteManager;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.*;
+import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
 
 
 public class Game extends Block implements Queueable{
-    private static final HashMap<GameType, SpriteManager> imgMap=new HashMap<>();
+    private SpriteManager spriteManager;
     private static final int MAX_QUEUE_LENGTH=100;
     private int ticketCost;
     private final ArrayBlockingQueue<Visitor> playingVisitors;
@@ -25,7 +27,6 @@ public class Game extends Block implements Queueable{
     private final int capacity;
     private int cooldownTime;
     private int buildingTime;
-    private int currentActivityTime;
     public Repairman repairer;
     public GameType type;
     private static final int MIN_VISITOR_TO_START=2;
@@ -205,7 +206,7 @@ public class Game extends Block implements Queueable{
                 if(getState()!=BlockState.FREE || getState()!=BlockState.USED){return false;} break;
             case FREE:
                 if(getState()==BlockState.UNDER_CONSTRUCTION){fillWithWorkers();
-                }else if(workers.size()==0 || currentActivityTime!=0 || needRepair() ){return false;}
+                }else if(workers.size()==0 || needRepair() ){state=BlockState.NOT_OPERABLE;return false;}
                 break;
         }
         state=to;
@@ -280,7 +281,7 @@ public class Game extends Block implements Queueable{
 
 
     private void setupImage(){
-        if(Objects.isNull(type) || imgMap.containsKey(type)){return;}
+        if(Objects.isNull(type)){throw new IllegalStateException("unknown type");}
         switch (type){
             case ROLLERCOASTER:
                 List<Rectangle> rectangles= Arrays.asList(
@@ -288,28 +289,27 @@ public class Game extends Block implements Queueable{
                         new Rectangle(150,0,150,227),
                         new Rectangle(300,0,150,227)
                 );
-                imgMap.put(type,new OnePicDynamicSpriteManager("graphics/rollercoaster.png",size,rectangles,10));
+                spriteManager=new OnePicDynamicSpriteManager("graphics/rollercoaster.png",size,rectangles,10);
                 break;
             case FERRISWHEEL:
                 List<String> imgPaths = Arrays.asList("graphics/ferriswheel1.png", "graphics/ferriswheel2.png");
-                imgMap.put(type,new DynamicSpriteManager(imgPaths,size,5));
+                spriteManager=new DynamicSpriteManager(imgPaths,size,5);
                 break;
             case RODEO:
                 imgPaths = Arrays.asList("graphics/rodeo1.png", "graphics/rodeo2.png");
-                imgMap.put(type,new DynamicSpriteManager(imgPaths,size,5));
+                spriteManager=new DynamicSpriteManager(imgPaths,size,5);
                 break;
             case SHOOTINGGALLERY:
                 imgPaths = Arrays.asList("graphics/shooting_1.png", "graphics/shooting_2.png");
-                imgMap.put(type,new DynamicSpriteManager(imgPaths,size,5));
+                spriteManager=new DynamicSpriteManager(imgPaths,size,5);
                 break;
             default:
-                imgMap.put(type,new OneColorSpriteManager(getColor(),getSize())); break;
+                spriteManager=new OneColorSpriteManager(getColor(),getSize()); break;
         }
     }
 
     @Override
     protected SpriteManager getSpriteManager() {
-        setupImage();
-        return imgMap.get(type);
+        return spriteManager;
     }
 }
