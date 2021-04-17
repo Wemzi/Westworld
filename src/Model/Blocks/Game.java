@@ -1,6 +1,7 @@
 package Model.Blocks;
 
 import Model.People.Operator;
+import Model.People.Repairman;
 import Model.People.Visitor;
 import Model.Position;
 import View.spriteManagers.DynamicSpriteManager;
@@ -23,6 +24,7 @@ public class Game extends Block implements Queueable{
     private int cooldownTime;
     private int buildingTime;
     private int currentActivityTime;
+    public Repairman repairer;
     public GameType type;
 
 
@@ -158,6 +160,10 @@ public class Game extends Block implements Queueable{
         if(workers.size() == 0 )
         {
             state = BlockState.NOT_OPERABLE;
+        }
+        if(condition<0)
+        {
+            condition = 0;
         }
         if(state.equals(BlockState.UNDER_CONSTRUCTION))
         {
