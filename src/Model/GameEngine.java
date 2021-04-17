@@ -264,7 +264,7 @@ public class GameEngine {
                         //System.out.println(v.toString());
 
                     int throwgarbage = Math.abs(rnd.nextInt() % 100);
-                    if(throwgarbage > 93)
+                    if(throwgarbage > 93 && !pg.isGarbageCanNearby(v.getPosition()))
                     {
                         Block possibleroad = pg.getBlockByPosition(v.getPosition());
                         if(possibleroad instanceof Road)
