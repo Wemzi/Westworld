@@ -300,7 +300,7 @@ public class Playground {
     public BlockState getBlockState(Block block)            { return block.getState(); }
     public Color getColor(Block block)                      { return block.getColor(); }
     public Block[][] getBlocks()                            { return blocks; }
-    public ArrayList<Block> getBuildedObjectList()          { return buildedObjects; }
+    public java.util.List<Block> getBuildedObjectList()          { return Collections.synchronizedList(buildedObjects); }
     public ArrayList<Game> getBuildedGameList()             { return builedGames; }
     public ArrayList<ServiceArea> getBuildedServiceList()   { return builededServices; }
 
@@ -317,17 +317,7 @@ public class Playground {
     public void setPopularity(double popularity)            { this.popularity = popularity; }
     public void setBuildedObjects(ArrayList<Block> buildedObjects) { this.buildedObjects = buildedObjects; }
 
-    public ArrayList<Block> getBuildedObjects() {
-        return buildedObjects;
-    }
 
-    public ArrayList<Game> getBuiledGames() {
-        return builedGames;
-    }
-
-    public ArrayList<ServiceArea> getBuilededServices() {
-        return builededServices;
-    }
 
     public ArrayList<EmployeeBase> getBuildedEmployeeBases() {
         return buildedEmployeeBases;
