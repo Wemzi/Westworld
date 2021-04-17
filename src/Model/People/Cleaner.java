@@ -10,7 +10,6 @@ import View.spriteManagers.SpriteManager;
 import View.spriteManagers.StaticPicturePartManager;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
@@ -34,7 +33,7 @@ public class Cleaner extends Employee {
 
     public void roundHasPassed(int minutesPerSecond)
     {
-        System.out.println(toString());
+        //System.out.println(toString());
         if(currentActivityLength>0 ){
             currentActivityLength-= minutesPerSecond;
             return;

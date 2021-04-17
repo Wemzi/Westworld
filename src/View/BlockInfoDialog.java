@@ -70,6 +70,7 @@ public class BlockInfoDialog extends JDialog {
         panel.add(new JLabel("Size: "+block.getSize()));
         panel.add(new JLabel("Position: "+block.getPos()));
         panel.add(new JLabel("Popularity increase: "+block.getPopularityIncrease()));
+        panel.add(new JLabel("Current activity time: "+block.getCurrentActivityTime()));
     }
 
     private static JPanel addCatererModificationRow(ServiceArea block,GameEngine engine){

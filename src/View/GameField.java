@@ -2,9 +2,11 @@ package View;
 
 import Model.Blocks.Block;
 import Model.Blocks.FreePlace;
+import Model.Blocks.Queueable;
 import Model.GameEngine;
 import Model.People.Employee;
 import Model.People.Visitor;
+import Model.People.VisitorState;
 import Model.Position;
 import View.spriteManagers.SpriteManager;
 import View.spriteManagers.StaticSpriteManager;
@@ -68,7 +70,9 @@ public class GameField extends JPanel {
     private static void paintVisitors(Graphics2D gr, GameEngine gameEngine){
         ArrayList<Visitor> visitors=new ArrayList<>(gameEngine.getPg().getVisitors());
         for(Visitor v : visitors){
-            v.paint(gr);
+            if (v.getState() != VisitorState.DOING_SOMETHING) {
+                v.paint(gr);
+            }
         }
     }
 
@@ -125,10 +129,10 @@ public class GameField extends JPanel {
 
 
     private static void drawBlockLabel(Block block, Graphics2D gr){
-        /*
+
         if(block instanceof Queueable){
-            centerString(gr,getBlockAsRectangle(block),"V:"+((Queueable) block).getQueue().size());
-        }*/
+            centerString(gr,getBlockAsRectangle(block),"Q:"+((Queueable) block).getQueue().size());
+        }
 
     }
 

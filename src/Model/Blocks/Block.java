@@ -1,5 +1,6 @@
 package Model.Blocks;
 
+import Model.GameEngine;
 import Model.Position;
 import View.spriteManagers.SpriteManager;
 
@@ -16,34 +17,15 @@ public abstract class Block {
     private static final int MAX_CONDITION=100;
     protected BlockState state;
     protected int buildingCost;
-    private int buildingTime;
     protected int upkeepCost;
     protected int condition;
     public Position size;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof Block)) return false;
-
-        Block block = (Block) o;
-
-        return this.state.equals(block.state)           &&
-                this.buildingCost == block.buildingCost &&
-                this.buildingTime == block.buildingTime &&
-                this.upkeepCost == block.upkeepCost     &&
-                this.condition == block.condition       &&
-                this.size == block.size;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.buildingTime,this.buildingCost,this.size,this.pos,this.size,this.upkeepCost,this.condition,this.popularityIncrease,this.state);
-    }
-
     public  Position pos;
     protected double popularityIncrease;
+
+    protected int buildingTime;
+    protected int currentActivityTime;
+
     public Block()
     {
         state = BlockState.FREE;
@@ -77,11 +59,46 @@ public abstract class Block {
 
     //Methods:
     public void build(){
-        //now its instantly builds itself
-        //todo building time for blocks
         setupSprites();
-        state=BlockState.FREE;
+        state=BlockState.UNDER_CONSTRUCTION;
+        currentActivityTime= GameEngine.TIME_1x*5;
     }
+
+    public void roundHasPassed(int minutesPerSecond){
+        switch (getState()){
+            case UNDER_CONSTRUCTION:
+            case UNDER_REPAIR:
+                if(currentActivityTime==0){activityFinished();
+                }else{decreaseCurrentActivityTime(minutesPerSecond);}
+            break;
+            default:
+                break;
+        }
+    }
+
+    protected void activityFinished(){
+        switch (getState()){
+            case UNDER_REPAIR:
+                condition=MAX_CONDITION;
+                setState(BlockState.FREE);
+                currentActivityTime=0;
+                break;
+            case UNDER_CONSTRUCTION:
+                setState(BlockState.FREE);
+                break;
+        }
+    }
+
+    protected void decreaseCurrentActivityTime(int value){
+        if(value <=0){throw new IllegalArgumentException("pozitiv szam kene");}
+        if(currentActivityTime==0){throw new IllegalStateException("Nincsen folyamatban semmi. BlockState: " + getState().toString());}
+        if(currentActivityTime>value){
+            currentActivityTime-=value;
+        }else{
+            currentActivityTime=0;
+        }
+    }
+
     public void startDay(){getSpriteManager().start();}
     public void endDay(){getSpriteManager().stop();}
 
@@ -107,12 +124,17 @@ public abstract class Block {
         return condition;
     }
 
+    public int getCurrentActivityTime() {
+        return currentActivityTime;
+    }
+
     public double getPopularityIncrease() {
         return popularityIncrease;
     }
 
-    public void setState(BlockState state) {
+    public boolean setState(BlockState state) {
         this.state = state;
+        return true;
     }
 
     public void setBuildingCost(int buildingCost) {
@@ -149,6 +171,27 @@ public abstract class Block {
 
     public String getName(){
         return "Block";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Block)) return false;
+
+        Block block = (Block) o;
+
+        return this.state.equals(block.state)           &&
+                this.buildingCost == block.buildingCost &&
+                this.buildingTime == block.buildingTime &&
+                this.upkeepCost == block.upkeepCost     &&
+                this.condition == block.condition       &&
+                this.size == block.size;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.buildingTime,this.buildingCost,this.size,this.pos,this.size,this.upkeepCost,this.condition,this.popularityIncrease,this.state);
     }
 
     //painting

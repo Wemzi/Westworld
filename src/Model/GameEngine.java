@@ -17,7 +17,7 @@ public class GameEngine {
     private Playground pg;
     private boolean isBuildingPeriod;
     public static final int TIME_1x=5;
-    private static int minutesPerSecond = TIME_1x;
+    private int minutesPerSecond = TIME_1x;
 
     /* Konstruktor */
     public GameEngine() {
@@ -53,7 +53,7 @@ public class GameEngine {
         buildBlock(new Road(new Position(10,11,false),false,true));
 
         buildBlock(new Game(GameType.FERRISWHEEL,new Position(6,6,false)));
-        buildBlock(new Game(GameType.ROLLERCOASTER,new Position(11,8,false)));
+        //buildBlock(new Game(GameType.ROLLERCOASTER,new Position(11,8,false)));
         buildBlock(new ServiceArea(ServiceType.BUFFET,new Position(6,2,false)));
         buildBlock(new ServiceArea(ServiceType.TOILET,new Position(9,8,false)));
         buildBlock(new EmployeeBase(new Position(11,5,false)));
@@ -78,9 +78,10 @@ public class GameEngine {
     public boolean buildBlock(Block toBuild) {
         //if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
 
-        if(toBuild instanceof GarbageCan){return buildBin(toBuild.pos);}
+
         if(pg.getMoney() < toBuild.getBuildingCost()) return false;
         if(!(pg.isBuildable(toBuild))) return false;
+        if(toBuild instanceof GarbageCan){return buildBin(toBuild.pos);}
 
         int posFromX = toBuild.getPos().getX_asIndex();
         int posFromY = toBuild.getPos().getY_asIndex();
@@ -178,11 +179,8 @@ public class GameEngine {
                     //manage block
                     boolean everyCleanerHasJob = false;
                     for(Block b :copy){
-                        if(b instanceof Game){
-                            ((Game) b).roundHasPassed(minutesPerSecond);
-                        }else if(b instanceof ServiceArea){
-                            ((ServiceArea) b).roundHasPassed(minutesPerSecond);
-                        }else if(b instanceof Road){
+                        //b.roundHasPassed(minutesPerSecond);
+                        if(b instanceof Road){
                             Road road=((Road) b);
                             Road.GarbageLevel garbageLevel =road.getGarbageLevel();
                             if((garbageLevel== Road.GarbageLevel.FEW || garbageLevel == Road.GarbageLevel.LOT) && Objects.isNull(road.cleaner)){
@@ -259,6 +257,7 @@ public class GameEngine {
                     }
                 }
                 rounds[0] = 0;
+                for(Block b: pg.getBuildedObjectList()){b.roundHasPassed(minutesPerSecond);}
                 for(Visitor v : pg.getVisitors()) {
                         v.roundHasPassed(minutesPerSecond);
                         //System.out.println(v.toString());

@@ -5,6 +5,7 @@ import Model.People.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 import static View.MainWindow2.NUM_OF_COLS;
@@ -23,7 +24,7 @@ public class Playground {
 
     private final ArrayList<Caterer> cateres;
     private final ArrayList<Cleaner> cleaners;
-    private final ArrayList<Operator> operators;
+    private final ArrayList<Operator> operators; //todo handle this
     private final ArrayList<Repairman> repairmen;
 
 
@@ -251,7 +252,7 @@ public class Playground {
                 Block b = blocks[Math.abs(posX)][Math.abs(posY)];
                 if (b instanceof Road && ((Road) b).isHasGarbageCan()){ret=true;}
                 posY++;
-                System.out.println("posX: " + posX + " posY:"+ posY );
+                //System.out.println("posX: " + posX + " posY:"+ posY );
             }
             posX++;
         }
@@ -303,8 +304,8 @@ public class Playground {
     public ArrayList<Game> getBuildedGameList()             { return builedGames; }
     public ArrayList<ServiceArea> getBuildedServiceList()   { return builededServices; }
 
-    public ArrayList<Visitor> getVisitors()                 { return visitors; }
-    public ArrayList<Caterer> getCaterers()                  { return cateres; }
+    public java.util.List<Visitor> getVisitors()            { return Collections.synchronizedList(visitors);}
+    public ArrayList<Caterer> getCaterers()                 { return cateres; }
     public ArrayList<Cleaner> getCleaners()                 { return cleaners; }
     public ArrayList<Operator> getOperators()               { return operators; }
     public ArrayList<Repairman> getRepairmen()              { return repairmen; }

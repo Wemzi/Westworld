@@ -19,8 +19,8 @@ public class Operator extends Employee {
 
     public void operate()
     {
-        operateThis.run();
-        currentActivityLength = operateThis.getCooldownTime();
+        //operateThis.run();
+        //currentActivityLength = operateThis.getCooldownTime();
     }
 
     public void roundHasPassed(int minutesPerSecond)

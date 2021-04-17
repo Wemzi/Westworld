@@ -11,9 +11,6 @@ import View.spriteManagers.SpriteManager;
 import View.spriteManagers.StaticPicturePartManager;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -42,11 +39,12 @@ public class Visitor extends Person {
     }
 
     public void playGame(Game that) {
-        playfulness -= 60;
+        changePlayfulness(-60);
         happiness += 20;
         hunger += 15;
-        currentActivityLength = that.getCooldownTime();
-        state = VisitorState.DOESNT_KNOW;
+        //currentActivityLength = that.getCooldownTime();
+        direction=Direction.NONE;
+        state = VisitorState.DOING_SOMETHING;
     }
 
     public void eat(ServiceArea where) {
@@ -54,17 +52,24 @@ public class Visitor extends Person {
         happiness += 5;
         playfulness += 50;
         currentActivityLength = where.getCooldownTime();
+        direction=Direction.NONE;
         this.state = VisitorState.WANNA_TOILET;
     }
 
     public void toilet(ServiceArea where) {
         currentActivityLength = where.getCooldownTime();
+        direction=Direction.NONE;
         state = VisitorState.DOESNT_KNOW;
     }
 
     public Road throwGarbage(Road there) {
         there.setGarbage(there.getGarbage() + 2);
         return there;
+    }
+
+    public void finishedActivity() {
+        state=VisitorState.DOESNT_KNOW;
+        currentActivityLength=0;
     }
 
     @Override
@@ -118,8 +123,10 @@ public class Visitor extends Person {
             toilet((ServiceArea) goal);
             System.out.println("kaksizott!");}
         else if(getState().equals(VisitorState.WANNA_PLAY) && goal != null) {
-            playGame((Game) goal);
-            System.out.println("játszott!");
+            //playGame((Game) goal);
+            ((Game) goal).addVisitor(this);
+            state=VisitorState.WAITING_IN_QUEUE;
+            System.out.println("játékra vár!");
         }
         else if(getState().equals(VisitorState.WANNA_EAT) && goal != null){
             eat( (ServiceArea) goal);
@@ -129,20 +136,25 @@ public class Visitor extends Person {
 
     }
 
+    private void decreaseCurrentActivityLength(int value){
+        if(value <=0){throw new IllegalArgumentException("pozitiv szam kene");}
+        if(currentActivityLength>value){
+            currentActivityLength-=value;
+        }else{
+            currentActivityLength=0;
+        }
+    }
 
 
+    @Override
     public void roundHasPassed(int minutesPerSecond) {
-        System.out.println(toString());
+        //System.out.println(toString());
         this.hunger += minutesPerSecond/5;
         this.stayingTime -= minutesPerSecond;
-        if(!isMoving)
-        {
-            currentActivityLength-= minutesPerSecond;
-        }
-        if(state != VisitorState.DOESNT_KNOW)
-        {
-            return;
-        }
+        if(!isMoving){decreaseCurrentActivityLength(minutesPerSecond); }
+
+        if(state != VisitorState.DOESNT_KNOW){ return;}
+
         if(state.equals(VisitorState.WANNA_LEAVE)) {
             System.out.println("el akarok menni!");
         }
@@ -158,10 +170,7 @@ public class Visitor extends Person {
             this.state = VisitorState.WANNA_PLAY;
             return;
         }
-        if(playfulness < 0)
-        {
-            playfulness = 0;
-        }
+
         /*
         if(stayingTime < 0 && state == VisitorState.DOESNT_KNOW )
         {
@@ -174,12 +183,10 @@ public class Visitor extends Person {
             {
             happiness-= minutesPerSecond;
         }
-        if(currentActivityLength <= 0)
+        if(currentActivityLength == 0)
         {
-            currentActivityLength = 0;
             state=VisitorState.DOESNT_KNOW;
         }
-        return;
     }
 
     public int getCurrentActivityLength() {
@@ -224,8 +231,12 @@ public class Visitor extends Person {
         this.hunger = hunger;
     }
 
-    public void setPlayfulness(int playfulness) {
-        this.playfulness = playfulness;
+    public void changePlayfulness(int value) {
+        if(playfulness<0 && playfulness+value<0){
+            playfulness=0;
+        }else{
+            this.playfulness += value;
+        }
     }
 
 

@@ -16,38 +16,20 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class Game extends Block implements Queueable{
     private static final HashMap<GameType, SpriteManager> imgMap=new HashMap<>();
+    private static final int MAX_QUEUE_LENGTH=100;
     private int ticketCost;
+    private final ArrayBlockingQueue<Visitor> playingVisitors;
     private final ArrayBlockingQueue<Visitor> queue;
     private ArrayList<Operator> workers;
-    private int capacity;
+    private final int capacity;
     private int cooldownTime;
-    private int buildingTime;
-    private int currentActivityTime;
     public GameType type;
+    private static final int MIN_VISITOR_TO_START=2;
 
-
-    @Deprecated
-    public Game(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, int ticketCost, int capacity, Position size, Position pos, int cooldownTime) {
-        super(buildingCost, upkeepCost, popularityIncrease, state, size, pos);
-        this.ticketCost = ticketCost;
-        this.capacity = capacity;
-        this.queue = new ArrayBlockingQueue<>(capacity);
-        this.cooldownTime = cooldownTime;
-        this.buildingTime = 5 * cooldownTime;
-        this.workers=new ArrayList<Operator>();
-        setupImage();
-    }
-    @Deprecated
-    public Game(Position size, Position pos) {
-        super(0, 0, 0, BlockState.FREE, size, pos);
-        this.ticketCost = 0;
-        this.capacity = 0;
-        this.queue = new ArrayBlockingQueue<>(capacity);
-        setupImage();
-    }
     // Implemented preset types of games
     public Game(GameType type,Position pos) {
         this.type = type;
+        queue=new ArrayBlockingQueue<>(MAX_QUEUE_LENGTH);
         if (type == GameType.DODGEM) {
             this.buildingCost = 300;
             this.upkeepCost = 50;
@@ -59,7 +41,7 @@ public class Game extends Block implements Queueable{
             this.pos = pos;
             this.cooldownTime=5;
             this.buildingTime = 5 * cooldownTime;
-            queue = new ArrayBlockingQueue<>(this.capacity);
+            playingVisitors = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Operator>();
         } else if (type == GameType.FERRISWHEEL) {
             this.buildingCost = 600;
@@ -72,7 +54,7 @@ public class Game extends Block implements Queueable{
             this.pos = pos;
             this.cooldownTime = 3;
             this.buildingTime = 5 * cooldownTime;
-            queue = new ArrayBlockingQueue<>(this.capacity);
+            playingVisitors = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Operator>();
         } else if (type == GameType.RODEO)
         {
@@ -86,7 +68,7 @@ public class Game extends Block implements Queueable{
             this.pos = pos;
             this.cooldownTime = 2;
             this.buildingTime = 5 * cooldownTime;
-            queue = new ArrayBlockingQueue<>(this.capacity);
+            playingVisitors = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Operator>();
         } else if( type == GameType.ROLLERCOASTER) {
             this.buildingCost = 800;
@@ -99,7 +81,7 @@ public class Game extends Block implements Queueable{
             this.pos = pos;
             this.cooldownTime = 5;
             this.buildingTime = 5 * cooldownTime;
-            queue = new ArrayBlockingQueue<>(this.capacity);
+            playingVisitors = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Operator>();
         } else if(type == GameType.SHOOTINGGALLERY) {
             this.buildingCost = 200;
@@ -112,7 +94,7 @@ public class Game extends Block implements Queueable{
             this.pos = pos;
             this.cooldownTime = 2;
             this.buildingTime = 5 * cooldownTime;
-            queue = new ArrayBlockingQueue<>(this.capacity);
+            playingVisitors = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Operator>();
         }
         else throw new RuntimeException("Gametype not found at creating game, or not yet implemented");
@@ -127,14 +109,14 @@ public class Game extends Block implements Queueable{
 
     public void addWorker(Operator o){workers.add(o);}
     public void addVisitor(Visitor v){
-        if( this.getState() == BlockState.FREE ) queue.add(v); //todo es ha eppen megy a jatek?
-        //else throw new RuntimeException("Visitor tried to get into queue, but state of Game wasn't 'FREE' ");
+        queue.add(v);
     }
 
     public int getCooldownTime() {
         return cooldownTime;
     }
 
+    /*
     public void run(){
         if(this.state.equals(BlockState.FREE))
         {
@@ -145,45 +127,83 @@ public class Game extends Block implements Queueable{
             this.setCondition(this.getCondition()-2);
         }
         else throw new RuntimeException("You can't run the game cause it's not free!");
-    }
+    }*/
 
-    public void fillwithWorkers()
+    public void fillWithWorkers()
     {
         workers.add(new Operator(new Position(this.getPos().getX_asIndex(),this.getPos().getY_asIndex(),true),25,this));
         workers.add(new Operator(new Position(this.getPos().getX_asIndex(),this.getPos().getY_asIndex(),true),25,this));
     }
 
+    @Override
     public void roundHasPassed(int minutesPerSecond)
     {
-        if(workers.size() == 0 )
-        {
-            state = BlockState.NOT_OPERABLE;
+        super.roundHasPassed(minutesPerSecond);
+        switch (getState()){
+            case USED:
+                if(currentActivityTime==0){
+                    activityFinished();
+                }else{decreaseCurrentActivityTime(minutesPerSecond);}
+                break;
+            case FREE:
+                startGame();
+                break;
         }
-        if(state.equals(BlockState.UNDER_CONSTRUCTION))
-        {
-            buildingTime-=minutesPerSecond;
+
+    }
+
+    private void startGame(){
+        if(queue.size() >= MIN_VISITOR_TO_START){
+            if(setState(BlockState.USED)){
+                for(int i = 0; i<=getCapacity() && !queue.isEmpty(); ++i){
+                    Visitor v= queue.poll();
+                    playingVisitors.add(v);
+                    v.playGame(this);
+                }
+                currentActivityTime=getCooldownTime();
+            }else{
+                System.err.println("Cannot start game because its state: "+getState().toString());
+            }
         }
-        if(state.equals(BlockState.USED) && workers.size() > 0 )
-        {
-            currentActivityTime-=minutesPerSecond;
+    }
+
+    @Override
+    protected void activityFinished() {
+        super.activityFinished();
+        switch (getState()){
+            case USED:
+                setState(BlockState.FREE);
+                condition-=2;
+                while(!playingVisitors.isEmpty()){
+                    Visitor v=playingVisitors.poll();
+                    v.finishedActivity();
+                }
+                break;
         }
-        else if(buildingTime <= 0 && !(state.equals(BlockState.USED))) {
-            state = BlockState.FREE;
-            fillwithWorkers();
+    }
+
+    @Override
+    public boolean setState(BlockState to){
+        switch (to){
+            case UNDER_CONSTRUCTION:
+                if(getState()!=BlockState.UNDER_PLACEMENT){return false;}
+                break;
+            case UNDER_REPAIR:
+                if(getState()!=BlockState.FREE || getState()!=BlockState.NOT_OPERABLE){return false;}
+                break;
+            case USED:
+                if(getState()!=BlockState.FREE){return false;}
+                break;
+            //case UNDER_PLACEMENT: throw new IllegalArgumentException("Cannot change state to UNDER_PLACEMENT");
+            case NOT_OPERABLE:
+                if(getState()!=BlockState.FREE || getState()!=BlockState.USED){return false;} break;
+            case FREE://todo repair check
+                if(getState()==BlockState.UNDER_CONSTRUCTION){fillWithWorkers();
+                }else if(workers.size()==0 || currentActivityTime!=0 ){return false;}
+                break;
         }
-        else if(state.equals(BlockState.FREE) && queue.remainingCapacity()>0 && workers.size() > 0)
-        {
-            workers.get(0).operate();
-        }
-        if(state.equals(BlockState.UNDER_REPAIR))
-        {
-            currentActivityTime -= minutesPerSecond;
-        }
-        if(state.equals(BlockState.UNDER_REPAIR) && currentActivityTime <= 0 && workers.size() > 0 )
-        {
-            state = BlockState.FREE;
-            currentActivityTime = 0;
-        }
+        state=to;
+        return true;
     }
 
     public int getTicketCost() {
@@ -214,10 +234,6 @@ public class Game extends Block implements Queueable{
         this.workers = workers;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
     public void setCooldownTime(int cooldownTime) {
         this.cooldownTime = cooldownTime;
     }
@@ -232,7 +248,7 @@ public class Game extends Block implements Queueable{
         return "Game{" +
                 "Type=" + type +
                 "ticketCost=" + ticketCost +
-                ", queue=" + queue +
+                ", queue=" + queue.size() +
                 ", workers=" + workers +
                 ", capacity=" + capacity +
                 ", cooldownTime=" + cooldownTime +
