@@ -27,38 +27,38 @@ public class GameEngine {
 
         for(int i = 0; i < NUM_OF_COLS; i++) {
             for(int j = 0; j < NUM_OF_ROWS; j++) {
-                buildBlock(new FreePlace(new Position(i,j,false)));
+                buildBlockImmediately(new FreePlace(new Position(i,j,false)));
             }
         }
 
         //test: Base Gamefield
-        buildBlock(new Road(new Position(5,0,false),false,true));
-        buildBlock(new Road(new Position(5,1,false)));
-        buildBlock(new Road(new Position(5,2,false)));
-        buildBlock(new Road(new Position(5,3,false)));
-        buildBlock(new Road(new Position(5,4,false)));
-        buildBlock(new Road(new Position(5,5,false)));
-        buildBlock(new Road(new Position(6,5,false)));
-        buildBlock(new Road(new Position(7,5,false)));
-        buildBlock(new Road(new Position(8,5,false)));
-        buildBlock(new Road(new Position(9,5,false)));
+        buildBlockImmediately(new Road(new Position(5,0,false),false,true));
+        buildBlockImmediately(new Road(new Position(5,1,false)));
+        buildBlockImmediately(new Road(new Position(5,2,false)));
+        buildBlockImmediately(new Road(new Position(5,3,false)));
+        buildBlockImmediately(new Road(new Position(5,4,false)));
+        buildBlockImmediately(new Road(new Position(5,5,false)));
+        buildBlockImmediately(new Road(new Position(6,5,false)));
+        buildBlockImmediately(new Road(new Position(7,5,false)));
+        buildBlockImmediately(new Road(new Position(8,5,false)));
+        buildBlockImmediately(new Road(new Position(9,5,false)));
         //buildBlock(new Road(new Position(10,5,false)));
         Road dirtyRoad=new Road(new Position(10,5,false));
         dirtyRoad.setGarbage(40);
-        buildBlock(dirtyRoad);
-        buildBlock(new Road(new Position(10,6,false)));
-        buildBlock(new Road(new Position(10,7,false)));
-        buildBlock(new Road(new Position(10,8,false)));
-        buildBlock(new Road(new Position(10,9,false)));
-        buildBlock(new Road(new Position(10,10,false)));
-        buildBlock(new Road(new Position(10,11,false),false,true));
+        buildBlockImmediately(dirtyRoad);
+        buildBlockImmediately(new Road(new Position(10,6,false)));
+        buildBlockImmediately(new Road(new Position(10,7,false)));
+        buildBlockImmediately(new Road(new Position(10,8,false)));
+        buildBlockImmediately(new Road(new Position(10,9,false)));
+        buildBlockImmediately(new Road(new Position(10,10,false)));
+        buildBlockImmediately(new Road(new Position(10,11,false),false,true));
         Game repairme = new Game(GameType.FERRISWHEEL,new Position(6,6,false));
         repairme.setCondition(10);
-        buildBlock(repairme);
+        buildBlockImmediately(repairme);
         //buildBlock(new Game(GameType.ROLLERCOASTER,new Position(11,8,false)));
-        buildBlock(new ServiceArea(ServiceType.BUFFET,new Position(6,2,false)));
-        buildBlock(new ServiceArea(ServiceType.TOILET,new Position(9,8,false)));
-        buildBlock(new EmployeeBase(new Position(11,5,false)));
+        buildBlockImmediately(new ServiceArea(ServiceType.BUFFET,new Position(6,2,false)));
+        buildBlockImmediately(new ServiceArea(ServiceType.TOILET,new Position(9,8,false)));
+        buildBlockImmediately(new EmployeeBase(new Position(11,5,false)));
 
         pg.entrancePosition = new Position(5,0,false);
 
@@ -80,8 +80,15 @@ public class GameEngine {
      *          true, ha építés végbement
      */
     public boolean buildBlock(Block toBuild) {
-        //if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
+        return buildBlock(toBuild,false);
+    }
 
+    public boolean buildBlockImmediately(Block toBuild) {
+        return buildBlock(toBuild,true);
+    }
+
+    public boolean buildBlock(Block toBuild,boolean instantBuild){
+        //if(!isBuildingPeriod) { System.err.println("Nem lehet építkezni, míg nyitva van a park!"); return false; }
 
         if(pg.getMoney() < toBuild.getBuildingCost()) return false;
         if(!(pg.isBuildable(toBuild))) return false;
@@ -99,7 +106,11 @@ public class GameEngine {
 
         pg.setMoney(pg.getMoney()-toBuild.getBuildingCost());
         pg.getBuildedObjectList().add(toBuild);
-        toBuild.build();
+        if(instantBuild){
+            toBuild.buildInstantly();
+        }else{
+            toBuild.build();
+        }
 
         if(toBuild instanceof Game)               pg.getBuildedGameList().add((Game) toBuild);
         else if(toBuild instanceof ServiceArea)   { pg.getBuildedServiceList().add((ServiceArea) toBuild);

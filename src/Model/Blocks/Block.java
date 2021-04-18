@@ -63,6 +63,11 @@ public abstract class Block {
         currentActivityTime= GameEngine.TIME_1x*5;
     }
 
+    public void buildInstantly(){
+        build();
+        currentActivityTime=0;
+    }
+
     public void roundHasPassed(int minutesPerSecond){
         decreaseCurrentActivityTime(minutesPerSecond);
 
