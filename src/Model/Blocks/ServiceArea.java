@@ -22,7 +22,6 @@ public class ServiceArea extends Block implements Queueable{
     private final int capacity;
     private final ServiceType type;
     private int cooldownTime;
-    private int buildingTime;
     private static final HashMap<ServiceType,SpriteManager> spriteManagerMap=new HashMap<>();
 
 
@@ -95,7 +94,12 @@ public class ServiceArea extends Block implements Queueable{
 
     public void setCooldownTime(int cooldownTime) {this.cooldownTime = cooldownTime; }
 
-    public int getCooldownTime() { return cooldownTime; }
+    public int getCooldownTime() {
+        if(workers.size()==0 || getType()==ServiceType.TOILET){return cooldownTime;
+        }else{
+            return cooldownTime/workers.size();
+        }
+    }
 
     private void startService(){
         Visitor v = queue.pollFirst();

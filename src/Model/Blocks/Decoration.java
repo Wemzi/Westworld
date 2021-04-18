@@ -10,14 +10,8 @@ import java.util.HashMap;
 
 
 public class Decoration  extends Block {
-    private DecType decorationType;
+    private final DecType decorationType;
     private static final HashMap<DecType, SpriteManager> spriteMap=new HashMap<>();
-
-    @Deprecated
-    public Decoration(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state) {
-        super(buildingCost, upkeepCost, popularityIncrease, state);
-        this.decorationType = DecType.JUNGLETREE;
-    }
 
     public Decoration(DecType type,Position pos){
         this.decorationType = type;
