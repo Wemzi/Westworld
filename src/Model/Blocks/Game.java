@@ -26,7 +26,6 @@ public class Game extends Block implements Queueable{
     private ArrayList<Operator> workers;
     private final int capacity;
     private int cooldownTime;
-    private int buildingTime;
     public Repairman repairer;
     public GameType type;
     private static final int MIN_VISITOR_TO_START=2;

@@ -20,6 +20,8 @@ public class GameEngine {
     public static final int TIME_1x=5;
     private int minutesPerSecond = TIME_1x;
 
+    private final Random rnd = new Random();
+
     /* Konstruktor */
     public GameEngine() {
         pg = new Playground();
@@ -55,12 +57,11 @@ public class GameEngine {
         Game repairme = new Game(GameType.FERRISWHEEL,new Position(6,6,false));
         repairme.setCondition(10);
         buildBlockImmediately(repairme);
-        //buildBlock(new Game(GameType.ROLLERCOASTER,new Position(11,8,false)));
-        buildBlockImmediately(new ServiceArea(ServiceType.BUFFET,new Position(6,2,false)));
+        buildBlock(new Game(GameType.ROLLERCOASTER,new Position(11,8,false)));
+        ServiceArea buffet=new ServiceArea(ServiceType.BUFFET,new Position(6,2,false));
+        buildBlockImmediately(buffet);
         buildBlockImmediately(new ServiceArea(ServiceType.TOILET,new Position(9,8,false)));
         buildBlockImmediately(new EmployeeBase(new Position(11,5,false)));
-
-        pg.entrancePosition = new Position(5,0,false);
 
         //hire
         Cleaner cl=new Cleaner(new Position(5,0,false),10);
@@ -176,7 +177,7 @@ public class GameEngine {
         isBuildingPeriod = false;
         pg.getBuildedObjectList().forEach(Block::startDay);
 
-        Position entrancePosition = pg.getEntrancePosition();
+        Position entrancePosition = pg.getRandomEntrance(rnd).getPos();
         pg.getVisitors().add(new Visitor(entrancePosition));
         //pg.getVisitors().get(0).roundHasPassed(minutesPerSecond);
 
@@ -184,7 +185,6 @@ public class GameEngine {
 
         Timer visitorTimer = new Timer();
         Timer timer = new Timer();
-        Random rnd = new Random();
         visitorTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -313,7 +313,7 @@ public class GameEngine {
                     pg.setMinutes(0);
                     pg.setHours(pg.getHours()+1);
 
-                    pg.getVisitors().add(new Visitor(entrancePosition));
+                    pg.getVisitors().add(new Visitor(pg.getRandomEntrance(rnd).getPos()));
                     pg.getVisitors().get(pg.getVisitors().size()-1).roundHasPassed(minutesPerSecond);
                 }
                 if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban

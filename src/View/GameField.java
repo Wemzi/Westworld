@@ -1,9 +1,7 @@
 package View;
 
 import Model.Blocks.Block;
-import Model.Blocks.BlockState;
 import Model.Blocks.FreePlace;
-import Model.Blocks.Queueable;
 import Model.GameEngine;
 import Model.People.Employee;
 import Model.People.Visitor;
@@ -131,9 +129,10 @@ public class GameField extends JPanel {
 
     private static void drawBlockLabel(Block block, Graphics2D gr){
 
+        /*
         if(block instanceof Queueable && block.getState() == BlockState.FREE || block.getState()==BlockState.USED){
             centerString(gr,getBlockAsRectangle(block),"Q:"+((Queueable) block).getQueue().size());
-        }
+        }*/
 
     }
 

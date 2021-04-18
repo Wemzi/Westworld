@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Random;
 
 import static View.MainWindow2.NUM_OF_COLS;
 import static View.MainWindow2.NUM_OF_ROWS;
@@ -31,8 +32,6 @@ public class Playground {
     private int money;
     private int days, hours, minutes;
     private double popularity;
-
-    Position entrancePosition;
 
     /* Konstruktor */
     public Playground() {
@@ -294,7 +293,6 @@ public class Playground {
     public int getMinutes()                                 { return minutes; }
     public int getDays()                                    { return days; }
     public double getPopularity()                           { return popularity; }
-    public Position getEntrancePosition()                   { return entrancePosition; }
     public Block getBlockByPosition(Position pos)           { return blocks[pos.getX_asIndex()][pos.getY_asIndex()]; }
 
     public BlockState getBlockState(Block block)            { return block.getState(); }
@@ -318,9 +316,17 @@ public class Playground {
     public void setBuildedObjects(ArrayList<Block> buildedObjects) { this.buildedObjects = buildedObjects; }
 
 
-
     public ArrayList<EmployeeBase> getBuildedEmployeeBases() {
         return buildedEmployeeBases;
+    }
+
+    public Road getRandomEntrance(Random rnd){
+        ArrayList<Road> entrances = new ArrayList<>();
+        getBuildedObjectList().forEach( r -> {if(r instanceof Road && ((Road) r).isEntrance() && r.getState()==BlockState.FREE ){entrances.add(((Road) r));}});
+        if(entrances.size()==0){
+            System.err.println("No entrance!");
+            return null;}
+        return entrances.get(Math.abs(rnd.nextInt())%entrances.size());
     }
 
     /**
