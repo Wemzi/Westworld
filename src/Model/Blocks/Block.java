@@ -132,10 +132,7 @@ public abstract class Block {
         return popularityIncrease;
     }
 
-    public boolean setState(BlockState state) {
-        this.state = state;
-        return true;
-    }
+    public void setState(BlockState state) { this.state = state; }
 
     public void setBuildingCost(int buildingCost) {
         this.buildingCost = buildingCost;
@@ -159,6 +156,10 @@ public abstract class Block {
 
     public boolean needRepair(){
         return (state==BlockState.NOT_OPERABLE || state==BlockState.FREE) && condition<20;
+    }
+
+    public void setCurrentActivityTime(int currentActivityTime) {
+        this.currentActivityTime = currentActivityTime;
     }
 
     public String toString() {

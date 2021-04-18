@@ -25,7 +25,7 @@ public class Game extends Block implements Queueable{
     private final ArrayBlockingQueue<Visitor> queue;
     private ArrayList<Operator> workers;
     private final int capacity;
-    private int cooldownTime;
+    private final int cooldownTime;
     public Repairman repairer;
     public GameType type;
     private static final int MIN_VISITOR_TO_START=2;
@@ -149,7 +149,9 @@ public class Game extends Block implements Queueable{
 
         //finished activity
         if(getState()==BlockState.UNDER_CONSTRUCTION && currentActivityTime==0){fillWithWorkers();constructionFinished();}
-        if(getState()==BlockState.UNDER_REPAIR && currentActivityTime==0){repairFinished();}
+        if(getState()==BlockState.UNDER_REPAIR && currentActivityTime==0){
+            repairFinished();
+        }
         if(getState()==BlockState.NOT_OPERABLE && isOperable() && !needRepair()){setState(BlockState.FREE);}
         if (getState()==BlockState.USED && currentActivityTime==0){playingFinished();}
 
@@ -157,7 +159,9 @@ public class Game extends Block implements Queueable{
         if(getState()==BlockState.FREE && needRepair()){setState(BlockState.NOT_OPERABLE);}
         if(getState()==BlockState.FREE && !isOperable()){setState(BlockState.NOT_OPERABLE);}
 
-        if (getState()==BlockState.FREE && isOperable() && !needRepair() && queue.size()>0 && playingVisitors.size()<capacity){startPlaying();}
+        if (getState()==BlockState.FREE && isOperable() && !needRepair() && queue.size()>0 && playingVisitors.size()<capacity){
+            startPlaying();
+        }
     }
 
     private void startPlaying(){
@@ -207,10 +211,6 @@ public class Game extends Block implements Queueable{
 
     public void setWorkers(ArrayList<Operator> workers) {
         this.workers = workers;
-    }
-
-    public void setCooldownTime(int cooldownTime) {
-        this.cooldownTime = cooldownTime;
     }
 
     public void setBuildingTime(int buildingTime) {

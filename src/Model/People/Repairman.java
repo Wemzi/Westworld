@@ -23,9 +23,9 @@ public class Repairman extends Employee {
     public void repair(Game g) {
         if (g.getState() == BlockState.FREE || g.getState()==BlockState.NOT_OPERABLE) {
             g.setState(BlockState.UNDER_REPAIR);
-            g.setCondition(100);
+            //g.setCondition(100);
             currentActivityLength = g.getBuildingCost() / 10;
-            g.setCooldownTime(currentActivityLength);
+            g.setCurrentActivityTime(currentActivityLength);
         }
     }
 
