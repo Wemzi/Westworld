@@ -25,7 +25,6 @@ public class Playground {
 
     private final ArrayList<Caterer> cateres;
     private final ArrayList<Cleaner> cleaners;
-    private final ArrayList<Operator> operators; //todo handle this
     private final ArrayList<Repairman> repairmen;
 
 
@@ -42,7 +41,6 @@ public class Playground {
         visitors            = new ArrayList<>();
         cateres             = new ArrayList<>();
         cleaners            = new ArrayList<>();
-        operators           = new ArrayList<>();
         repairmen           = new ArrayList<>();
         buildedEmployeeBases= new ArrayList<>();
 
@@ -132,11 +130,7 @@ public class Playground {
             ((Caterer) e).workPlace.addWorker((Caterer) e);
         } else if(e instanceof Cleaner) {
             cleaners.add((Cleaner)e);
-        }
-        else if(e instanceof Operator) {
-            operators.add((Operator)e);
-        }
-        else if(e instanceof Repairman) {
+        } else if(e instanceof Repairman) {
             repairmen.add((Repairman)e);
             System.out.println("Hired a repairman");
         }
@@ -154,11 +148,7 @@ public class Playground {
             }else{
                 System.err.println("No free cleaner to remove!");
             }
-        }
-        else if(e instanceof Operator) {
-            operators.remove(e);
-        }
-        else if(e instanceof Repairman) {
+        } else if(e instanceof Repairman) {
             repairmen.remove(e);
         }
     }
@@ -305,7 +295,6 @@ public class Playground {
     public java.util.List<Visitor> getVisitors()            { return Collections.synchronizedList(visitors);}
     public ArrayList<Caterer> getCaterers()                 { return cateres; }
     public ArrayList<Cleaner> getCleaners()                 { return cleaners; }
-    public ArrayList<Operator> getOperators()               { return operators; }
     public ArrayList<Repairman> getRepairmen()              { return repairmen; }
 
     public void setMoney(int money)                         { this.money = money; }
@@ -318,6 +307,12 @@ public class Playground {
 
     public ArrayList<EmployeeBase> getBuildedEmployeeBases() {
         return buildedEmployeeBases;
+    }
+
+    public ArrayList<Operator> getOperators(){
+        ArrayList<Operator> r = new ArrayList<>();
+        getBuildedGameList().forEach(g -> {r.addAll(g.getWorkers());});
+        return r;
     }
 
     public Road getRandomEntrance(Random rnd){

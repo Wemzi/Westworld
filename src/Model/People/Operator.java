@@ -67,4 +67,10 @@ public class Operator extends Employee {
         );
         manager=new OnePicDynamicSpriteManager("graphics/visitor.png",personSize,rectangles,10);
     }
+
+
+    @Override
+    public void paint(Graphics2D gr) {
+        //ne rajzoljuk ki az operatorokat
+    }
 }

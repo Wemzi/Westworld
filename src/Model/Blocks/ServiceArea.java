@@ -3,6 +3,7 @@ package Model.Blocks;
 import Model.People.Caterer;
 import Model.People.Employee;
 import Model.People.Visitor;
+import Model.Playground;
 import Model.Position;
 import View.spriteManagers.OneColorSpriteManager;
 import View.spriteManagers.SpriteManager;
@@ -144,6 +145,13 @@ public class ServiceArea extends Block implements Queueable{
         if(getState()==BlockState.FREE && !isOperable()){setState(BlockState.NOT_OPERABLE);}
 
         if (getState()==BlockState.FREE && isOperable() && !needRepair() && queue.size()>0 && visitorsUsingThisService.size()<capacity){startService();}
+    }
+
+    public void hire(Caterer r , Playground pg){
+        if(getType() != ServiceType.BUFFET){throw new IllegalStateException("Only buffets can hire caterers!");}
+        pg.hire(r);
+        addWorker(r);
+        r.setPosition(this.getPos());
     }
 
     @Override

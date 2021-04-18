@@ -1,7 +1,9 @@
 package Model.Blocks;
 
-import Model.People.Caterer;
+import Model.People.Cleaner;
 import Model.People.Employee;
+import Model.People.Repairman;
+import Model.Playground;
 import Model.Position;
 import View.spriteManagers.OneColorSpriteManager;
 import View.spriteManagers.SpriteManager;
@@ -11,8 +13,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class EmployeeBase extends Block {
-        private ArrayList<Employee> workers;
-        private int cooldownTime;
+        private ArrayList<Employee> workers; //todo ez mire van?
         private static SpriteManager spriteManager=null;
 
         public EmployeeBase(Position p) {
@@ -21,19 +22,27 @@ public class EmployeeBase extends Block {
             this.pos=p;
         }
 
-        public void addWorker(Caterer o){workers.add(o); }
+        public void addWorker(Employee o){workers.add(o); }
+
+        public void hire(Repairman r ,Playground pg){
+            pg.hire(r);
+            addWorker(r);
+            r.setPosition(this.getPos());
+        }
+
+        public void hire(Cleaner r , Playground pg){
+            pg.hire(r);
+            addWorker(r);
+            r.setPosition(this.getPos());
+        }
 
         @Override
-        public Color getColor() {
-            return Color.YELLOW;}
+        public Color getColor() {return Color.YELLOW;}
 
         public ArrayList<Employee> getWorkers() { return workers; }
 
         public void setWorkers(ArrayList<Employee> workers) { this.workers = workers; }
 
-        public void setCooldownTime(int cooldownTime) {this.cooldownTime = cooldownTime; }
-
-        public int getCooldownTime() { return cooldownTime; }
 
         @Override
         public String toString() {
