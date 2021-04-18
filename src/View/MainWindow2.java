@@ -150,12 +150,20 @@ public class MainWindow2 extends JFrame{
                 engine.setTimerSpeed(GameEngine.TIME_1x*3);
             }
         });
+        JMenuItem timeTenMenuItem = new JMenuItem("Time 10x");
+        timeTenMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                engine.setTimerSpeed(GameEngine.TIME_1x*10);
+            }
+        });
 
         //final initialization moves
         //menu
         timeMenu.add(timeOneMenuItem);
         timeMenu.add(timeTwoMenuItem);
         timeMenu.add(timeThreeMenuItem);
+        timeMenu.add(timeTenMenuItem);
 
         otherMenu.add(managementMenuItem);
         otherMenu.addSeparator();
