@@ -23,7 +23,7 @@ public class Playground {
     private final ArrayList<EmployeeBase> buildedEmployeeBases;
     private final ArrayList<Visitor> visitors;
 
-    private final ArrayList<Caterer> cateres;
+    private final ArrayList<Caterer> caterers;
     private final ArrayList<Cleaner> cleaners;
     private final ArrayList<Repairman> repairmen;
 
@@ -39,7 +39,7 @@ public class Playground {
         builedGames         = new ArrayList<>();
         builededServices    = new ArrayList<>();
         visitors            = new ArrayList<>();
-        cateres             = new ArrayList<>();
+        caterers             = new ArrayList<>();
         cleaners            = new ArrayList<>();
         repairmen           = new ArrayList<>();
         buildedEmployeeBases= new ArrayList<>();
@@ -126,7 +126,7 @@ public class Playground {
 
     public void hire(Employee e) {
         if(e instanceof Caterer) {
-            cateres.add((Caterer) e);
+            caterers.add((Caterer) e);
             ((Caterer) e).workPlace.addWorker((Caterer) e);
         } else if(e instanceof Cleaner) {
             cleaners.add((Cleaner)e);
@@ -138,7 +138,7 @@ public class Playground {
 
     public void fire(Employee e){
         if(e instanceof Caterer) {
-            cateres.remove(e);
+            caterers.remove(e);
             ((Caterer) e).workPlace.getWorkers().remove(e);
         }
         else if(e instanceof Cleaner) {
@@ -238,10 +238,14 @@ public class Playground {
         while(posX<posXorigin+2 ) {
             int posY = pos.getY_asIndex()-2;
             while (posY < posYorigin + 2) {
-                Block b = blocks[Math.abs(posX)][Math.abs(posY)];
-                if (b instanceof Road && ((Road) b).isHasGarbageCan()){ret=true;}
-                posY++;
-                //System.out.println("posX: " + posX + " posY:"+ posY );
+                if(isSafe(posX,posY)) {
+                    Block b = blocks[Math.abs(posX)][Math.abs(posY)];
+                    if (b instanceof Road && ((Road) b).isHasGarbageCan()) {
+                        ret = true;
+                    }
+                    posY++;
+                    //System.out.println("posX: " + posX + " posY:"+ posY );
+                }
             }
             posX++;
         }
@@ -288,12 +292,12 @@ public class Playground {
     public BlockState getBlockState(Block block)            { return block.getState(); }
     public Color getColor(Block block)                      { return block.getColor(); }
     public Block[][] getBlocks()                            { return blocks; }
-    public java.util.List<Block> getBuildedObjectList()          { return Collections.synchronizedList(buildedObjects); }
+    public java.util.List<Block> getBuildedObjectList()     { return Collections.synchronizedList(buildedObjects); }
     public ArrayList<Game> getBuildedGameList()             { return builedGames; }
     public ArrayList<ServiceArea> getBuildedServiceList()   { return builededServices; }
 
     public java.util.List<Visitor> getVisitors()            { return Collections.synchronizedList(visitors);}
-    public ArrayList<Caterer> getCaterers()                 { return cateres; }
+    public ArrayList<Caterer> getCaterers()                 { return caterers; }
     public ArrayList<Cleaner> getCleaners()                 { return cleaners; }
     public ArrayList<Repairman> getRepairmen()              { return repairmen; }
 

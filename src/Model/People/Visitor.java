@@ -19,7 +19,6 @@ public class Visitor extends Person {
     private int playfulness;
     private int stayingTime;
     private VisitorState state;
-    private String name;
 
 
     // TODO: cyclical waiting at a game for example
@@ -30,7 +29,7 @@ public class Visitor extends Person {
         happiness = Math.abs(rnd.nextInt() % 100);
         hunger = Math.abs(rnd.nextInt() % 100);
         playfulness = 50;
-        stayingTime = Math.abs(rnd.nextInt() % 500);
+        stayingTime = Math.abs(rnd.nextInt() % 300) + 200;
         isMoving = false;
         pathPositionIndex = 0;
         state = VisitorState.DOESNT_KNOW;
@@ -86,7 +85,7 @@ public class Visitor extends Person {
 
             goal = GameList.get(Math.abs((rnd.nextInt())) % GameList.size());
 
-            System.out.println("Visitor játszani megy!");
+            System.out.println(name + " játszani megy!");
         }
         else if ( getState().equals(VisitorState.WANNA_EAT)) {
             ArrayList<ServiceArea> SvList = pg.getBuildedServiceList();
@@ -113,12 +112,23 @@ public class Visitor extends Person {
             //System.out.println(v.getPathPositionList());
             //System.out.println("Visitor WC-re megy!");
         }
+        else if(getState() == VisitorState.WANNA_LEAVE)
+        {
+            java.util.List<Block> BuildedObjects = pg.getBuildedObjectList();
+            for(Block b : BuildedObjects)
+            {
+                if(b instanceof Road && ((Road) b).isEntrance())
+                {
+                    goal = b;
+                }
+            }
+        }
     }
 
 
     @Override
     public void arrived(int minutesPerSecond){
-        System.out.println("Visitor megérkezett!");
+        System.out.println(name + " megérkezett!");
         isMoving = false;
         pathPositionIndex = 0;
         ArrayList<Position> copy = getPathPositionList();
@@ -153,37 +163,26 @@ public class Visitor extends Person {
 
     @Override
     public void roundHasPassed(int minutesPerSecond) {
-        //System.out.println(toString());
+        System.out.println(toString());
         this.hunger += minutesPerSecond/5;
         this.stayingTime -= minutesPerSecond;
         if(!isMoving){decreaseCurrentActivityLength(minutesPerSecond); }
-
-        if(state != VisitorState.DOESNT_KNOW){ return;}
-
-        if(state.equals(VisitorState.WANNA_LEAVE)) {
-            System.out.println("el akarok menni!");
+        if(stayingTime < 0) {
+            state = VisitorState.WANNA_LEAVE;
         }
-        else if (hunger < 50) {
+        if(state != VisitorState.DOESNT_KNOW){ return;}
+        else if (hunger < 50 & state != VisitorState.WANNA_LEAVE) {
             this.playfulness += minutesPerSecond * 2 ;
         }
-        else if(hunger > 50 && state == VisitorState.DOESNT_KNOW)
+        else if(hunger > 50 && state == VisitorState.DOESNT_KNOW && state != VisitorState.WANNA_LEAVE)
         {
             this.state = VisitorState.WANNA_EAT;
             return;
         }
-        if(playfulness > 50 && hunger < 50 && state == VisitorState.DOESNT_KNOW) {
+        if(playfulness > 50 && hunger < 50 && state == VisitorState.DOESNT_KNOW & state != VisitorState.WANNA_LEAVE) {
             this.state = VisitorState.WANNA_PLAY;
             return;
         }
-
-        /*
-        if(stayingTime < 0 && state == VisitorState.DOESNT_KNOW )
-        {
-            state = VisitorState.WANNA_LEAVE;
-            return;
-        }
-        */
-
         if (this.currentActivityLength == 0 && state == VisitorState. DOESNT_KNOW)
             {
             happiness-= minutesPerSecond;

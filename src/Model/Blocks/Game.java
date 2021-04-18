@@ -34,7 +34,7 @@ public class Game extends Block implements Queueable{
     public Game(GameType type,Position pos) {
         this.type = type;
         queue=new ArrayBlockingQueue<>(MAX_QUEUE_LENGTH);
-        if (type == GameType.DODGEM) {
+       /* if (type == GameType.DODGEM) {
             this.buildingCost = 300;
             this.upkeepCost = 50;
             this.popularityIncrease=1.4;
@@ -47,7 +47,8 @@ public class Game extends Block implements Queueable{
             this.buildingTime = 5 * cooldownTime;
             playingVisitors = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Operator>();
-        } else if (type == GameType.FERRISWHEEL) {
+            }*/
+        if (type == GameType.FERRISWHEEL) {
             this.buildingCost = 600;
             this.upkeepCost = 150;
             this.popularityIncrease=1.7;
@@ -241,7 +242,7 @@ public class Game extends Block implements Queueable{
             case FERRISWHEEL: return "Ferris Wheel";
             case RODEO: return "Rodeo";
             case ROLLERCOASTER: return "Roller Coaster";
-            case DODGEM: return "Dodgem";
+            //case DODGEM: return "Dodgem";
             case SHOOTINGGALLERY: return "Shooting Gallery";
             default : return "undefined";
         }

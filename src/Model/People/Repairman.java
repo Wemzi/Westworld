@@ -23,15 +23,15 @@ public class Repairman extends Employee {
     public void repair(Game g) {
         if (g.getState() == BlockState.FREE || g.getState()==BlockState.NOT_OPERABLE) {
             g.setState(BlockState.UNDER_REPAIR);
-            //g.setCondition(100);
             currentActivityLength = g.getBuildingCost() / 10;
             g.setCurrentActivityTime(currentActivityLength);
+            goal = null;
         }
     }
 
     @Override
     public void roundHasPassed(int minutesPerSecond) {
-        System.out.println(toString());
+        //System.out.println(toString());
         if (currentActivityLength > 0) {
             currentActivityLength -= minutesPerSecond;
         }else{
@@ -49,9 +49,14 @@ public class Repairman extends Employee {
                 System.out.println("megyek javitani");
                 return;
             }
-            else if(b instanceof EmployeeBase && !isBusy()){
-                goal=b;
-                System.out.println("megvan az employeebase");
+        }
+        for(Block b :pg.getBuildedEmployeeBases())
+        {
+            if(b instanceof EmployeeBase && !isBusy() && !(pg.getBlockByPosition(getPosition()) instanceof EmployeeBase))
+            {
+                goal = b;
+                System.out.println("Megvan az employeebase");
+                return;
             }
         }
     }

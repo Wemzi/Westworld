@@ -16,6 +16,7 @@ public class GameEngine {
     private boolean isBuildingPeriod;
     public static final int TIME_1x=5;
     private int minutesPerSecond = TIME_1x;
+    private int prevVisitors = 1;
 
     private final Random rnd = new Random();
 
@@ -176,7 +177,11 @@ public class GameEngine {
         pg.getBuildedObjectList().forEach(Block::startDay);
 
         Position entrancePosition = pg.getRandomEntrance(rnd).getPos();
-        pg.getVisitors().add(new Visitor(entrancePosition));
+        for(int idx = 0; idx < prevVisitors; idx++ )
+        {
+            pg.getVisitors().add(new Visitor(entrancePosition));
+        }
+
         //pg.getVisitors().get(0).roundHasPassed(minutesPerSecond);
 
 
@@ -247,9 +252,6 @@ public class GameEngine {
                         }
                         else if(v.isMoving && !v.isBusy()){v.move(minutesPerSecond);}
                     }
-
-
-
                     for (Visitor v : pg.getVisitors()) {
                             if(Objects.isNull(v.goal)){
                                 v.findGoal(rnd,pg);
@@ -284,8 +286,6 @@ public class GameEngine {
                 for(Block b: pg.getBuildedObjectList()){b.roundHasPassed(minutesPerSecond);}
                 for(Visitor v : pg.getVisitors()) {
                         v.roundHasPassed(minutesPerSecond);
-                        //System.out.println(v.toString());
-
                     int throwgarbage = Math.abs(rnd.nextInt() % 100);
                     if(throwgarbage > 93 && !pg.isGarbageCanNearby(v.getPosition()))
                     {
@@ -295,8 +295,12 @@ public class GameEngine {
                             ((Road) possibleroad).setGarbage(((Road) possibleroad).getGarbage()+15);
                         }
                     }
-                    if (v.getStayingTime() == 0) {
-                        pg.getVisitors().remove(v);
+                    if (v.getState() == VisitorState.WANNA_LEAVE && pg.getBlockByPosition(v.getPosition()) instanceof Road ) {
+                        Road r =(Road) pg.getBlockByPosition(v.getPosition());
+                        if ( r.isEntrance())
+                        {
+                            pg.getVisitors().remove(v);
+                        }
                         break;
                     }
                 }
@@ -305,23 +309,29 @@ public class GameEngine {
                 {
                     c.roundHasPassed(minutesPerSecond);
                 }
+                for(Repairman c : pg.getRepairmen())
+                {
+                    c.roundHasPassed(minutesPerSecond);
+                }
                 rounds[1] = 0;
 
                 if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
                     pg.setMinutes(0);
-                    pg.setHours(pg.getHours()+1);
-
-                    pg.getVisitors().add(new Visitor(pg.getRandomEntrance(rnd).getPos()));
-                    pg.getVisitors().get(pg.getVisitors().size()-1).roundHasPassed(minutesPerSecond);
+                    pg.setHours(pg.getHours() + 1);
+                    if (pg.getHours() < 20){
+                        pg.getVisitors().add(new Visitor(pg.getRandomEntrance(rnd).getPos()));
+                        pg.getVisitors().get(pg.getVisitors().size() - 1).roundHasPassed(minutesPerSecond);
+                    }
                 }
-                if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban
+                if(pg.getHours() == 20) { // Eltelt 1 nap a játékban, Visitorok elindulnak kifele, bezár a park.
+                    prevVisitors = endDay(); //Nap vége
+                }
+                if(pg.getVisitors().size() == 0) { // Eltelt 1 nap a játékban, bezárás
                     pg.setMinutes(0);
                     pg.setHours(8);
                     pg.setDays(pg.getDays()+1);
-
                     timer.cancel(); timer.purge(); // Timer leállítása a nap végén
                     visitorTimer.cancel(); visitorTimer.purge(); // Visitor timer leállítása
-                    endDayPayOff(); //Nap végén lévő elszámolás
                     isBuildingPeriod = true;
                     System.out.println("Nap véget ért!");
                 }
@@ -349,6 +359,17 @@ public class GameEngine {
 
         pg.setMoney(money);
 
+    }
+
+    public int endDay()
+    {
+        endDayPayOff();
+        int ret = pg.getVisitors().size();
+        for(Visitor v : pg.getVisitors())
+        {
+            v.setStayingTime(-1000);
+        }
+        return ret;
     }
 
     public int getRepairmanSalaries(){return pg.getRepairmen().stream().mapToInt(Employee::getSalary).sum(); }

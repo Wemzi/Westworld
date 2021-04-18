@@ -61,9 +61,14 @@ public class Cleaner extends Employee {
                 System.out.println("KOSZOS AZ EGESZ HOBELEVANC");
                 return;
             }
-            else if(b instanceof EmployeeBase && !isBusy()){
-                goal=b;
-                System.out.println("megvan az employeebase");
+        }
+        for(Block b :pg.getBuildedEmployeeBases())
+        {
+            if(b instanceof EmployeeBase && !isBusy() && !(pg.getBlockByPosition(getPosition()) instanceof EmployeeBase))
+            {
+                goal = b;
+                System.out.println("Megvan az employeebase");
+                return;
             }
         }
     }

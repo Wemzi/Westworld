@@ -25,6 +25,7 @@ abstract public class Person {
     public boolean isMoving;
     public int pathPositionIndex;
     public Block goal;
+    public String name = getRandomName();
 
 
     protected Person(Position startingCoord)
