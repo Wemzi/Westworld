@@ -66,6 +66,7 @@ public abstract class Block {
     public void buildInstantly(){
         build();
         currentActivityTime=0;
+        roundHasPassed(GameEngine.TIME_1x);
     }
 
     public void roundHasPassed(int minutesPerSecond){
