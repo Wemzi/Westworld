@@ -183,15 +183,6 @@ public class Visitor extends Person {
             this.state = VisitorState.WANNA_PLAY;
             return;
         }
-
-        /*
-        if(stayingTime < 0 && state == VisitorState.DOESNT_KNOW )
-        {
-            state = VisitorState.WANNA_LEAVE;
-            return;
-        }
-        */
-
         if (this.currentActivityLength == 0 && state == VisitorState. DOESNT_KNOW)
             {
             happiness-= minutesPerSecond;

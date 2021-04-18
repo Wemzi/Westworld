@@ -16,6 +16,7 @@ public class GameEngine {
     private boolean isBuildingPeriod;
     public static final int TIME_1x=5;
     private int minutesPerSecond = TIME_1x;
+    private int prevVisitors = 1;
 
     private final Random rnd = new Random();
 
@@ -176,8 +177,11 @@ public class GameEngine {
         pg.getBuildedObjectList().forEach(Block::startDay);
 
         Position entrancePosition = pg.getRandomEntrance(rnd).getPos();
-        for(int idx = 0; idx <  )
-        pg.getVisitors().add(new Visitor(entrancePosition));
+        for(int idx = 0; idx < prevVisitors; idx++ )
+        {
+            pg.getVisitors().add(new Visitor(entrancePosition));
+        }
+
         //pg.getVisitors().get(0).roundHasPassed(minutesPerSecond);
 
 
@@ -313,22 +317,21 @@ public class GameEngine {
 
                 if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
                     pg.setMinutes(0);
-                    pg.setHours(pg.getHours()+1);
-
-                    pg.getVisitors().add(new Visitor(pg.getRandomEntrance(rnd).getPos()));
-                    pg.getVisitors().get(pg.getVisitors().size()-1).roundHasPassed(minutesPerSecond);
+                    pg.setHours(pg.getHours() + 1);
+                    if (pg.getHours() < 20){
+                        pg.getVisitors().add(new Visitor(pg.getRandomEntrance(rnd).getPos()));
+                        pg.getVisitors().get(pg.getVisitors().size() - 1).roundHasPassed(minutesPerSecond);
+                    }
                 }
-                if(pg.getHours() >= 20) { // Eltelt 1 nap a játékban, Visitorok elindulnak kifele, bezár a park.
-                    endDay(); //Nap vége
+                if(pg.getHours() == 20) { // Eltelt 1 nap a játékban, Visitorok elindulnak kifele, bezár a park.
+                    prevVisitors = endDay(); //Nap vége
                 }
                 if(pg.getVisitors().size() == 0) { // Eltelt 1 nap a játékban, bezárás
                     pg.setMinutes(0);
                     pg.setHours(8);
                     pg.setDays(pg.getDays()+1);
-
                     timer.cancel(); timer.purge(); // Timer leállítása a nap végén
                     visitorTimer.cancel(); visitorTimer.purge(); // Visitor timer leállítása
-                    endDay(); //Nap vége
                     isBuildingPeriod = true;
                     System.out.println("Nap véget ért!");
                 }
@@ -364,7 +367,7 @@ public class GameEngine {
         int ret = pg.getVisitors().size();
         for(Visitor v : pg.getVisitors())
         {
-            v.setStayingTime(0);
+            v.setStayingTime(-1000);
         }
         return ret;
     }
