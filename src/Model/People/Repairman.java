@@ -31,7 +31,7 @@ public class Repairman extends Employee {
 
     @Override
     public void roundHasPassed(int minutesPerSecond) {
-        System.out.println(toString());
+        //System.out.println(toString());
         if (currentActivityLength > 0) {
             currentActivityLength -= minutesPerSecond;
         }else{
