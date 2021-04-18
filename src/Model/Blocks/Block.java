@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public abstract class Block {
     protected static final Color DEFAULT_BACKGROUND_COLOR =new Color(52, 177, 52);
-    private static final int MAX_CONDITION=100;
+    protected static final int MAX_CONDITION=100;
     protected BlockState state;
     protected int buildingCost;
     protected int upkeepCost;
@@ -57,8 +57,6 @@ public abstract class Block {
     }
 
 
-
-    //Methods:
     public void build(){
         setupSprites();
         state=BlockState.UNDER_CONSTRUCTION;
@@ -66,33 +64,24 @@ public abstract class Block {
     }
 
     public void roundHasPassed(int minutesPerSecond){
-        switch (getState()){
-            case UNDER_CONSTRUCTION:
-            case UNDER_REPAIR:
-                if(currentActivityTime==0){activityFinished();
-                }else{decreaseCurrentActivityTime(minutesPerSecond);}
-            break;
-            case FREE:
-                if(needRepair()){
-                    setState(BlockState.NOT_OPERABLE);
-                }
-            default:
-                break;
-        }
+        decreaseCurrentActivityTime(minutesPerSecond);
+
+        //finished activity
+        if(getState()==BlockState.UNDER_CONSTRUCTION && currentActivityTime==0){constructionFinished();}
+        if(getState()==BlockState.UNDER_REPAIR && currentActivityTime==0){repairFinished();}
+        if(getState()==BlockState.NOT_OPERABLE && !needRepair()){setState(BlockState.FREE);}
+
+        //need to start activity
+        if(getState()==BlockState.FREE && needRepair()){setState(BlockState.NOT_OPERABLE);}
     }
 
-    protected void activityFinished(){
-        switch (getState()){
-            case UNDER_REPAIR:
-                condition=MAX_CONDITION;
-                setState(BlockState.FREE);
-                currentActivityTime=0;
-                break;
-            case UNDER_CONSTRUCTION:
-                setState(BlockState.FREE);
-                break;
-        }
+    protected void repairFinished(){
+        condition=MAX_CONDITION;
+        setState(BlockState.FREE);
+        currentActivityTime=0;
     }
+
+    protected void constructionFinished(){setState(BlockState.FREE);}
 
     protected void decreaseCurrentActivityTime(int value){
         if(value <=0){throw new IllegalArgumentException("pozitiv szam kene");}
@@ -163,7 +152,7 @@ public abstract class Block {
     }
 
     public boolean needRepair(){
-        return condition<20;
+        return (state==BlockState.NOT_OPERABLE || state==BlockState.FREE) && condition<20;
     }
 
     public String toString() {

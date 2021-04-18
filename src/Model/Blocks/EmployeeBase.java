@@ -13,8 +13,6 @@ import java.util.Objects;
 public class EmployeeBase extends Block {
         private ArrayList<Employee> workers;
         private int cooldownTime;
-        private int buildingTime;
-        private int currentActivityTime;
         private static SpriteManager spriteManager=null;
 
         public EmployeeBase(Position p) {
@@ -23,8 +21,7 @@ public class EmployeeBase extends Block {
             this.pos=p;
         }
 
-        public void addWorker(Caterer o){workers.add(o);
-        }
+        public void addWorker(Caterer o){workers.add(o); }
 
         @Override
         public Color getColor() {
@@ -37,35 +34,6 @@ public class EmployeeBase extends Block {
         public void setCooldownTime(int cooldownTime) {this.cooldownTime = cooldownTime; }
 
         public int getCooldownTime() { return cooldownTime; }
-
-        public void roundHasPassed(int minutesPerSecond)
-        {
-            if(workers.size() <= 1 )
-            {
-                state = BlockState.NOT_OPERABLE;
-                return;
-            }
-            if(state.equals(BlockState.UNDER_CONSTRUCTION))
-            {
-                buildingTime-=minutesPerSecond;
-            }
-            if(state.equals(BlockState.USED))
-            {
-                currentActivityTime-=minutesPerSecond;
-            }
-            else if(buildingTime == 0 && !(state.equals(BlockState.USED))) {
-                state = BlockState.FREE;
-            }
-            if(state.equals(BlockState.UNDER_REPAIR))
-            {
-                currentActivityTime -= minutesPerSecond;
-            }
-            if(state.equals(BlockState.UNDER_REPAIR) && currentActivityTime <= 0 )
-            {
-                state = BlockState.FREE;
-                currentActivityTime = 0;
-            }
-        }
 
         @Override
         public String toString() {

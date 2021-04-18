@@ -139,78 +139,47 @@ public class Game extends Block implements Queueable{
         workers.add(new Operator(new Position(this.getPos().getX_asIndex(),this.getPos().getY_asIndex(),true),25,this));
         workers.add(new Operator(new Position(this.getPos().getX_asIndex(),this.getPos().getY_asIndex(),true),25,this));
     }
+    private boolean isOperable(){
+        return workers.size()>0;
+    }
 
     @Override
     public void roundHasPassed(int minutesPerSecond)
     {
-        super.roundHasPassed(minutesPerSecond);
-        switch (getState()){
-            case USED:
-                if(currentActivityTime==0){
-                    activityFinished();
-                }else{decreaseCurrentActivityTime(minutesPerSecond);}
-                break;
-            case FREE:
-                if(needRepair()){setState(BlockState.NOT_OPERABLE);break;}
-                startGame();
-                break;
-        }
+        decreaseCurrentActivityTime(minutesPerSecond);
 
+        //finished activity
+        if(getState()==BlockState.UNDER_CONSTRUCTION && currentActivityTime==0){fillWithWorkers();constructionFinished();}
+        if(getState()==BlockState.UNDER_REPAIR && currentActivityTime==0){repairFinished();}
+        if(getState()==BlockState.NOT_OPERABLE && isOperable() && !needRepair()){setState(BlockState.FREE);}
+        if (getState()==BlockState.USED && currentActivityTime==0){playingFinished();}
 
+        //need to start activity
+        if(getState()==BlockState.FREE && needRepair()){setState(BlockState.NOT_OPERABLE);}
+        if(getState()==BlockState.FREE && !isOperable()){setState(BlockState.NOT_OPERABLE);}
+
+        if (getState()==BlockState.FREE && isOperable() && !needRepair() && queue.size()>0 && playingVisitors.size()<capacity){startPlaying();}
     }
 
-    private void startGame(){
+    private void startPlaying(){
         if(queue.size() >= MIN_VISITOR_TO_START){
-            if(setState(BlockState.USED)){
-                for(int i = 0; i<=getCapacity() && !queue.isEmpty(); ++i){
-                    Visitor v= queue.poll();
-                    playingVisitors.add(v);
-                    v.startPlaying();
-                }
-                currentActivityTime=getCooldownTime();
-            }else{
-                System.err.println("Cannot start game because its state: "+getState().toString());
+            setState(BlockState.USED);
+            for(int i = 0; i<=getCapacity() && !queue.isEmpty(); ++i){
+                Visitor v= queue.poll();
+                playingVisitors.add(v);
+                v.startPlaying();
             }
+            currentActivityTime=getCooldownTime();
         }
     }
 
-    @Override
-    protected void activityFinished() {
-        super.activityFinished();
-        switch (getState()){
-            case USED:
-                setState(BlockState.FREE);
-                condition-=2;
-                while(!playingVisitors.isEmpty()){
-                    Visitor v=playingVisitors.poll();
-                    v.finishedPlaying();
-                }
-                break;
+    private void playingFinished(){
+        setState(BlockState.FREE);
+        condition-=2;
+        while(!playingVisitors.isEmpty()){
+            Visitor v=playingVisitors.poll();
+            v.finishedPlaying();
         }
-    }
-
-    @Override
-    public boolean setState(BlockState to){
-        switch (to){
-            case UNDER_CONSTRUCTION:
-                if(getState()!=BlockState.UNDER_PLACEMENT){return false;}
-                break;
-            case UNDER_REPAIR:
-                if(getState()!=BlockState.FREE || getState()!=BlockState.NOT_OPERABLE){return false;}
-                break;
-            case USED:
-                if(getState()!=BlockState.FREE){return false;}
-                break;
-            //case UNDER_PLACEMENT: throw new IllegalArgumentException("Cannot change state to UNDER_PLACEMENT");
-            case NOT_OPERABLE:
-                if(getState()!=BlockState.FREE || getState()!=BlockState.USED){return false;} break;
-            case FREE:
-                if(getState()==BlockState.UNDER_CONSTRUCTION){fillWithWorkers();
-                }else if(workers.size()==0 || needRepair() ){state=BlockState.NOT_OPERABLE;return false;}
-                break;
-        }
-        state=to;
-        return true;
     }
 
     public int getTicketCost() {

@@ -124,13 +124,14 @@ public class ServiceArea extends Block implements Queueable{
         return true;
     }
 
+    @Override
     public void roundHasPassed(int minutesPerSecond)
     {
         decreaseCurrentActivityTime(minutesPerSecond);
 
         //finished activity
         if(getState()==BlockState.UNDER_CONSTRUCTION && currentActivityTime==0){setState(BlockState.FREE);}
-        if(getState()==BlockState.UNDER_REPAIR && currentActivityTime==0){setState(BlockState.FREE);}
+        if(getState()==BlockState.UNDER_REPAIR && currentActivityTime==0){repairFinished();}
         if(getState()==BlockState.NOT_OPERABLE && isOperable() && !needRepair()){setState(BlockState.FREE);}
         if (getState()==BlockState.USED && currentActivityTime==0){serviceFinished();}
 
