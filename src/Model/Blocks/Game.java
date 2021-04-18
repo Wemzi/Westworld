@@ -43,7 +43,7 @@ public class Game extends Block implements Queueable{
             this.capacity=20;
             this.size= new Position(2, 2,false);
             this.pos = pos;
-            this.cooldownTime=5;
+            this.cooldownTime=10;
             this.buildingTime = 5 * cooldownTime;
             playingVisitors = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Operator>();
@@ -56,7 +56,7 @@ public class Game extends Block implements Queueable{
             this.capacity=20;
             this.size= new Position(2, 2,false);
             this.pos = pos;
-            this.cooldownTime = 3;
+            this.cooldownTime = 5;
             this.buildingTime = 5 * cooldownTime;
             playingVisitors = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Operator>();
@@ -70,7 +70,7 @@ public class Game extends Block implements Queueable{
             this.capacity=3;
             this.size= new Position(1, 1,false);
             this.pos = pos;
-            this.cooldownTime = 2;
+            this.cooldownTime = 4;
             this.buildingTime = 5 * cooldownTime;
             playingVisitors = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Operator>();
@@ -96,7 +96,7 @@ public class Game extends Block implements Queueable{
             this.capacity=5;
             this.size= new Position(2, 2,false);
             this.pos = pos;
-            this.cooldownTime = 2;
+            this.cooldownTime = 3;
             this.buildingTime = 5 * cooldownTime;
             playingVisitors = new ArrayBlockingQueue<>(this.capacity);
             this.workers=new ArrayList<Operator>();

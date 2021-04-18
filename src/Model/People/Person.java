@@ -2,6 +2,7 @@ package Model.People;
 
 import Model.Blocks.Block;
 import Model.Direction;
+import Model.GameEngine;
 import Model.Playground;
 import Model.Position;
 import View.MainWindow2;
@@ -57,9 +58,8 @@ abstract public class Person {
     }
 
     public void move(int minutesPerSecond){
-            if(pathPositionIndex==-1){
-                System.err.println("v.pathPositionIndex==-1"); return; // todo find out why
-            }
+        for(int counter=minutesPerSecond*2/GameEngine.TIME_1x;counter>0 && pathPositionIndex!=-1;counter--){
+            //if(pathPositionIndex==-1){ System.err.println("v.pathPositionIndex==-1"); return;  }// todo find out why
             Position nextBlockPosition = getPathPositionList().get(pathPositionIndex);
             boolean isArrived =  getPathPositionList().size()  == 0 || (getPosition().getX_asPixel() == getPathPositionList().get(0).getX_asPixel() &&
                     getPosition().getY_asPixel() == getPathPositionList().get(0).getY_asPixel());
@@ -85,8 +85,9 @@ abstract public class Person {
                 pathPositionIndex--;
             }
             else if (isDifferentPosition) {
-                moveTo(direction,((minutesPerSecond/3) + 1));
+                moveTo(direction,1);
             }
+        }
     }
 
     public String getRandomName()
