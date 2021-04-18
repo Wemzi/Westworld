@@ -247,9 +247,6 @@ public class GameEngine {
                         }
                         else if(v.isMoving && !v.isBusy()){v.move(minutesPerSecond);}
                     }
-
-
-
                     for (Visitor v : pg.getVisitors()) {
                             if(Objects.isNull(v.goal)){
                                 v.findGoal(rnd,pg);
@@ -302,6 +299,10 @@ public class GameEngine {
                 }
 
                 for(Cleaner c : pg.getCleaners())
+                {
+                    c.roundHasPassed(minutesPerSecond);
+                }
+                for(Repairman c : pg.getRepairmen())
                 {
                     c.roundHasPassed(minutesPerSecond);
                 }

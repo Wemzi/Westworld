@@ -238,10 +238,14 @@ public class Playground {
         while(posX<posXorigin+2 ) {
             int posY = pos.getY_asIndex()-2;
             while (posY < posYorigin + 2) {
-                Block b = blocks[Math.abs(posX)][Math.abs(posY)];
-                if (b instanceof Road && ((Road) b).isHasGarbageCan()){ret=true;}
-                posY++;
-                //System.out.println("posX: " + posX + " posY:"+ posY );
+                if(isSafe(posX,posY)) {
+                    Block b = blocks[Math.abs(posX)][Math.abs(posY)];
+                    if (b instanceof Road && ((Road) b).isHasGarbageCan()) {
+                        ret = true;
+                    }
+                    posY++;
+                    //System.out.println("posX: " + posX + " posY:"+ posY );
+                }
             }
             posX++;
         }

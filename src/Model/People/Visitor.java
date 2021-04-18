@@ -19,7 +19,6 @@ public class Visitor extends Person {
     private int playfulness;
     private int stayingTime;
     private VisitorState state;
-    private String name;
 
 
     // TODO: cyclical waiting at a game for example
@@ -86,7 +85,7 @@ public class Visitor extends Person {
 
             goal = GameList.get(Math.abs((rnd.nextInt())) % GameList.size());
 
-            System.out.println("Visitor játszani megy!");
+            System.out.println(name + " játszani megy!");
         }
         else if ( getState().equals(VisitorState.WANNA_EAT)) {
             ArrayList<ServiceArea> SvList = pg.getBuildedServiceList();
@@ -118,7 +117,7 @@ public class Visitor extends Person {
 
     @Override
     public void arrived(int minutesPerSecond){
-        System.out.println("Visitor megérkezett!");
+        System.out.println(name + " megérkezett!");
         isMoving = false;
         pathPositionIndex = 0;
         ArrayList<Position> copy = getPathPositionList();
