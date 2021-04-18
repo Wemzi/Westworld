@@ -1,10 +1,7 @@
 package Model;
 
 import Model.Blocks.*;
-import Model.People.Cleaner;
-import Model.People.Employee;
-import Model.People.Repairman;
-import Model.People.Visitor;
+import Model.People.*;
 
 import java.util.*;
 
@@ -59,6 +56,7 @@ public class GameEngine {
         buildBlockImmediately(repairme);
         buildBlock(new Game(GameType.ROLLERCOASTER,new Position(11,8,false)));
         ServiceArea buffet=new ServiceArea(ServiceType.BUFFET,new Position(6,2,false));
+        buffet.hire(new Caterer(buffet.getPos(),10,buffet),getPg());
         buildBlockImmediately(buffet);
         buildBlockImmediately(new ServiceArea(ServiceType.TOILET,new Position(9,8,false)));
         buildBlockImmediately(new EmployeeBase(new Position(11,5,false)));
