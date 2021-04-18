@@ -50,6 +50,7 @@ public class BlockInfoDialog extends JDialog implements LiveDataPanel{
             retList.add("Type: "+((ServiceArea) block).getType());
             retList.add("Ticket cost: "+((ServiceArea) block).getTicketCost());
             retList.add("Queue size: "+Objects.requireNonNullElse(((ServiceArea) block).getQueue(),new ArrayList<>()).size());
+            retList.add("Under service size: "+Objects.requireNonNullElse(((ServiceArea) block).getVisitorsUsingThisService(),new ArrayList<>()).size());
             retList.add("Capacity: "+((ServiceArea) block).getCapacity());
             retList.add("Cooldown time: "+((ServiceArea) block).getCooldownTime());
             retList.add("Workers: "+Objects.requireNonNullElse(((ServiceArea) block).getWorkers(),new ArrayList<>()).size());

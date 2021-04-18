@@ -1,6 +1,7 @@
 package View;
 
 import Model.Blocks.Block;
+import Model.Blocks.BlockState;
 import Model.Blocks.FreePlace;
 import Model.Blocks.Queueable;
 import Model.GameEngine;
@@ -63,7 +64,7 @@ public class GameField extends JPanel {
         }
     }
 
-    private static Rectangle getBlockAsRectangle(Block block){
+    public static Rectangle getBlockAsRectangle(Block block){
         return new Rectangle(block.pos.getX_asPixel(),block.pos.getY_asPixel(),block.size.getX_asPixel(),block.size.getY_asPixel());
     }
 
@@ -130,7 +131,7 @@ public class GameField extends JPanel {
 
     private static void drawBlockLabel(Block block, Graphics2D gr){
 
-        if(block instanceof Queueable){
+        if(block instanceof Queueable && block.getState() == BlockState.FREE || block.getState()==BlockState.USED){
             centerString(gr,getBlockAsRectangle(block),"Q:"+((Queueable) block).getQueue().size());
         }
 

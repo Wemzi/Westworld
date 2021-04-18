@@ -1,9 +1,6 @@
 package Model.People;
 
-import Model.Blocks.Game;
-import Model.Blocks.Road;
-import Model.Blocks.ServiceArea;
-import Model.Blocks.ServiceType;
+import Model.Blocks.*;
 import Model.Direction;
 import Model.Playground;
 import Model.Position;
@@ -13,6 +10,7 @@ import View.spriteManagers.StaticPicturePartManager;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Random;
 
 public class Visitor extends Person {
@@ -38,7 +36,7 @@ public class Visitor extends Person {
         state = VisitorState.DOESNT_KNOW;
     }
 
-    public void playGame(Game that) {
+    public void startPlaying() {
         changePlayfulness(-60);
         happiness += 20;
         hunger += 15;
@@ -47,18 +45,28 @@ public class Visitor extends Person {
         state = VisitorState.DOING_SOMETHING;
     }
 
-    public void eat(ServiceArea where) {
+    public void finishedPlaying() {
+        state=VisitorState.DOESNT_KNOW;
+        currentActivityLength=0;
+    }
+
+    public void startEating(){
+        state=VisitorState.DOING_SOMETHING;
+        direction=Direction.NONE;
+    }
+    public void finishedEating(){
         hunger = 0;
         happiness += 5;
         playfulness += 50;
-        currentActivityLength = where.getCooldownTime();
-        direction=Direction.NONE;
         this.state = VisitorState.WANNA_TOILET;
+        currentActivityLength=0;
     }
-
-    public void toilet(ServiceArea where) {
-        currentActivityLength = where.getCooldownTime();
+    public void startToilet(){
+        state=VisitorState.DOING_SOMETHING;
         direction=Direction.NONE;
+    }
+    public void finishedToilet(){
+        currentActivityLength = 0;
         state = VisitorState.DOESNT_KNOW;
     }
 
@@ -67,10 +75,7 @@ public class Visitor extends Person {
         return there;
     }
 
-    public void finishedActivity() {
-        state=VisitorState.DOESNT_KNOW;
-        currentActivityLength=0;
-    }
+
 
     @Override
     public void findGoal(Random rnd, Playground pg) {
@@ -119,19 +124,19 @@ public class Visitor extends Person {
         ArrayList<Position> copy = getPathPositionList();
         getPathPositionList().removeAll(copy);
 
+        if(Objects.isNull(goal) || !(goal instanceof Queueable)){return;}
+        ((Queueable) goal).addVisitor(this);
+        state=VisitorState.WAITING_IN_QUEUE;
+
+        /*
         if(getState().equals(VisitorState.WANNA_TOILET) &&  goal != null){
-            toilet((ServiceArea) goal);
-            System.out.println("kaksizott!");}
+            System.out.println("kaksizna!");}
         else if(getState().equals(VisitorState.WANNA_PLAY) && goal != null) {
-            //playGame((Game) goal);
-            ((Game) goal).addVisitor(this);
-            state=VisitorState.WAITING_IN_QUEUE;
             System.out.println("játékra vár!");
         }
         else if(getState().equals(VisitorState.WANNA_EAT) && goal != null){
-            eat( (ServiceArea) goal);
             System.out.println("evett!");
-        }
+        }*/
         goal=null;
 
     }

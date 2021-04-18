@@ -26,7 +26,7 @@ public class Caterer extends Employee {
 
     public void serve(Visitor v )
     {
-        v.eat(workPlace);
+        //v.eat(workPlace);
     }
 
     public void roundHasPassed(int minutesPerSecond)

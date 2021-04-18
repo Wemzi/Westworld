@@ -2,6 +2,7 @@ package Model.Blocks;
 
 import Model.GameEngine;
 import Model.Position;
+import View.GameField;
 import View.spriteManagers.SpriteManager;
 
 import javax.imageio.ImageIO;
@@ -239,6 +240,11 @@ public abstract class Block {
             case FREE:
                 getSpriteManager().stop();
                 gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(),null);
+                break;
+            case NOT_OPERABLE:
+                getSpriteManager().stop();
+                gr.drawImage(getSpriteManager().nextSprite(),pos.getX_asPixel(),pos.getY_asPixel(),null);
+                GameField.centerString(gr,GameField.getBlockAsRectangle(this),"Not operable");
                 break;
         }
         drawBorder(gr);

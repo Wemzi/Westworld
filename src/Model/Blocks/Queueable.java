@@ -2,11 +2,12 @@ package Model.Blocks;
 
 import Model.People.Visitor;
 
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.Queue;
 
 /**
  * Marks classes where visitors can wait in a queue
  */
 public interface Queueable {
-    ArrayBlockingQueue<Visitor> getQueue();
+    Queue<Visitor> getQueue();
+    void addVisitor(Visitor v);
 }

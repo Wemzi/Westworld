@@ -165,7 +165,7 @@ public class Game extends Block implements Queueable{
                 for(int i = 0; i<=getCapacity() && !queue.isEmpty(); ++i){
                     Visitor v= queue.poll();
                     playingVisitors.add(v);
-                    v.playGame(this);
+                    v.startPlaying();
                 }
                 currentActivityTime=getCooldownTime();
             }else{
@@ -183,7 +183,7 @@ public class Game extends Block implements Queueable{
                 condition-=2;
                 while(!playingVisitors.isEmpty()){
                     Visitor v=playingVisitors.poll();
-                    v.finishedActivity();
+                    v.finishedPlaying();
                 }
                 break;
         }
