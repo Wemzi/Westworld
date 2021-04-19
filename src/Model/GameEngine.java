@@ -98,6 +98,12 @@ public class GameEngine {
         int posFromY = toBuild.getPos().getY_asIndex();
         int buildUntilX = posFromX + toBuild.getSize().getX_asIndex();
         int buildUntilY = posFromY + toBuild.getSize().getY_asIndex();
+        if(toBuild instanceof Road &&  pg.blocks[posFromX][posFromY] instanceof Road){
+            if(((Road) toBuild).isEntrance() != ((Road) pg.blocks[posFromX][posFromY]).isEntrance()){
+                ((Road) pg.blocks[posFromX][posFromY]).setEntrance(!((Road) pg.blocks[posFromX][posFromY]).isEntrance());
+            }
+        }
+
 
         for (int x = posFromX; x < buildUntilX; ++x)
             for (int y = posFromY; y < buildUntilY; ++y)
