@@ -191,20 +191,17 @@ public class GameEngine {
         visitorTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-
                 ArrayList<Block> copy= new ArrayList<>(pg.getBuildedObjectList());
-                try{
+                try {
                     //manage block
                     boolean everyCleanerHasJob = false;
                     for(Block b :copy){
-                        //b.roundHasPassed(minutesPerSecond);
                         if(b instanceof Road){
                             Road road=((Road) b);
                             Road.GarbageLevel garbageLevel =road.getGarbageLevel();
                             if((garbageLevel== Road.GarbageLevel.FEW || garbageLevel == Road.GarbageLevel.LOT) && Objects.isNull(road.cleaner)){
                                 Cleaner cleaner=pg.getFreeCleaner();
-                                if(Objects.isNull(pg.getFreeCleaner()))
-                                {
+                                if(Objects.isNull(pg.getFreeCleaner())) {
                                     everyCleanerHasJob = true;
                                 }
                                 if(!Objects.isNull(cleaner)){
@@ -216,12 +213,10 @@ public class GameEngine {
                         }
                     }
                     // send cleaners back to base
-                    if(!everyCleanerHasJob)
-                    {
+                    if(!everyCleanerHasJob) {
                         ArrayList<EmployeeBase> bases = pg.getBuildedEmployeeBases();
                         Cleaner cleaner = pg.getFreeCleaner();
-                        while(!Objects.isNull(cleaner))
-                        {
+                        while(!Objects.isNull(cleaner)) {
                             if(!Objects.isNull(cleaner)){
                                 cleaner.goal= bases.get(Math.abs(rnd.nextInt()%bases.size()));
                                 cleaner.setupRoute(pg);
@@ -258,7 +253,7 @@ public class GameEngine {
                                 if(!Objects.isNull(v.goal)){
                                     v.setupRoute(pg);
                                 }
-                            }else{
+                            } else {
                                v.move(minutesPerSecond);
                             }
                     }
@@ -270,58 +265,67 @@ public class GameEngine {
             }
         },0,16);
 
-        int[] rounds = {0,0};
+
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 pg.setMinutes(pg.getMinutes() + minutesPerSecond);
-                rounds[0] += minutesPerSecond; rounds[1] += minutesPerSecond;
 
-                for(Game g: getPg().getBuildedGameList()){
-                    if(rounds[0] >= 10) {
-                        g.roundHasPassed(minutesPerSecond);
-                    }
-                }
-                rounds[0] = 0;
-                for(Block b: pg.getBuildedObjectList()){b.roundHasPassed(minutesPerSecond);}
+                for(Block b : pg.getBuildedObjectList())
+                    b.roundHasPassed(minutesPerSecond);
+                for(Cleaner c : pg.getCleaners())
+                    c.roundHasPassed(minutesPerSecond);
+                for(Repairman c : pg.getRepairmen())
+                    c.roundHasPassed(minutesPerSecond);
+
                 for(Visitor v : pg.getVisitors()) {
-                        v.roundHasPassed(minutesPerSecond);
+                    v.roundHasPassed(minutesPerSecond);
+
                     int throwgarbage = Math.abs(rnd.nextInt() % 100);
-                    if(throwgarbage > 93 && !pg.isGarbageCanNearby(v.getPosition()))
-                    {
+                    if(throwgarbage > 93 && !pg.isGarbageCanNearby(v.getPosition())) {
                         Block possibleroad = pg.getBlockByPosition(v.getPosition());
-                        if(possibleroad instanceof Road)
-                        {
+                        if(possibleroad instanceof Road) {
                             ((Road) possibleroad).setGarbage(((Road) possibleroad).getGarbage()+15);
                         }
                     }
                     if (v.getState() == VisitorState.WANNA_LEAVE && pg.getBlockByPosition(v.getPosition()) instanceof Road ) {
-                        Road r =(Road) pg.getBlockByPosition(v.getPosition());
-                        if ( r.isEntrance())
-                        {
+                        Road r = (Road) pg.getBlockByPosition(v.getPosition());
+                        if (r.isEntrance()) {
+                            if(v.getHappiness() >= 50)
+                                pg.setPopularity(pg.getPopularity()+1);
+                            else if(v.getHappiness() < 50)
+                                pg.setPopularity(pg.getPopularity()-1);
+                            else if(v.getHappiness() >= 100)
+                                pg.setPopularity(pg.getPopularity()+2);
+                            else if(v.getHappiness() <= 0)
+                                pg.setPopularity(pg.getPopularity()-2);
+
                             pg.getVisitors().remove(v);
                         }
                         break;
                     }
                 }
 
-                for(Cleaner c : pg.getCleaners())
-                {
-                    c.roundHasPassed(minutesPerSecond);
+                int randomPeriod = rnd.nextInt(100-1) + 1;
+                double currentPopularity = pg.getPopularity();
+                if(pg.getPopularity() > 50)
+                    currentPopularity = 50;
+
+                double visitorComingPeriod = currentPopularity + randomPeriod;
+
+                if(visitorComingPeriod > 80) {
+                    System.out.println("Visitor érkezik!");
+                    pg.getVisitors().add(new Visitor(pg.getRandomEntrance(rnd).getPos()));
+                    pg.getVisitors().get(pg.getVisitors().size() - 1).roundHasPassed(minutesPerSecond);
                 }
-                for(Repairman c : pg.getRepairmen())
-                {
-                    c.roundHasPassed(minutesPerSecond);
-                }
-                rounds[1] = 0;
 
                 if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
                     pg.setMinutes(0);
                     pg.setHours(pg.getHours() + 1);
-                    if (pg.getHours() < 20){
+                    /*if (pg.getHours() < 20){
                         pg.getVisitors().add(new Visitor(pg.getRandomEntrance(rnd).getPos()));
                         pg.getVisitors().get(pg.getVisitors().size() - 1).roundHasPassed(minutesPerSecond);
-                    }
+                    }*/
                 }
                 if(pg.getHours() == 20) { // Eltelt 1 nap a játékban, Visitorok elindulnak kifele, bezár a park.
                     prevVisitors = endDay(); //Nap vége
@@ -366,9 +370,7 @@ public class GameEngine {
         endDayPayOff();
         int ret = pg.getVisitors().size();
         for(Visitor v : pg.getVisitors())
-        {
             v.setStayingTime(-1000);
-        }
         return ret;
     }
 

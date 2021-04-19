@@ -191,7 +191,7 @@ public class Playground {
                         || blocks[i][j] instanceof EmployeeBase
                                 && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
                                 && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex())
-                        && !visited[i][j]) {
+                && !visited[i][j]) {
 
             visited[i][j] = true;
 
