@@ -234,23 +234,21 @@ public class Playground {
     {   int posXorigin = pos.getX_asIndex();
         int posYorigin = pos.getY_asIndex();
         int posX = pos.getX_asIndex()-2;
-        boolean ret = false;
         while(posX<posXorigin+2 ) {
             int posY = pos.getY_asIndex()-2;
             while (posY < posYorigin + 2) {
                 if(isSafe(posX,posY)) {
-                    Block b = blocks[Math.abs(posX)][Math.abs(posY)];
+                    Block b = blocks[posX][posY];
                     if (b instanceof Road && ((Road) b).isHasGarbageCan()) {
-                        ret = true;
+                        return true;
                     }
-                    posY++;
                     //System.out.println("posX: " + posX + " posY:"+ posY );
                 }
+                posY++;
             }
             posX++;
         }
-        System.out.println(ret);
-        return ret;
+        return false;
     }
 
     public ArrayList getEmployeesLike(Employee e){
