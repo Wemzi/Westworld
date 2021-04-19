@@ -7,6 +7,7 @@ import Model.Playground;
 import Model.Position;
 import View.spriteManagers.OneColorSpriteManager;
 import View.spriteManagers.SpriteManager;
+import View.spriteManagers.StaticSpriteManager;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class EmployeeBase extends Block {
 
     @Override
     protected SpriteManager getSpriteManager() {
-        if(Objects.isNull(spriteManager)){spriteManager=new OneColorSpriteManager(getColor(),getSize());}
+        if(Objects.isNull(spriteManager)){spriteManager=new StaticSpriteManager("graphics/employeebase.png",getSize());}
         return spriteManager;
     }
 }

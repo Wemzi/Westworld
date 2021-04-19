@@ -293,6 +293,7 @@ public class GameEngine {
                         Block possibleroad = pg.getBlockByPosition(v.getPosition());
                         if(possibleroad instanceof Road) {
                             ((Road) possibleroad).setGarbage(((Road) possibleroad).getGarbage()+15);
+                            ((Road) possibleroad).cleaner = null;
                         }
                     }
                     if (v.getState() == VisitorState.WANNA_LEAVE && pg.getBlockByPosition(v.getPosition()) instanceof Road ) {

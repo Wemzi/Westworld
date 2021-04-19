@@ -15,7 +15,7 @@ public class Decoration  extends Block {
 
     public Decoration(DecType type,Position pos){
         this.decorationType = type;
-        if(type == DecType.BUSH)
+        /*if(type == DecType.BUSH)
         {
             this.buildingCost = 50;
             this.upkeepCost = 8;
@@ -23,8 +23,8 @@ public class Decoration  extends Block {
             this.size = new Position(1,1,false);
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.pos=pos;
-        }
-        else if(type == DecType.JUNGLETREE){
+        }*/
+        if(type == DecType.JUNGLETREE){
             this.buildingCost = 80;
             this.upkeepCost = 10;
             this.popularityIncrease=1.12;
@@ -48,14 +48,14 @@ public class Decoration  extends Block {
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.pos=pos;
         }
-        else if(type == DecType.MONKEYCAGE){
+        /*else if(type == DecType.MONKEYCAGE){
             this.buildingCost = 140;
             this.upkeepCost = 8;
             this.popularityIncrease=1.1;
             this.size = new Position(2,1,false);
             this.state=BlockState.UNDER_CONSTRUCTION;
             this.pos=pos;
-        }
+        }*/
         else throw new RuntimeException("Invalid type of decoration!");
     }
 
@@ -76,11 +76,11 @@ public class Decoration  extends Block {
     {
         switch(this.decorationType)
         {
-            case MONKEYCAGE :return "Monkey Cage";
+            //case MONKEYCAGE :return "Monkey Cage";
             case JUNGLETREE: return "Jungle Tree";
             case LAKE: return "Lake";
             case FLOWERGARDEN: return "Flower Garden";
-            case BUSH : return "Bush";
+            //case BUSH : return "Bush";
             default : return "undefined";
         }
     }
