@@ -311,9 +311,9 @@ public class GameEngine {
                 if(pg.getPopularity() > 50)
                     currentPopularity = 50;
 
-                double visitorComingPeriod = currentPopularity + randomPeriod;
+                double visitorComingPeriod = currentPopularity + randomPeriod + minutesPerSecond;
 
-                if(visitorComingPeriod > 80) {
+                if(visitorComingPeriod > 85 && pg.getHours() < 20) {
                     System.out.println("Visitor érkezik!");
                     pg.getVisitors().add(new Visitor(pg.getRandomEntrance(rnd).getPos()));
                     pg.getVisitors().get(pg.getVisitors().size() - 1).roundHasPassed(minutesPerSecond);
