@@ -168,7 +168,7 @@ public class Game extends Block implements Queueable{
     private void startPlaying(){
         if(queue.size() >= MIN_VISITOR_TO_START){
             setState(BlockState.USED);
-            for(int i = 0; i<=getCapacity() && !queue.isEmpty(); ++i){
+            for(int i = 0; i<getCapacity() && !queue.isEmpty(); ++i){
                 Visitor v= queue.poll();
                 playingVisitors.add(v);
                 v.startPlaying();
