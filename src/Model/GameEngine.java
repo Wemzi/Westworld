@@ -278,7 +278,8 @@ public class GameEngine {
                 for(Repairman c : pg.getRepairmen())
                     c.roundHasPassed(minutesPerSecond);
 
-                for(Visitor v : pg.getVisitors()) {
+                ArrayList<Visitor> visitorsCopy= new ArrayList<>(pg.getVisitors());
+                for(Visitor v :visitorsCopy) {
                     v.roundHasPassed(minutesPerSecond);
 
                     int throwgarbage = Math.abs(rnd.nextInt() % 100);
@@ -302,7 +303,7 @@ public class GameEngine {
 
                             pg.getVisitors().remove(v);
                         }
-                        break;
+                        //break;
                     }
                 }
 
