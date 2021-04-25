@@ -41,27 +41,15 @@ public class MainWindow2 extends JFrame{
     private final JLabel visitorsLabel;
     private final JButton startDayButton;
 
-
+    
+    void timerSetup(){}
+    
     public MainWindow2() {
 
         engine=new GameEngine();
         field=new GameField(engine);
         liveDataPanels=new LinkedList<LiveDataPanel>();
-        timer=new Timer(1000/FPS, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                moneyLabel.setText("Money: $"+engine.getPg().getMoney());
-                popularityLabel.setText("Popularity: "+engine.getPg().getPopularity());
-                visitorsLabel.setText("Visitors: "+engine.getPg().getVisitors().size());
-                timerText.setText(engine.getPg().dateToString());
-                if(engine.isBuildingPeriod() != startDayButton.isEnabled()){
-                    startDayButton.setEnabled(engine.isBuildingPeriod());
-                }
-                liveDataPanels.forEach(LiveDataPanel::refreshData);
-
-                field.repaint();
-            }
-        });
+        timer = getTimer();
 
         //handle click event
         field.addMouseListener(new MouseAdapter(){
@@ -110,7 +98,7 @@ public class MainWindow2 extends JFrame{
         new MenuCreator(buildMenu,this).inflate();
 
         //management dialog
-        MainWindow2 owner=this;
+        final MainWindow2 owner=this;
         JMenuItem managementMenuItem = new JMenuItem("Management");
         managementMenuItem.addActionListener(new AbstractAction() {
             @Override
@@ -179,27 +167,53 @@ public class MainWindow2 extends JFrame{
         timerText=new JLabel("Date");
         add(timerText);
         setTitle("WestWorld");
-        pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
+
+        /*
+        pack();
+        setResizable(false);*/
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        //setUndecorated(true);
         setVisible(true);
 
         startGame();
     }
 
+    private Timer getTimer() {
+        final Timer timer;
+        timer=new Timer(1000/FPS, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                moneyLabel.setText("Money: $"+engine.getPg().getMoney());
+                popularityLabel.setText("Popularity: "+engine.getPg().getPopularity());
+                visitorsLabel.setText("Visitors: "+engine.getPg().getVisitors().size());
+                timerText.setText(engine.getPg().dateToString());
+                if(engine.isBuildingPeriod() != startDayButton.isEnabled()){
+                    startDayButton.setEnabled(engine.isBuildingPeriod());
+                }
+                liveDataPanels.forEach(LiveDataPanel::refreshData);
+
+                field.repaint();
+            }
+        });
+        return timer;
+    }
+
 
     public void startGame(){
-
-        field.setPreferredSize(new Dimension(BOX_SIZE* NUM_OF_COLS,BOX_SIZE* NUM_OF_ROWS));
-        this.add(field,BorderLayout.SOUTH);
-
         JPanel playersPanel=new JPanel();
         playersPanel.add(moneyLabel);
         playersPanel.add(popularityLabel);
         playersPanel.add(visitorsLabel);
         playersPanel.add(startDayButton);
         this.add(playersPanel,BorderLayout.NORTH);
-        pack();
+
+        JPanel gridPanel=new JPanel();
+        gridPanel.setLayout(new GridBagLayout());
+        gridPanel.add(field);
+        field.setPreferredSize(new Dimension(BOX_SIZE* NUM_OF_COLS,BOX_SIZE* NUM_OF_ROWS));
+        this.add(gridPanel,BorderLayout.CENTER);
 
         timer.start();
 
