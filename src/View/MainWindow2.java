@@ -19,7 +19,7 @@ import java.util.LinkedList;
  * @author Gabor
  */
 public class MainWindow2 extends JFrame{
-    public static final int BOX_SIZE=40;//hany pixel szeles legyen egy elem a matrixban
+    private static int BOX_SIZE=40;//hany pixel szeles legyen egy elem a matrixban
     public static final int NUM_OF_COLS =25;//oszlopok szama
     public static final int NUM_OF_ROWS =12;//sorok szama
     public static final int FPS=50;
@@ -42,10 +42,8 @@ public class MainWindow2 extends JFrame{
     private final JButton startDayButton;
 
     
-    void timerSetup(){}
-    
     public MainWindow2() {
-
+        setBoxSize();
         engine=new GameEngine();
         field=new GameField(engine);
         liveDataPanels=new LinkedList<LiveDataPanel>();
@@ -165,7 +163,7 @@ public class MainWindow2 extends JFrame{
         //window
         setLayout(new BorderLayout());
         timerText=new JLabel("Date");
-        add(timerText);
+        add(timerText,BorderLayout.NORTH);
         setTitle("WestWorld");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -178,6 +176,15 @@ public class MainWindow2 extends JFrame{
         setVisible(true);
 
         startGame();
+    }
+
+    private void setBoxSize(){
+        Dimension screen=new Dimension(getToolkit().getScreenSize().width,getToolkit().getScreenSize().height);
+        BOX_SIZE=(int) Math.floor(0.9*Math.min(screen.getWidth()/NUM_OF_COLS,screen.getHeight()/NUM_OF_ROWS));
+    }
+
+    public static int getBoxSize() {
+        return BOX_SIZE;
     }
 
     private Timer getTimer() {

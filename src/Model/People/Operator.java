@@ -65,7 +65,7 @@ public class Operator extends Employee {
         List<Rectangle> rectangles= Arrays.asList(
                 new Rectangle(202,0,202,291)
         );
-        manager=new OnePicDynamicSpriteManager("graphics/visitor.png",personSize,rectangles,10);
+        manager=new OnePicDynamicSpriteManager("graphics/visitor.png",getPersonSize(),rectangles,10);
     }
 
 

@@ -110,11 +110,11 @@ public class Cleaner extends Employee {
     static{
         spriteManagerMap=new HashMap<>();
         String imgPath="graphics/cleaner.png";
-        spriteManagerMap.put(Direction.NONE,new StaticPicturePartManager(imgPath,personSize,new Rectangle(202,0,202,291)));
-        spriteManagerMap.put(Direction.DOWN,new StaticPicturePartManager(imgPath,personSize,new Rectangle(202,0,202,291)));
-        spriteManagerMap.put(Direction.LEFT,new StaticPicturePartManager(imgPath,personSize,new Rectangle(0,0,202,291)));
-        spriteManagerMap.put(Direction.RIGHT,new StaticPicturePartManager(imgPath,personSize,new Rectangle(404,0,202,291)));
-        spriteManagerMap.put(Direction.UP,new StaticPicturePartManager(imgPath,personSize,new Rectangle(606,0,202,291)));
+        spriteManagerMap.put(Direction.NONE,new StaticPicturePartManager(imgPath,getPersonSize(),new Rectangle(202,0,202,291)));
+        spriteManagerMap.put(Direction.DOWN,new StaticPicturePartManager(imgPath,getPersonSize(),new Rectangle(202,0,202,291)));
+        spriteManagerMap.put(Direction.LEFT,new StaticPicturePartManager(imgPath,getPersonSize(),new Rectangle(0,0,202,291)));
+        spriteManagerMap.put(Direction.RIGHT,new StaticPicturePartManager(imgPath,getPersonSize(),new Rectangle(404,0,202,291)));
+        spriteManagerMap.put(Direction.UP,new StaticPicturePartManager(imgPath,getPersonSize(),new Rectangle(606,0,202,291)));
     }
 
     @Override

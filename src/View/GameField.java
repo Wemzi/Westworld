@@ -88,12 +88,12 @@ public class GameField extends JPanel {
 
     private void makeBackgroundImage(){
         SpriteManager sp=new StaticSpriteManager("graphics/grass.png",new Position(1,1,false));
-        background = new BufferedImage(MainWindow2.BOX_SIZE*MainWindow2.NUM_OF_COLS, MainWindow2.BOX_SIZE*MainWindow2.NUM_OF_ROWS, BufferedImage.TYPE_INT_ARGB);
+        background = new BufferedImage(MainWindow2.getBoxSize()*MainWindow2.NUM_OF_COLS, MainWindow2.getBoxSize()*MainWindow2.NUM_OF_ROWS, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D bgGraphics = background.createGraphics();
         for (int i = 0; i < MainWindow2.NUM_OF_COLS; i++) {
             for (int j = 0; j < MainWindow2.NUM_OF_ROWS; j++) {
-                bgGraphics.drawImage(sp.nextSprite(), i*MainWindow2.BOX_SIZE, j*MainWindow2.BOX_SIZE, null);
+                bgGraphics.drawImage(sp.nextSprite(), i*MainWindow2.getBoxSize(), j*MainWindow2.getBoxSize(), null);
             }
         }
         bgGraphics.dispose();

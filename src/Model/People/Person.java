@@ -17,7 +17,6 @@ import java.util.Objects;
 import java.util.Random;
 
 abstract public class Person {
-    public static final Position personSize=new Position(MainWindow2.BOX_SIZE/2,MainWindow2.BOX_SIZE/2,true);
     private Position pos;
     public Direction direction=Direction.NONE;
     protected int currentActivityLength;
@@ -27,6 +26,9 @@ abstract public class Person {
     public Block goal;
     public String name = getRandomName();
 
+    public static Position getPersonSize(){
+        return new Position(MainWindow2.getBoxSize()/2,MainWindow2.getBoxSize()/2,true);
+    }
 
     protected Person(Position startingCoord)
     {
