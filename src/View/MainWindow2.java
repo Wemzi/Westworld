@@ -19,7 +19,7 @@ import java.util.LinkedList;
  * @author Gabor
  */
 public class MainWindow2 extends JFrame{
-    private static int BOX_SIZE=40;//hany pixel szeles legyen egy elem a matrixban
+    private static int BOX_SIZE;//hany pixel szeles legyen egy elem a matrixban
     public static final int NUM_OF_COLS =25;//oszlopok szama
     public static final int NUM_OF_ROWS =12;//sorok szama
     public static final int FPS=50;
@@ -172,11 +172,21 @@ public class MainWindow2 extends JFrame{
         setResizable(false);*/
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        //setUndecorated(true);
+        setUndecorated(true);
         setVisible(true);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                setBoxSize();
+                super.componentResized(e);
+            }
+        });
 
         startGame();
     }
+
+
 
     private void setBoxSize(){
         Dimension screen=new Dimension(getToolkit().getScreenSize().width,getToolkit().getScreenSize().height);
