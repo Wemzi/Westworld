@@ -19,7 +19,7 @@ import java.util.LinkedList;
  * @author Gabor
  */
 public class MainWindow2 extends JFrame{
-    public static final int BOX_SIZE=40;//hany pixel szeles legyen egy elem a matrixban
+    private static int BOX_SIZE=40;//hany pixel szeles legyen egy elem a matrixban
     public static final int NUM_OF_COLS =25;//oszlopok szama
     public static final int NUM_OF_ROWS =12;//sorok szama
     public static final int FPS=50;
@@ -41,27 +41,13 @@ public class MainWindow2 extends JFrame{
     private final JLabel visitorsLabel;
     private final JButton startDayButton;
 
-
+    
     public MainWindow2() {
-
+        setBoxSize();
         engine=new GameEngine();
         field=new GameField(engine);
         liveDataPanels=new LinkedList<LiveDataPanel>();
-        timer=new Timer(1000/FPS, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                moneyLabel.setText("Money: $"+engine.getPg().getMoney());
-                popularityLabel.setText("Popularity: "+engine.getPg().getPopularity());
-                visitorsLabel.setText("Visitors: "+engine.getPg().getVisitors().size());
-                timerText.setText(engine.getPg().dateToString());
-                if(engine.isBuildingPeriod() != startDayButton.isEnabled()){
-                    startDayButton.setEnabled(engine.isBuildingPeriod());
-                }
-                liveDataPanels.forEach(LiveDataPanel::refreshData);
-
-                field.repaint();
-            }
-        });
+        timer = getTimer();
 
         //handle click event
         field.addMouseListener(new MouseAdapter(){
@@ -110,7 +96,7 @@ public class MainWindow2 extends JFrame{
         new MenuCreator(buildMenu,this).inflate();
 
         //management dialog
-        MainWindow2 owner=this;
+        final MainWindow2 owner=this;
         JMenuItem managementMenuItem = new JMenuItem("Management");
         managementMenuItem.addActionListener(new AbstractAction() {
             @Override
@@ -177,29 +163,64 @@ public class MainWindow2 extends JFrame{
         //window
         setLayout(new BorderLayout());
         timerText=new JLabel("Date");
-        add(timerText);
+        add(timerText,BorderLayout.NORTH);
         setTitle("WestWorld");
-        pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
+
+        /*
+        pack();
+        setResizable(false);*/
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        //setUndecorated(true);
         setVisible(true);
 
         startGame();
     }
 
+    private void setBoxSize(){
+        Dimension screen=new Dimension(getToolkit().getScreenSize().width,getToolkit().getScreenSize().height);
+        BOX_SIZE=(int) Math.floor(0.9*Math.min(screen.getWidth()/NUM_OF_COLS,screen.getHeight()/NUM_OF_ROWS));
+    }
+
+    public static int getBoxSize() {
+        return BOX_SIZE;
+    }
+
+    private Timer getTimer() {
+        final Timer timer;
+        timer=new Timer(1000/FPS, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                moneyLabel.setText("Money: $"+engine.getPg().getMoney());
+                popularityLabel.setText("Popularity: "+engine.getPg().getPopularity());
+                visitorsLabel.setText("Visitors: "+engine.getPg().getVisitors().size());
+                timerText.setText(engine.getPg().dateToString());
+                if(engine.isBuildingPeriod() != startDayButton.isEnabled()){
+                    startDayButton.setEnabled(engine.isBuildingPeriod());
+                }
+                liveDataPanels.forEach(LiveDataPanel::refreshData);
+
+                field.repaint();
+            }
+        });
+        return timer;
+    }
+
 
     public void startGame(){
-
-        field.setPreferredSize(new Dimension(BOX_SIZE* NUM_OF_COLS,BOX_SIZE* NUM_OF_ROWS));
-        this.add(field,BorderLayout.SOUTH);
-
         JPanel playersPanel=new JPanel();
         playersPanel.add(moneyLabel);
         playersPanel.add(popularityLabel);
         playersPanel.add(visitorsLabel);
         playersPanel.add(startDayButton);
         this.add(playersPanel,BorderLayout.NORTH);
-        pack();
+
+        JPanel gridPanel=new JPanel();
+        gridPanel.setLayout(new GridBagLayout());
+        gridPanel.add(field);
+        field.setPreferredSize(new Dimension(BOX_SIZE* NUM_OF_COLS,BOX_SIZE* NUM_OF_ROWS));
+        this.add(gridPanel,BorderLayout.CENTER);
 
         timer.start();
 

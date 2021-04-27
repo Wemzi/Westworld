@@ -1,8 +1,8 @@
 package Model;
 
-import java.util.Objects;
+import View.MainWindow2;
 
-import static View.MainWindow2.BOX_SIZE;
+import java.util.Objects;
 
 /**
  * A UI-on elfoglalt képzletbeli dobozkák helye a UI Gridjében. Pl.: 5.sor 4. eleme
@@ -57,8 +57,8 @@ public final class Position {
     }
 
     //Conversions
-    public static int pixelToIndex(int coord){return coord/BOX_SIZE;}
-    public static int indexToPixel(int index){return index*BOX_SIZE;}
+    public static int pixelToIndex(int coord){return coord/ MainWindow2.getBoxSize();}
+    public static int indexToPixel(int index){return index*MainWindow2.getBoxSize();}
 
     @Override
     public boolean equals(Object o) {
