@@ -39,7 +39,7 @@ public class Playground {
         builedGames         = new ArrayList<>();
         builededServices    = new ArrayList<>();
         visitors            = new ArrayList<>();
-        caterers             = new ArrayList<>();
+        caterers            = new ArrayList<>();
         cleaners            = new ArrayList<>();
         repairmen           = new ArrayList<>();
         buildedEmployeeBases= new ArrayList<>();

@@ -183,23 +183,19 @@ public class GameEngine {
         pg.getBuildedObjectList().forEach(Block::startDay);
 
         Position entrancePosition = pg.getRandomEntrance(rnd).getPos();
+
+        System.out.println("Nap elkezdődött!");
+
         for(int idx = 0; idx < prevVisitors; idx++ )
-        {
             pg.getVisitors().add(new Visitor(entrancePosition));
-        }
-
-        //pg.getVisitors().get(0).roundHasPassed(minutesPerSecond);
-
-
 
         Timer personTimer = new Timer();
         Timer simulationTimer = new Timer();
+
         personTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 ArrayList<Block> copy= new ArrayList<>(pg.getBuildedObjectList());
-
-                visitorComingPeriod();
 
                 try {
                     //manage block
@@ -267,6 +263,8 @@ public class GameEngine {
                             }
                     }
 
+                    if(pg.getPopularity()+3 >= pg.getVisitors().size())     chanceToVisitorisComing();
+
                 } catch (ConcurrentModificationException e){
                     System.err.println("Concurrent");
                 }
@@ -332,29 +330,27 @@ public class GameEngine {
             }}, 0, 1000);
     }
 
-    void visitorComingPeriod() {
+    void chanceToVisitorisComing() {
         if(pg.getPopularity() >= 100)       pg.setPopularity(100);
         else if(pg.getPopularity() <= 0)    pg.setPopularity(0);
 
-        int randomPeriod = rnd.nextInt(100000-1) + 1;
+        int randomPeriod = rnd.nextInt(100-1) + 1;
         double currentPopularity = pg.getPopularity();
-
-        double periodPoint = (currentPopularity*80) + randomPeriod + minutesPerSecond;
+        double periodPoint = currentPopularity + randomPeriod + minutesPerSecond;
 
         if(pg.getHours() < 20) {
-            if(currentPopularity <= 0 && periodPoint >= 99900)          addVisitor();
-            else if(currentPopularity >= 1 && periodPoint >= 100000)    addVisitor();
-            else if(currentPopularity >= 5 && periodPoint >= 105000)    addVisitor();
-            else if(currentPopularity >= 10 && periodPoint >= 120000)   addVisitor();
-            else if(currentPopularity >= 20 && periodPoint >= 135000)   addVisitor();
-            else if(currentPopularity >= 50 && periodPoint >= 160000)   addVisitor();
-            else if(currentPopularity >= 80 && periodPoint >= 190000)   addVisitor();
+            if(pg.getPopularity() <= 0 && periodPoint >= 90)                                        addVisitor();
+            else if(pg.getPopularity() >= 1  && pg.getPopularity() < 25  && periodPoint >= 100)     addVisitor();
+            else if(pg.getPopularity() >= 25 && pg.getPopularity() < 75  && periodPoint >= 120)     addVisitor();
+            else if(pg.getPopularity() >= 75 && periodPoint >= 140)                                 addVisitor();
         }
+        randomPeriod = 0; currentPopularity = 0; periodPoint = 0;
     }
     void addVisitor() {
         pg.getVisitors().add(new Visitor(pg.getRandomEntrance(rnd).getPos()));
         pg.getVisitors().get(pg.getVisitors().size() - 1).roundHasPassed(minutesPerSecond);
-        System.out.println("Visitor érkezik!");
+        pg.setMoney(pg.getMoney()+10);
+        System.out.println("Visitor érkezett és fizetett 10$-t a belépőért!");
     }
 
     /**
