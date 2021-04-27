@@ -261,14 +261,11 @@ public class GameEngine {
                             } else {
                                v.move(minutesPerSecond);
                             }
-                    }
 
+                    }
                     if(pg.getPopularity()+3 >= pg.getVisitors().size())     chanceToVisitorisComing();
 
-                } catch (ConcurrentModificationException e){
-                    System.err.println("Concurrent");
-                }
-
+                } catch (ConcurrentModificationException e) { System.err.println("Concurrent"); }
             }
         },0,16);
 
@@ -300,15 +297,8 @@ public class GameEngine {
                     if (v.getState() == VisitorState.WANNA_LEAVE && pg.getBlockByPosition(v.getPosition()) instanceof Road ) {
                         Road r = (Road) pg.getBlockByPosition(v.getPosition());
                         if (r.isEntrance()) {
-                            if(v.getHappiness() >= 50)
-                                pg.setPopularity(pg.getPopularity()+1);
-                            else if(v.getHappiness() < 50)
-                                pg.setPopularity(pg.getPopularity()-1);
-                            else if(v.getHappiness() >= 100)
-                                pg.setPopularity(pg.getPopularity()+2);
-                            else if(v.getHappiness() <= 0)
-                                pg.setPopularity(pg.getPopularity()-2);
-
+                            visitorPayTheirCredit(v);
+                            updateParkPopularity(v);
                             pg.getVisitors().remove(v);
                         }
                     }
@@ -351,6 +341,18 @@ public class GameEngine {
         pg.getVisitors().get(pg.getVisitors().size() - 1).roundHasPassed(minutesPerSecond);
         pg.setMoney(pg.getMoney()+10);
         System.out.println("Visitor érkezett és fizetett 10$-t a belépőért!");
+    }
+    void updateParkPopularity(Visitor v) {
+        if(v.getHappiness() >= 50)          pg.setPopularity(pg.getPopularity()+1);
+        else if(v.getHappiness() < 50)      pg.setPopularity(pg.getPopularity()-1);
+        else if(v.getHappiness() >= 100)    pg.setPopularity(pg.getPopularity()+2);
+        else if(v.getHappiness() <= 0)      pg.setPopularity(pg.getPopularity()-2);
+    }
+    void visitorPayTheirCredit(Visitor v) {
+        if(v.getCredit() > 0) {
+            pg.setMoney(pg.getMoney() + v.getCredit());
+            v.setCredit(0);
+        }
     }
 
     /**

@@ -18,6 +18,7 @@ public class Visitor extends Person {
     private int hunger;
     private int playfulness;
     private int stayingTime;
+    private int credit;
     private VisitorState state;
 
 
@@ -32,6 +33,7 @@ public class Visitor extends Person {
         stayingTime = Math.abs(rnd.nextInt() % 300) + 200;
         isMoving = false;
         pathPositionIndex = 0;
+        credit = 0;
         state = VisitorState.DOESNT_KNOW;
     }
 
@@ -50,8 +52,9 @@ public class Visitor extends Person {
     }
 
     public void startEating(){
-        state=VisitorState.DOING_SOMETHING;
+        state=VisitorState.EATING;
         direction=Direction.NONE;
+        credit += 3;
     }
     public void finishedEating(){
         hunger = 0;
@@ -59,10 +62,12 @@ public class Visitor extends Person {
         playfulness += 50;
         this.state = VisitorState.WANNA_TOILET;
         currentActivityLength=0;
+
     }
     public void startToilet(){
         state=VisitorState.DOING_SOMETHING;
         direction=Direction.NONE;
+        credit += 1;
     }
     public void finishedToilet(){
         currentActivityLength = 0;
@@ -242,6 +247,10 @@ public class Visitor extends Person {
     public void setHunger(int hunger) {
         this.hunger = hunger;
     }
+
+    public int getCredit()  { return this.credit; }
+
+    public void setCredit(int credit) { this.credit = credit; }
 
     public void changePlayfulness(int value) {
         if(playfulness<0 && playfulness+value<0){
