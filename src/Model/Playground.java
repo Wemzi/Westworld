@@ -169,7 +169,7 @@ public class Playground {
     public boolean isSafe(int i, int j) {
         return i >= 0 && i < blocks.length && j >= 0 && j < blocks[0].length;
     }
-    //TODO: BUG, ha bal felső koordinátájhoz nem vezet út!
+
     public boolean isPath(int i, int j, boolean[][] visited, Position start, Position destination, Person visitor) {
         if (isSafe(i, j)
                 && (blocks[i][j] instanceof Road
