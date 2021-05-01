@@ -1,39 +1,84 @@
 package View;
 
+import View.spriteManagers.SpriteManager;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.color.ColorSpace;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 public class WelcomeScreen extends JFrame {
     private BufferedImage background;
+    private BufferedImage exitButtonImg;
+    private BufferedImage newGameImg;
+    private Rectangle exitButtonArea;
+    private Rectangle newGameButtonArea;
 
     public WelcomeScreen(String title) {
         super(title);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        int width=getToolkit().getScreenSize().width;
+        int height=getToolkit().getScreenSize().height;
+
         try {
-            background= ImageIO.read(new File("graphics/background.png"));
+            background= SpriteManager.resize(ImageIO.read(new File("graphics/background.png")),width,height);
+            exitButtonImg= ImageIO.read(new File("graphics/exit.png"));
+            exitButtonImg=SpriteManager.resize(exitButtonImg,exitButtonImg.getWidth()/2, exitButtonImg.getHeight()/2);
+            newGameImg= ImageIO.read(new File("graphics/newgame.png"));
+            newGameImg=SpriteManager.resize(newGameImg,newGameImg.getWidth()/2, newGameImg.getHeight()/2);
         } catch (IOException e) {
             System.err.println("background.png not found!");
-            BufferedImage img = new BufferedImage(getToolkit().getScreenSize().width,getToolkit().getScreenSize().height, ColorSpace.TYPE_RGB);
+            BufferedImage img = new BufferedImage(width, height, ColorSpace.TYPE_RGB);
             Graphics2D graphics = img.createGraphics();
 
             // Fill the background with color
-            graphics.setColor (Color.pink);
-            graphics.fillRect ( 0, 0, getToolkit().getScreenSize().width,getToolkit().getScreenSize().height);
-            background=img;
+            graphics.setColor(Color.pink);
+            graphics.fillRect(0, 0, width, height);
+            background = img;
         }
+        exitButtonArea=new Rectangle(3*width/5,3*height/5,exitButtonImg.getWidth(),exitButtonImg.getHeight());
+        newGameButtonArea=new Rectangle(1*width/5,3*height/5,newGameImg.getWidth(),newGameImg.getHeight());
 
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if(exitButtonArea.contains(e.getPoint())){
+                    System.err.println("User clicked on the exit button :(");
+                    exitGame();
+                }else if(newGameButtonArea.contains(e.getPoint())){
+                    System.err.println("User clicked on the new game button :)");
+                    MainWindow2 w=new MainWindow2();
+                    w.setVisible(true);
+                    w.requestFocus(FocusEvent.Cause.ACTIVATION);
+                    dispose();
+                }
+            }
+        });
+
+        setPreferredSize(new Dimension(width,height));
+        setUndecorated(true);
+        pack();
         setVisible(true);
+        requestFocus();
+    }
+
+    private void exitGame(){
+        dispose();
     }
 
     @Override
-    public void paintComponents(Graphics g) {
+    public void paint(Graphics g) {
+        super.paint(g);
         g.drawImage(background,0,0,null);
-        super.paintComponents(g);
+        g.drawImage(exitButtonImg,exitButtonArea.x,exitButtonArea.y,null);
+        g.drawImage(newGameImg,newGameButtonArea.x,newGameButtonArea.y,null);
     }
 }

@@ -49,6 +49,14 @@ public class MainWindow2 extends JFrame{
         liveDataPanels=new LinkedList<LiveDataPanel>();
         timer = getTimer();
 
+
+        try
+        {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            System.err.println("No look and feel");
+        }
+
         //handle click event
         field.addMouseListener(new MouseAdapter(){
             @Override
@@ -97,13 +105,15 @@ public class MainWindow2 extends JFrame{
 
         //management dialog
         final MainWindow2 owner=this;
-        JMenuItem managementMenuItem = new JMenuItem("Management");
-        managementMenuItem.addActionListener(new AbstractAction() {
+        JMenu managementMenuItem = new JMenu("Management");
+        managementMenuItem.addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 ManagementDialog managementDialog=new ManagementDialog(owner,engine);
                 managementDialog.setVisible(true);
+                super.mouseClicked(e);
             }
+
         });
 
         /*
@@ -118,10 +128,19 @@ public class MainWindow2 extends JFrame{
         */
 
 
-        JMenuItem menuGameExit = new JMenuItem(new AbstractAction("Exit") {
+        JMenu menuGameExit = new JMenu("Exit");
+        menuGameExit.addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                int result = JOptionPane.showConfirmDialog(owner,"Sure? You want to exit?", "Exit dialog",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                if(result == JOptionPane.YES_OPTION){
+                    System.exit(0);
+                }else{
+                    transferFocus();
+                }
             }
         });
 
@@ -163,14 +182,10 @@ public class MainWindow2 extends JFrame{
         timeMenu.add(timeThreeMenuItem);
         timeMenu.add(timeTenMenuItem);
 
-        otherMenu.add(managementMenuItem);
-        //otherMenu.add(menuToggleFullscreen);
-        otherMenu.addSeparator();
-        otherMenu.add(menuGameExit);
-
         menuBar.add(buildMenu);
         menuBar.add(timeMenu);
-        menuBar.add(otherMenu);
+        menuBar.add(managementMenuItem);
+        menuBar.add(menuGameExit);
         setJMenuBar(menuBar);
 
         //window
