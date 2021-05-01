@@ -27,10 +27,10 @@ public class Playground {
     private final ArrayList<Cleaner> cleaners;
     private final ArrayList<Repairman> repairmen;
 
-
     private int money;
     private int days, hours, minutes;
     private double popularity;
+    private boolean bankruptcy;
 
     /* Konstruktor */
     public Playground() {
@@ -39,17 +39,15 @@ public class Playground {
         builedGames         = new ArrayList<>();
         builededServices    = new ArrayList<>();
         visitors            = new ArrayList<>();
-        caterers             = new ArrayList<>();
+        caterers            = new ArrayList<>();
         cleaners            = new ArrayList<>();
         repairmen           = new ArrayList<>();
         buildedEmployeeBases= new ArrayList<>();
 
-
-
         money = 100_000;
         days = 1; hours = 8; minutes = 0;
         popularity = 0;
-
+        bankruptcy = false;
     }
 
     /* Metódusok */
@@ -68,14 +66,11 @@ public class Playground {
         blocks[posX][posY] = block;
         return true;
     }
-    public void demolishBlock(int posX, int posY)
-    {
+    public void demolishBlock(int posX, int posY) {
         FreePlace freeplaceBlock = new FreePlace(0,0,0,BlockState.FREE);
         freeplaceBlock.setPos(new Position(posX,posY,false));
         blocks[posX][posY] = freeplaceBlock;
     }
-
-
 
     /**
      * Megkapjuk a blockot, annak a pozíció és size alapján kiszámítjuk mettől meddig tart, majd végigmegyünk
@@ -163,13 +158,12 @@ public class Playground {
                         visitor.getPathPositionList().add(new Position(i,j,false));
                         return true;
                     }
-
         return false;
     }
     public boolean isSafe(int i, int j) {
         return i >= 0 && i < blocks.length && j >= 0 && j < blocks[0].length;
     }
-    //TODO: BUG, ha bal felső koordinátájhoz nem vezet út!
+
     public boolean isPath(int i, int j, boolean[][] visited, Position start, Position destination, Person visitor) {
         if (isSafe(i, j)
                 && (blocks[i][j] instanceof Road
@@ -286,6 +280,7 @@ public class Playground {
     public int getDays()                                    { return days; }
     public double getPopularity()                           { return popularity; }
     public Block getBlockByPosition(Position pos)           { return blocks[pos.getX_asIndex()][pos.getY_asIndex()]; }
+    public boolean isBankruptcy()                           { return this.money < 0; }
 
     public BlockState getBlockState(Block block)            { return block.getState(); }
     public Color getColor(Block block)                      { return block.getColor(); }
@@ -304,8 +299,6 @@ public class Playground {
     public void setHours(int hours)                         { this.hours = hours; }
     public void setMinutes(int minutes)                     { this.minutes = minutes; }
     public void setPopularity(double popularity)            { this.popularity = popularity; }
-    public void setBuildedObjects(ArrayList<Block> buildedObjects) { this.buildedObjects = buildedObjects; }
-
 
     public ArrayList<EmployeeBase> getBuildedEmployeeBases() {
         return buildedEmployeeBases;

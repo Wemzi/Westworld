@@ -183,21 +183,20 @@ public class GameEngine {
         pg.getBuildedObjectList().forEach(Block::startDay);
 
         Position entrancePosition = pg.getRandomEntrance(rnd).getPos();
+
+        System.out.println("Nap elkezdődött!");
+
         for(int idx = 0; idx < prevVisitors; idx++ )
-        {
             pg.getVisitors().add(new Visitor(entrancePosition));
-        }
 
-        //pg.getVisitors().get(0).roundHasPassed(minutesPerSecond);
+        Timer personTimer = new Timer();
+        Timer simulationTimer = new Timer();
 
-
-
-        Timer visitorTimer = new Timer();
-        Timer timer = new Timer();
-        visitorTimer.scheduleAtFixedRate(new TimerTask() {
+        personTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 ArrayList<Block> copy= new ArrayList<>(pg.getBuildedObjectList());
+
                 try {
                     //manage block
                     boolean everyCleanerHasJob = false;
@@ -262,17 +261,16 @@ public class GameEngine {
                             } else {
                                v.move(minutesPerSecond);
                             }
+
                     }
+                    if(pg.getPopularity()+3 >= pg.getVisitors().size())     chanceToVisitorisComing();
 
-                } catch (ConcurrentModificationException e){
-                    System.err.println("Concurrent");
-                }
-
+                } catch (ConcurrentModificationException e) { System.err.println("Concurrent"); }
             }
         },0,16);
 
 
-        timer.scheduleAtFixedRate(new TimerTask() {
+        simulationTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 pg.setMinutes(pg.getMinutes() + minutesPerSecond);
@@ -299,58 +297,63 @@ public class GameEngine {
                     if (v.getState() == VisitorState.WANNA_LEAVE && pg.getBlockByPosition(v.getPosition()) instanceof Road ) {
                         Road r = (Road) pg.getBlockByPosition(v.getPosition());
                         if (r.isEntrance()) {
-                            if(v.getHappiness() >= 50)
-                                pg.setPopularity(pg.getPopularity()+1);
-                            else if(v.getHappiness() < 50)
-                                pg.setPopularity(pg.getPopularity()-1);
-                            else if(v.getHappiness() >= 100)
-                                pg.setPopularity(pg.getPopularity()+2);
-                            else if(v.getHappiness() <= 0)
-                                pg.setPopularity(pg.getPopularity()-2);
-
+                            visitorPayTheirCredit(v);
+                            updateParkPopularity(v);
                             pg.getVisitors().remove(v);
                         }
-                        //break;
                     }
                 }
 
-                int randomPeriod = rnd.nextInt(100-1) + 1;
-                double currentPopularity = pg.getPopularity();
-                if(pg.getPopularity() > 50)
-                    currentPopularity = 50;
+                if(pg.getMinutes() >= 60)       { pg.setMinutes(0); pg.setHours(pg.getHours() + 1); }
+                if(pg.getHours() >= 20)         { prevVisitors = endDay(); }
+                if(pg.getHours() >= 24)         { pg.setHours(24); pg.setMinutes(0); }
 
-                double visitorComingPeriod = currentPopularity + randomPeriod + minutesPerSecond;
-
-                if(visitorComingPeriod > 85 && pg.getHours() < 20) {
-                    System.out.println("Visitor érkezik!");
-                    pg.getVisitors().add(new Visitor(pg.getRandomEntrance(rnd).getPos()));
-                    pg.getVisitors().get(pg.getVisitors().size() - 1).roundHasPassed(minutesPerSecond);
-                }
-
-                if(pg.getMinutes() >= 60) { // Eltelt 1 óra a játékban
-                    pg.setMinutes(0);
-                    pg.setHours(pg.getHours() + 1);
-                    /*if (pg.getHours() < 20){
-                        pg.getVisitors().add(new Visitor(pg.getRandomEntrance(rnd).getPos()));
-                        pg.getVisitors().get(pg.getVisitors().size() - 1).roundHasPassed(minutesPerSecond);
-                    }*/
-                }
-                if(pg.getHours() == 20) { // Eltelt 1 nap a játékban, Visitorok elindulnak kifele, bezár a park.
-                    prevVisitors = endDay(); //Nap vége
-                }
-                if(pg.getVisitors().size() == 0) { // Eltelt 1 nap a játékban, bezárás
+                if(pg.getVisitors().size() == 0) {
                     pg.setMinutes(0);
                     pg.setHours(8);
                     pg.setDays(pg.getDays()+1);
-                    timer.cancel(); timer.purge(); // Timer leállítása a nap végén
-                    visitorTimer.cancel(); visitorTimer.purge(); // Visitor timer leállítása
                     isBuildingPeriod = true;
-                    System.out.println("Nap véget ért!");
+
+                    personTimer.cancel(); personTimer.purge();
+                    simulationTimer.cancel(); simulationTimer.purge();
                 }
             }}, 0, 1000);
-        System.out.println("A nap elkeződött!");
     }
 
+    void chanceToVisitorisComing() {
+        if(pg.getPopularity() >= 100)       pg.setPopularity(100);
+        else if(pg.getPopularity() <= 0)    pg.setPopularity(0);
+
+        int randomPeriod = rnd.nextInt(100-1) + 1;
+        double currentPopularity = pg.getPopularity();
+        double periodPoint = currentPopularity + randomPeriod + minutesPerSecond;
+
+        if(pg.getHours() < 20) {
+            if(pg.getPopularity() <= 0 && periodPoint >= 90)                                        addVisitor();
+            else if(pg.getPopularity() >= 1  && pg.getPopularity() < 25  && periodPoint >= 100)     addVisitor();
+            else if(pg.getPopularity() >= 25 && pg.getPopularity() < 75  && periodPoint >= 120)     addVisitor();
+            else if(pg.getPopularity() >= 75 && periodPoint >= 140)                                 addVisitor();
+        }
+        randomPeriod = 0; currentPopularity = 0; periodPoint = 0;
+    }
+    void addVisitor() {
+        pg.getVisitors().add(new Visitor(pg.getRandomEntrance(rnd).getPos()));
+        pg.getVisitors().get(pg.getVisitors().size() - 1).roundHasPassed(minutesPerSecond);
+        pg.setMoney(pg.getMoney()+10);
+        System.out.println("Visitor érkezett és fizetett 10$-t a belépőért!");
+    }
+    void updateParkPopularity(Visitor v) {
+        if(v.getHappiness() >= 50)          pg.setPopularity(pg.getPopularity()+1);
+        else if(v.getHappiness() < 50)      pg.setPopularity(pg.getPopularity()-1);
+        else if(v.getHappiness() >= 100)    pg.setPopularity(pg.getPopularity()+2);
+        else if(v.getHappiness() <= 0)      pg.setPopularity(pg.getPopularity()-2);
+    }
+    void visitorPayTheirCredit(Visitor v) {
+        if(v.getCredit() > 0) {
+            pg.setMoney(pg.getMoney() + v.getCredit());
+            v.setCredit(0);
+        }
+    }
 
     /**
      * Metódus lecsökkenti a játékos pénzét a nap végén upkeep costnyival
