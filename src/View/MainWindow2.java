@@ -19,7 +19,7 @@ import java.util.LinkedList;
  * @author Gabor
  */
 public class MainWindow2 extends JFrame{
-    private static int BOX_SIZE;//hany pixel szeles legyen egy elem a matrixban
+    private static int BOX_SIZE=40;//hany pixel szeles legyen egy elem a matrixban
     public static final int NUM_OF_COLS =25;//oszlopok szama
     public static final int NUM_OF_ROWS =12;//sorok szama
     public static final int FPS=50;
@@ -106,6 +106,18 @@ public class MainWindow2 extends JFrame{
             }
         });
 
+        /*
+        JMenuItem menuToggleFullscreen = new JMenuItem(new AbstractAction("Fullscreen") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                setUndecorated(!isUndecorated());
+                setVisible(true);
+            }
+        });
+        */
+
+
         JMenuItem menuGameExit = new JMenuItem(new AbstractAction("Exit") {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -152,6 +164,7 @@ public class MainWindow2 extends JFrame{
         timeMenu.add(timeTenMenuItem);
 
         otherMenu.add(managementMenuItem);
+        //otherMenu.add(menuToggleFullscreen);
         otherMenu.addSeparator();
         otherMenu.add(menuGameExit);
 
@@ -175,22 +188,29 @@ public class MainWindow2 extends JFrame{
         setUndecorated(true);
         setVisible(true);
 
+        /*
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                setBoxSize();
+                System.out.println("Resized to " + e.getComponent().getSize());
+                setBoxSize(e.getComponent().getSize());
                 super.componentResized(e);
             }
-        });
-
+        });*/
+        //setBoxSize(getSize());
+        field.repaint();
         startGame();
     }
 
 
 
     private void setBoxSize(){
+        /*
         Dimension screen=new Dimension(getToolkit().getScreenSize().width,getToolkit().getScreenSize().height);
-        BOX_SIZE=(int) Math.floor(0.9*Math.min(screen.getWidth()/NUM_OF_COLS,screen.getHeight()/NUM_OF_ROWS));
+        System.out.println("resizing based:" + screen);
+        BOX_SIZE=(int) Math.floor(0.8*Math.min(screen.getWidth()/NUM_OF_COLS,screen.getHeight()/NUM_OF_ROWS));
+        //BOX_SIZE=40;
+        System.out.println("Box size: " + BOX_SIZE);*/
     }
 
     public static int getBoxSize() {

@@ -29,12 +29,7 @@ public final class Position {
             this.x = indexToPixel(x);
             this.y = indexToPixel(y);
         }
-
     }
-
-    public void setX_asIndex(int x) { this.x = x; }
-    public void setY_asIndex(int y) { this.y = y; }
-
 
     public int getX_asIndex() {
         return pixelToIndex(x);
