@@ -116,16 +116,16 @@ public class MainWindow2 extends JFrame{
 
         });
 
-        /*
-        JMenuItem menuToggleFullscreen = new JMenuItem(new AbstractAction("Fullscreen") {
+
+        JMenu menuToggleFullscreen = new JMenu("Fullscreen");
+        menuToggleFullscreen.addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 dispose();
                 setUndecorated(!isUndecorated());
                 setVisible(true);
             }
         });
-        */
 
 
         JMenu menuGameExit = new JMenu("Exit");
@@ -184,6 +184,7 @@ public class MainWindow2 extends JFrame{
 
         menuBar.add(buildMenu);
         menuBar.add(timeMenu);
+        menuBar.add(menuToggleFullscreen);
         menuBar.add(managementMenuItem);
         menuBar.add(menuGameExit);
         setJMenuBar(menuBar);
