@@ -34,20 +34,6 @@ public class Game extends Block implements Queueable{
     public Game(GameType type,Position pos) {
         this.type = type;
         queue=new ArrayBlockingQueue<>(MAX_QUEUE_LENGTH);
-       /* if (type == GameType.DODGEM) {
-            this.buildingCost = 300;
-            this.upkeepCost = 50;
-            this.popularityIncrease=1.4;
-            this.state=BlockState.UNDER_CONSTRUCTION;
-            this.ticketCost=25;
-            this.capacity=20;
-            this.size= new Position(2, 2,false);
-            this.pos = pos;
-            this.cooldownTime=10;
-            this.buildingTime = 5 * cooldownTime;
-            playingVisitors = new ArrayBlockingQueue<>(this.capacity);
-            this.workers=new ArrayList<Operator>();
-            }*/
         if (type == GameType.FERRISWHEEL) {
             this.buildingCost = 600;
             this.upkeepCost = 150;
@@ -60,7 +46,7 @@ public class Game extends Block implements Queueable{
             this.cooldownTime = 5;
             this.buildingTime = 5 * cooldownTime;
             playingVisitors = new ArrayBlockingQueue<>(this.capacity);
-            this.workers=new ArrayList<Operator>();
+            this.workers= new ArrayList<>();
         } else if (type == GameType.RODEO)
         {
             this.buildingCost = 270;
@@ -74,7 +60,7 @@ public class Game extends Block implements Queueable{
             this.cooldownTime = 4;
             this.buildingTime = 5 * cooldownTime;
             playingVisitors = new ArrayBlockingQueue<>(this.capacity);
-            this.workers=new ArrayList<Operator>();
+            this.workers= new ArrayList<>();
         } else if( type == GameType.ROLLERCOASTER) {
             this.buildingCost = 800;
             this.upkeepCost = 200;
@@ -87,7 +73,7 @@ public class Game extends Block implements Queueable{
             this.cooldownTime = 5;
             this.buildingTime = 5 * cooldownTime;
             playingVisitors = new ArrayBlockingQueue<>(this.capacity);
-            this.workers=new ArrayList<Operator>();
+            this.workers= new ArrayList<>();
         } else if(type == GameType.SHOOTINGGALLERY) {
             this.buildingCost = 200;
             this.upkeepCost = 30;
@@ -100,7 +86,7 @@ public class Game extends Block implements Queueable{
             this.cooldownTime = 3;
             this.buildingTime = 5 * cooldownTime;
             playingVisitors = new ArrayBlockingQueue<>(this.capacity);
-            this.workers=new ArrayList<Operator>();
+            this.workers= new ArrayList<>();
         }
         else throw new RuntimeException("Gametype not found at creating game, or not yet implemented");
 
@@ -112,7 +98,6 @@ public class Game extends Block implements Queueable{
         return Color.red;
     }
 
-    public void addWorker(Operator o){workers.add(o);}
     public void addVisitor(Visitor v){
         queue.add(v);
     }
@@ -120,19 +105,6 @@ public class Game extends Block implements Queueable{
     public int getCooldownTime() {
         return cooldownTime;
     }
-
-    /*
-    public void run(){
-        if(this.state.equals(BlockState.FREE))
-        {
-            queue.clear();
-            this.setState(BlockState.USED);
-            System.out.println("Game is running...");
-            currentActivityTime = cooldownTime;
-            this.setCondition(this.getCondition()-2);
-        }
-        else throw new RuntimeException("You can't run the game cause it's not free!");
-    }*/
 
     public void fillWithWorkers()
     {

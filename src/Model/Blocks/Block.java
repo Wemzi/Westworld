@@ -134,24 +134,12 @@ public abstract class Block {
 
     public void setState(BlockState state) { this.state = state; }
 
-    public void setBuildingCost(int buildingCost) {
-        this.buildingCost = buildingCost;
-    }
-
-    public void setUpkeepCost(int upkeepCost) {
-        this.upkeepCost = upkeepCost;
-    }
-
     public void setCondition(int condition) {
         this.condition = condition;
     }
 
     public void setPos(Position pos) {
         this.pos = pos;
-    }
-
-    public void setPopularityIncrease(double popularityIncrease) {
-        this.popularityIncrease = popularityIncrease;
     }
 
     public boolean needRepair(){
