@@ -40,8 +40,6 @@ public class Cleaner extends Employee {
         }
 
         if(!Objects.isNull(whatSheCleans)){
-            //whatSheCleans.setGarbage(whatSheCleans.getGarbage()-minutesPerSecond);
-            //System.out.println("Cleaned a little");
             if(currentActivityLength <= 0){
                 whatSheCleans.setGarbage(0);
                 whatSheCleans.cleaner = null;
