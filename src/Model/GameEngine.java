@@ -294,6 +294,11 @@ public class GameEngine {
                             ((Road) possibleroad).cleaner = null;
                         }
                     }
+                    if(pg.isDecorationNearby(v.getPosition()))
+                    {
+                        v.setHappiness(v.getHappiness()+1);
+                    }
+
                     if (v.getState() == VisitorState.WANNA_LEAVE && pg.getBlockByPosition(v.getPosition()) instanceof Road ) {
                         Road r = (Road) pg.getBlockByPosition(v.getPosition());
                         if (r.isEntrance()) {

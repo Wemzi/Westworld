@@ -245,6 +245,27 @@ public class Playground {
         return false;
     }
 
+    public boolean isDecorationNearby(Position pos)
+    {   int posXorigin = pos.getX_asIndex();
+        int posYorigin = pos.getY_asIndex();
+        int posX = pos.getX_asIndex()-2;
+        while(posX<posXorigin+2 ) {
+            int posY = pos.getY_asIndex()-2;
+            while (posY < posYorigin + 2) {
+                if(isSafe(posX,posY)) {
+                    Block b = blocks[posX][posY];
+                    if (b instanceof Decoration) {
+                        return true;
+                    }
+                    //System.out.println("posX: " + posX + " posY:"+ posY );
+                }
+                posY++;
+            }
+            posX++;
+        }
+        return false;
+    }
+
     public ArrayList getEmployeesLike(Employee e){
         if(e instanceof Caterer){return getCaterers();}
         if(e instanceof Cleaner){return getCleaners();}
