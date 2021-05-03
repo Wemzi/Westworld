@@ -36,9 +36,7 @@ public class Cleaner extends Employee {
         //System.out.println(toString());
         if(currentActivityLength>0 ){
             currentActivityLength-= minutesPerSecond;
-            return;
         }
-
         if(!Objects.isNull(whatSheCleans)){
             if(currentActivityLength <= 0){
                 whatSheCleans.setGarbage(0);
@@ -47,7 +45,6 @@ public class Cleaner extends Employee {
                 System.out.println("All cleaned");
             }
         }
-
     }
 
     @Override
