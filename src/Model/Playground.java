@@ -144,7 +144,12 @@ public class Playground {
                 System.err.println("No free cleaner to remove!");
             }
         } else if(e instanceof Repairman) {
-            repairmen.remove(e);
+            Repairman r = getFreeRepman();
+            if(!Objects.isNull(r)) {
+                repairmen.remove(r);
+            }else{
+                System.err.println("No free repairman to remove!");
+            }
         }
     }
 
@@ -279,6 +284,15 @@ public class Playground {
         for(Cleaner c :getCleaners() ){
             if(Objects.isNull(c.goal)){
                 return c;
+            }
+        }
+        return null;
+    }
+
+    public Repairman getFreeRepman(){
+        for(Repairman r :getRepairmen() ){
+            if(Objects.isNull(r.goal)){
+                return r;
             }
         }
         return null;

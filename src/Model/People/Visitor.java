@@ -92,30 +92,27 @@ public class Visitor extends Person {
 
             System.out.println(name + " játszani megy!");
         }
-        else if ( getState().equals(VisitorState.WANNA_EAT)) {
+        else if ( getState().equals(VisitorState.WANNA_EAT) ) {
             ArrayList<ServiceArea> SvList = pg.getBuildedServiceList();
-            if (SvList.size() == 0) return;
+            ArrayList<ServiceArea> BuffetList = new ArrayList<>();
             for (ServiceArea svarea : SvList) {
-                if (svarea.getType().equals(ServiceType.BUFFET)) {
-                    goal = svarea;
-                    break;
+                if (svarea.getType().equals(ServiceType.BUFFET) && svarea.getState().equals(BlockState.FREE)) {
+                    BuffetList.add(svarea);
                 }
             }
+            if(BuffetList.size() > 0 ) goal = BuffetList.get(Math.abs(rnd.nextInt()%BuffetList.size()));
             //System.out.println(v.getPathPositionList());
             //System.out.println("Visitor enni megy! " + v.getPathPositionList().size());
         }
         else if (getState() == VisitorState.WANNA_TOILET) {
             ArrayList<ServiceArea> SvList = pg.getBuildedServiceList();
-            if (SvList.size() == 0) return;
-            for(ServiceArea svarea : SvList)
-            {
-                if(svarea.getType().equals(ServiceType.TOILET)) {
-                    goal = svarea;
-                    break;
+            ArrayList<ServiceArea> ToiletList = new ArrayList<>();
+                for (ServiceArea svarea : SvList) {
+                    if (svarea.getType().equals(ServiceType.TOILET)&& svarea.getState().equals(BlockState.FREE)) {
+                        ToiletList.add(svarea);
+                    }
                 }
-            }
-            //System.out.println(v.getPathPositionList());
-            //System.out.println("Visitor WC-re megy!");
+            if(ToiletList.size() > 0 ) goal = ToiletList.get(Math.abs(rnd.nextInt()%ToiletList.size()));
         }
         else if(getState() == VisitorState.WANNA_LEAVE)
         {
