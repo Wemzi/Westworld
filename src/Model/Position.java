@@ -1,7 +1,5 @@
 package Model;
 
-import View.MainWindow2;
-
 import java.util.Objects;
 
 /**
@@ -11,6 +9,8 @@ import java.util.Objects;
 public final class Position {
     private int x;
     private int y;
+    private int boxSize;
+    public static Scaler scaler;
 
     /**
      *
@@ -29,6 +29,19 @@ public final class Position {
             this.x = indexToPixel(x);
             this.y = indexToPixel(y);
         }
+        boxSize= scaler.getBoxSize();
+    }
+
+    /**
+     *
+     * @param x idex of rows
+     * @param y index of cols
+     * @apiNote Measured in indices and not in pixels
+     */
+    public Position(double x, double y){
+        boxSize= scaler.getBoxSize();
+        this.x= (int) (boxSize*x);
+        this.y= (int) (boxSize*y);
     }
 
     public int getX_asIndex() {
@@ -52,8 +65,8 @@ public final class Position {
     }
 
     //Conversions
-    public static int pixelToIndex(int coord){return coord/ MainWindow2.getBoxSize();}
-    public static int indexToPixel(int index){return index*MainWindow2.getBoxSize();}
+    public static int pixelToIndex(int coord){return coord/ scaler.getBoxSize();}
+    public static int indexToPixel(int index){return index*scaler.getBoxSize();}
 
     @Override
     public boolean equals(Object o) {

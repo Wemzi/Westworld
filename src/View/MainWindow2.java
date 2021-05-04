@@ -8,6 +8,7 @@ import Model.Blocks.Road;
 import Model.GameEngine;
 import Model.People.Person;
 import Model.Position;
+import Model.Scaler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,13 +20,14 @@ import java.util.LinkedList;
  * @author Gabor
  */
 public class MainWindow2 extends JFrame{
-    private static int BOX_SIZE=40;//hany pixel szeles legyen egy elem a matrixban
+    //private static int BOX_SIZE=40;//hany pixel szeles legyen egy elem a matrixban
     public static final int NUM_OF_COLS =25;//oszlopok szama
     public static final int NUM_OF_ROWS =12;//sorok szama
     public static final int FPS=50;
 
     private final GameField field;
     public final GameEngine engine;
+    public final Scaler scaler;
 
     private boolean isPlaceSelectionMode=false;
     private Block toBuild;
@@ -43,9 +45,11 @@ public class MainWindow2 extends JFrame{
 
     
     public MainWindow2() {
-        setBoxSize();
+        scaler= new Scaler(40);
+        setScaler(calculateBoxSize());
+        Position.scaler=scaler;
         engine=new GameEngine();
-        field=new GameField(engine);
+        field=new GameField(engine,scaler);
         liveDataPanels=new LinkedList<LiveDataPanel>();
         timer = getTimer();
 
@@ -207,7 +211,7 @@ public class MainWindow2 extends JFrame{
             @Override
             public void componentResized(ComponentEvent e) {
                 System.out.println("Resized to " + e.getComponent().getSize());
-                setBoxSize(e.getComponent().getSize());
+                MainWindow2.this.setScaler(calculateBoxSize(e.getComponent().getSize()));
                 super.componentResized(e);
             }
         });*/
@@ -216,19 +220,19 @@ public class MainWindow2 extends JFrame{
         startGame();
     }
 
-
-
-    private void setBoxSize(){
-        /*
-        Dimension screen=new Dimension(getToolkit().getScreenSize().width,getToolkit().getScreenSize().height);
-        System.out.println("resizing based:" + screen);
-        BOX_SIZE=(int) Math.floor(0.8*Math.min(screen.getWidth()/NUM_OF_COLS,screen.getHeight()/NUM_OF_ROWS));
-        //BOX_SIZE=40;
-        System.out.println("Box size: " + BOX_SIZE);*/
+    private void setScaler(int size){
+        System.out.println("Box size set to: " + size);
+        scaler.setBoxSize(size);
     }
 
-    public static int getBoxSize() {
-        return BOX_SIZE;
+    private int calculateBoxSize(Dimension d){
+        System.out.println("resizing based:" + d);
+        return (int) Math.floor(0.9*Math.min(d.getWidth()/NUM_OF_COLS,d.getHeight()/NUM_OF_ROWS));
+    }
+    private int calculateBoxSize(){
+        Dimension screen=new Dimension(getToolkit().getScreenSize().width,getToolkit().getScreenSize().height);
+        System.out.println("resizing based:" + screen);
+        return (int) Math.floor(0.9*Math.min(screen.getWidth()/NUM_OF_COLS,screen.getHeight()/NUM_OF_ROWS));
     }
 
     private Timer getTimer() {
@@ -267,7 +271,7 @@ public class MainWindow2 extends JFrame{
         JPanel gridPanel=new JPanel();
         gridPanel.setLayout(new GridBagLayout());
         gridPanel.add(field);
-        field.setPreferredSize(new Dimension(BOX_SIZE* NUM_OF_COLS,BOX_SIZE* NUM_OF_ROWS));
+        field.setPreferredSize(new Dimension(scaler.getBoxSize()* NUM_OF_COLS,scaler.getBoxSize()* NUM_OF_ROWS));
         this.add(gridPanel,BorderLayout.CENTER);
 
         timer.start();

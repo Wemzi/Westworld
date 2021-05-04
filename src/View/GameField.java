@@ -7,6 +7,7 @@ import Model.People.Employee;
 import Model.People.Visitor;
 import Model.People.VisitorState;
 import Model.Position;
+import Model.Scaler;
 import View.spriteManagers.SpriteManager;
 import View.spriteManagers.StaticSpriteManager;
 
@@ -23,16 +24,18 @@ import java.util.ArrayList;
  */
 public class GameField extends JPanel {
     private final GameEngine engine;
+    private final Scaler scaler;
 
     private BufferedImage background;
 
     private boolean mouseFollowing=false;
     private Block toBuild;
 
-    public GameField(GameEngine engine) {
+    public GameField(GameEngine engine,Scaler sc) {
         setPreferredSize(new Dimension(600, 600));
         setBorder(BorderFactory.createLineBorder(Color.black));
         this.engine=engine;
+        this.scaler=sc;
         makeBackgroundImage();
     }
 
@@ -88,12 +91,12 @@ public class GameField extends JPanel {
 
     private void makeBackgroundImage(){
         SpriteManager sp=new StaticSpriteManager("graphics/grass.png",new Position(1,1,false));
-        background = new BufferedImage(MainWindow2.getBoxSize()*MainWindow2.NUM_OF_COLS, MainWindow2.getBoxSize()*MainWindow2.NUM_OF_ROWS, BufferedImage.TYPE_INT_ARGB);
+        background = new BufferedImage(scaler.getBoxSize()*MainWindow2.NUM_OF_COLS, scaler.getBoxSize()*MainWindow2.NUM_OF_ROWS, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D bgGraphics = background.createGraphics();
         for (int i = 0; i < MainWindow2.NUM_OF_COLS; i++) {
             for (int j = 0; j < MainWindow2.NUM_OF_ROWS; j++) {
-                bgGraphics.drawImage(sp.nextSprite(), i*MainWindow2.getBoxSize(), j*MainWindow2.getBoxSize(), null);
+                bgGraphics.drawImage(sp.nextSprite(), i*scaler.getBoxSize(), j*scaler.getBoxSize(), null);
             }
         }
         bgGraphics.dispose();

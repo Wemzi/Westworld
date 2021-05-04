@@ -5,7 +5,6 @@ import Model.Direction;
 import Model.GameEngine;
 import Model.Playground;
 import Model.Position;
-import View.MainWindow2;
 import View.spriteManagers.SpriteManager;
 
 import java.awt.*;
@@ -27,7 +26,7 @@ abstract public class Person {
     public String name = getRandomName();
 
     public static Position getPersonSize(){
-        return new Position(MainWindow2.getBoxSize()/2,MainWindow2.getBoxSize()/2,true);
+        return new Position(0.5,0.5);
     }
 
     protected Person(Position startingCoord)
