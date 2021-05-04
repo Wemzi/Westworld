@@ -191,8 +191,6 @@ public class MainWindow2 extends JFrame{
 
         //window
         setLayout(new BorderLayout());
-        timerText=new JLabel("Date");
-        add(timerText,BorderLayout.NORTH);
         setTitle("WestWorld");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -200,7 +198,7 @@ public class MainWindow2 extends JFrame{
         pack();
         setResizable(false);*/
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-
+        timerText=new JLabel("Date");
         setUndecorated(true);
         setVisible(true);
 
@@ -255,12 +253,16 @@ public class MainWindow2 extends JFrame{
 
 
     public void startGame(){
-        JPanel playersPanel=new JPanel();
-        playersPanel.add(moneyLabel);
-        playersPanel.add(popularityLabel);
-        playersPanel.add(visitorsLabel);
-        playersPanel.add(startDayButton);
-        this.add(playersPanel,BorderLayout.NORTH);
+
+        JPanel upperDataPanel=new JPanel(new BorderLayout());
+        JPanel centerStatPanel = new JPanel();
+        upperDataPanel.add(timerText,BorderLayout.WEST);
+        centerStatPanel.add(moneyLabel);
+        centerStatPanel.add(popularityLabel );
+        centerStatPanel.add(visitorsLabel);
+        centerStatPanel.add(startDayButton);
+        upperDataPanel.add(centerStatPanel,BorderLayout.CENTER);
+        this.add(upperDataPanel,BorderLayout.NORTH);
 
         JPanel gridPanel=new JPanel();
         gridPanel.setLayout(new GridBagLayout());
