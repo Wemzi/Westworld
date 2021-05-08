@@ -8,7 +8,13 @@ import View.spriteManagers.StaticSpriteManager;
 import java.awt.*;
 import java.util.Objects;
 
+/**
+ * Az út, ami összeköt. Ezeken mozognak a Visitorok, így érik el céljaikat, itt keresnek újabb kihívásokat.
+ */
 public class Road extends Block {
+    /**
+     * Szemét szinteket tartalmazó enumeráció.
+     */
     public enum GarbageLevel{NONE,FEW,LOT};
     private static SpriteManager noGarbageSpriteManager =null;
     private static SpriteManager fewGarbageSpriteManager =null;
@@ -20,7 +26,16 @@ public class Road extends Block {
     private int garbage;
     public Cleaner cleaner=null;
 
-
+    /**
+     * Út osztály konstruktora.
+     * @param buildingCost Az építés ára
+     * @param upkeepCost a fenntartás ára
+     * @param popularityIncrease ennyivel növeli a népszerűséget
+     * @param state az állapota
+     * @param hasGarbageCan van-e rajta kuka
+     * @param isEntrance bejárat-e
+     * @param garbage mennyi szemetet tartalmaz
+     */
     public Road(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, boolean hasGarbageCan, boolean isEntrance, int garbage) {
         super(buildingCost, upkeepCost, popularityIncrease, state);
         this.hasGarbageCan = hasGarbageCan;
@@ -40,6 +55,10 @@ public class Road extends Block {
         garbage=0;
     }
 
+    /**
+     *
+     * @return Hogy van e az úton kuka.
+     */
     //getters setters
     public boolean isHasGarbageCan() {
         return hasGarbageCan;
@@ -60,12 +79,16 @@ public class Road extends Block {
     public int getGarbage() {
         return garbage;
     }
+
+    /**
+     * A garbage számot GarbageLevel-é konvertáljuk.
+     * @return Semennyi, kevés, vagy sok szemét van.
+     */
     public GarbageLevel getGarbageLevel(){
         if(garbage==0)return GarbageLevel.NONE;
         if(garbage<33)return GarbageLevel.FEW;
         return GarbageLevel.LOT;
     }
-
     public void setGarbage(int garbage) {
         this.garbage = garbage;
     }
@@ -89,6 +112,10 @@ public class Road extends Block {
     @Override
     public String getName(){return "Road"; }
 
+    /**
+     * Megkeresi az út állapotának megfelelő spriteot, és beállítja azt.
+     * @return
+     */
     @Override
     protected SpriteManager getSpriteManager() {
         if(Objects.isNull(noGarbageSpriteManager)){

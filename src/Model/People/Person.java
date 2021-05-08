@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * Absztrakt osztály a személyeknek.
+ */
 abstract public class Person {
     private Position pos;
     public Direction direction=Direction.NONE;
@@ -25,6 +28,10 @@ abstract public class Person {
     public Block goal;
     public String name = getRandomName();
 
+    /**
+     * Az emberek mérete.
+     * @return az emberek méretét.
+     */
     public static Position getPersonSize(){
         return new Position(0.5,0.5);
     }
@@ -35,8 +42,17 @@ abstract public class Person {
         currentActivityLength = 0;
     }
 
+    /**
+     * Új cél keresése.
+     * @param rnd random szám
+     * @param pg a park, ahol vannak
+     */
     public void findGoal(Random rnd, Playground pg) {}
 
+    /**
+     * Útkeresés az új célhoz.
+     * @param pg a pálya.
+     */
     public void setupRoute(Playground pg){
 
         if(Objects.isNull(goal)) return;
@@ -49,19 +65,24 @@ abstract public class Person {
         isMoving = true;
     }
 
+    /**
+     * Megérkezett az ember az úticélhoz.
+     * @param minutesPerSecond Ennyi perc telik el másodpercenként.
+     */
     public void arrived(int minutesPerSecond){
         isMoving = false;
         pathPositionIndex = 0;
         ArrayList<Position> copy = getPathPositionList();
         getPathPositionList().removeAll(copy);
-
-        //todo megerkeztunk, akkor valamit csinalni is kene
         goal=null;
     }
 
+    /**
+     * Mozgás.
+     * @param minutesPerSecond Ennyi perc telik el másodpercenként.
+     */
     public void move(int minutesPerSecond){
         for(int counter=minutesPerSecond*2/GameEngine.TIME_1x;counter>0 && pathPositionIndex!=-1;counter--){
-            //if(pathPositionIndex==-1){ System.err.println("v.pathPositionIndex==-1"); return;  }// todo find out why
             Position nextBlockPosition = getPathPositionList().get(pathPositionIndex);
             boolean isArrived =  getPathPositionList().size()  == 0 || (getPosition().getX_asPixel() == getPathPositionList().get(0).getX_asPixel() &&
                     getPosition().getY_asPixel() == getPathPositionList().get(0).getY_asPixel());
@@ -92,6 +113,10 @@ abstract public class Person {
         }
     }
 
+    /**
+     *
+     * @return Véletlenszerű név string a names.txt-ből.
+     */
     public String getRandomName()
     {
         Random rnd = new Random();
@@ -113,6 +138,11 @@ abstract public class Person {
         return ret;
     }
 
+    /**
+     * Mozgás egy adott irányba,
+     * @param d irány
+     * @param pixel ennyi pixelt
+     */
     public void moveTo(Direction d,int pixel )
     {
         if(pixel<=0){throw new IllegalArgumentException("@param pixel must be >0");}

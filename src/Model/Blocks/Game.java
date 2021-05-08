@@ -30,7 +30,11 @@ public class Game extends Block implements Queueable{
     public GameType type;
     private static final int MIN_VISITOR_TO_START=2;
 
-    // Implemented preset types of games
+    /**
+     * Olyan konstruktor, amiben csak a típust kell átadnunk, az adattagok maguktól beállítódnak.
+     * @param type a játék típusa.
+     * @param pos a játék pozíciója.
+     */
     public Game(GameType type,Position pos) {
         this.type = type;
         queue=new ArrayBlockingQueue<>(MAX_QUEUE_LENGTH);
@@ -98,6 +102,10 @@ public class Game extends Block implements Queueable{
         return Color.red;
     }
 
+    /**
+     * Beállítunk a sorba egy látogatót.
+     * @param v A látogató.
+     */
     public void addVisitor(Visitor v){
         queue.add(v);
     }
@@ -106,15 +114,27 @@ public class Game extends Block implements Queueable{
         return cooldownTime;
     }
 
+    /**
+     * Ha megépült a játék, operátorokat rendelünk hozzá, hogy lehessen rajta játszani.
+     */
     public void fillWithWorkers()
     {
         workers.add(new Operator(new Position(this.getPos().getX_asIndex(),this.getPos().getY_asIndex(),true),25,this));
         workers.add(new Operator(new Position(this.getPos().getX_asIndex(),this.getPos().getY_asIndex(),true),25,this));
     }
+
+    /**
+     * Egy játék akkor operálható, ha legalább egy operátor dolgozik itt. Ezt lehet itt lekérdezni.
+     * @return Hogy operálható-e, vagy sem.
+     */
     private boolean isOperable(){
         return workers.size()>0;
     }
 
+    /**
+     * A másodpercenként lefutó metódusunk, amely a játék statisztikáinak, állapotának változtatását végzi. GameEngine-ből hívjuk.
+     * @param minutesPerSecond Ennyi perc telik el egy másodperc alatt. (idősebesség függő)
+     */
     @Override
     public void roundHasPassed(int minutesPerSecond)
     {
@@ -137,6 +157,9 @@ public class Game extends Block implements Queueable{
         }
     }
 
+    /**
+     * A játék elindítása.
+     */
     private void startPlaying(){
         if(queue.size() >= MIN_VISITOR_TO_START){
             setState(BlockState.USED);
@@ -149,6 +172,9 @@ public class Game extends Block implements Queueable{
         }
     }
 
+    /**
+     * A játék befejezése.
+     */
     private void playingFinished(){
         setState(BlockState.FREE);
         condition-=2;
@@ -206,6 +232,9 @@ public class Game extends Block implements Queueable{
                 '}' + super.toString();
     }
 
+    /**
+     * @return A játék típusát reprezentáló string.
+     */
     @Override
     public String getName()
     {
@@ -220,7 +249,9 @@ public class Game extends Block implements Queueable{
         }
     }
 
-
+    /**
+     * Megkeresi a játék típusa alapján a megfelelő spriteot, és beállítja azt.
+     */
     private void setupImage(){
         if(Objects.isNull(type)){throw new IllegalStateException("unknown type");}
         switch (type){

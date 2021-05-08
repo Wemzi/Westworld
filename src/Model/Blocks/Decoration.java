@@ -13,6 +13,11 @@ public class Decoration  extends Block {
     private final DecType decorationType;
     private static final HashMap<DecType, SpriteManager> spriteMap=new HashMap<>();
 
+    /**
+     * Konstruktor, aminek típust adunk át, ami alapján beállítjuk az adattagjait.
+     * @param type a típusa a dekorációnak.
+     * @param pos a pozíciója.
+     */
     public Decoration(DecType type,Position pos){
         this.decorationType = type;
         /*if(type == DecType.BUSH)
@@ -59,6 +64,9 @@ public class Decoration  extends Block {
         else throw new RuntimeException("Invalid type of decoration!");
     }
 
+    /**
+     * @return a dekoráció típusát.
+     */
     public DecType getDecorationType() {
         return decorationType;
     }
@@ -71,6 +79,9 @@ public class Decoration  extends Block {
             return  "Decoration type: " + decorationType.toString() + " " + super.toString();
         }
 
+    /**
+     * @return Stringben a típusát egy dekorációnak.
+     */
     @Override
     public String getName()
     {
@@ -85,6 +96,9 @@ public class Decoration  extends Block {
         }
     }
 
+    /**
+     * Megkeresi a típusnak megfelelő képet, és beállítja azt.
+     */
     private void setupImage(){
         if(spriteMap.containsKey(decorationType)){return;}
         System.out.println(decorationType);

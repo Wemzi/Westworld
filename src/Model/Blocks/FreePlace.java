@@ -7,8 +7,12 @@ import View.spriteManagers.StaticSpriteManager;
 import java.awt.*;
 import java.util.Objects;
 
+/**
+ * Ezt az osztályt használjuk arra a célra, ha valami üres. Alapból ilyennel lesz tele a pályánk.
+ */
 public class FreePlace extends Block {
     private static SpriteManager mySpMan;
+
 
     public FreePlace(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state) {
         super(buildingCost, upkeepCost, popularityIncrease, state);

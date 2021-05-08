@@ -5,7 +5,7 @@ import Model.People.Visitor;
 import java.util.Queue;
 
 /**
- * Marks classes where visitors can wait in a queue
+ * Olyan osztályokat jelöl, amelyeknél sorba lehet állni.
  */
 public interface Queueable {
     Queue<Visitor> getQueue();

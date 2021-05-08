@@ -14,12 +14,19 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Random;
 
+/**
+ * Szerelő osztály, ők javítják az elromlott objektumokat.
+ */
 public class Repairman extends Employee {
 
     public Repairman(Position startingPos, int salary) {
         super(startingPos, salary);
     }
 
+    /**
+     * Javítás.
+     * @param g a játék, amit meg kell javítani.
+     */
     public void repair(Game g) {
         if (g.getState() == BlockState.FREE || g.getState()==BlockState.NOT_OPERABLE) {
             g.setState(BlockState.UNDER_REPAIR);
@@ -29,6 +36,10 @@ public class Repairman extends Employee {
         }
     }
 
+    /**
+     * A tevékenységeket, statisztikákat állító metódus, mely másodpercenként fut.
+     * @param minutesPerSecond ennyi perc telik le egy másodperc alatt.
+     */
     @Override
     public void roundHasPassed(int minutesPerSecond) {
         //System.out.println(toString());
@@ -39,7 +50,11 @@ public class Repairman extends Employee {
         }
     }
 
-
+    /**
+     * új cél keresése
+     * @param rnd random szám
+     * @param pg a park, ahol vannak
+     */
     @Override
     public void findGoal(Random rnd, Playground pg) {
         for(Block b :pg.getBuildedGameList()){
@@ -61,11 +76,19 @@ public class Repairman extends Employee {
         }
     }
 
+    /**
+     *
+     * @return sztring, ami reprezentálja a típust.
+     */
     @Override
     public String getPersonClass() {
         return "Repairman";
     }
 
+    /**
+     * Megérkezett a szerelő a helyszínre.
+     * @param minutesPerSecond Ennyi perc telik el másodpercenként.
+     */
     @Override
     public void arrived(int minutesPerSecond) {
         if(goal instanceof Game){
@@ -86,6 +109,10 @@ public class Repairman extends Employee {
     //drawing
     private static final HashMap<Direction, SpriteManager> spriteManagerMap;
 
+    /**
+     *
+     * @return Beállítja a négy iránynak megfelelő spriteot, és hozzárendeli az osztályhoz.
+     */
     @Override
     public SpriteManager getSpriteManager() {
         return spriteManagerMap.get(direction);
