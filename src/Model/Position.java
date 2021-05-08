@@ -10,7 +10,7 @@ public final class Position {
     private int x;
     private int y;
     private int boxSize;
-    public static Scaler scaler;
+    public static Scaler scaler = new Scaler(40);
 
     /**
      *
