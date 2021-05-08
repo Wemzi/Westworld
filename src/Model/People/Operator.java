@@ -9,6 +9,9 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Operátorok, akik a játékokat üzemeltetik.
+ */
 public class Operator extends Employee {
     private Game operateThis;
     public Operator(Position startingPos, int salary, Game operateThis)
@@ -17,12 +20,19 @@ public class Operator extends Employee {
         this.operateThis = operateThis;
     }
 
+    /**
+     * Egy játék operálása.
+     */
     public void operate()
     {
         //operateThis.run();
         //currentActivityLength = operateThis.getCooldownTime();
     }
 
+    /**
+     * A tevékenységeket, statisztikákat állító metódus, mely másodpercenként fut.
+     * @param minutesPerSecond ennyi perc telik le egy másodperc alatt.
+     */
     public void roundHasPassed(int minutesPerSecond)
     {
         if(currentActivityLength == 0 && operateThis.getQueue().remainingCapacity()==0)
@@ -55,6 +65,10 @@ public class Operator extends Employee {
     //drawing
     private static final SpriteManager manager;
 
+    /**
+     * Get the 4 direction sprites for the class, and set them.
+     * @return
+     */
     @Override
     public SpriteManager getSpriteManager() {
         return manager;

@@ -1,5 +1,8 @@
 package Model;
 
+/**
+ * Skálázó osztály, hogy többféle monitoron is fusson a játékunk.
+ */
 public class Scaler {
     private int boxSize;
 

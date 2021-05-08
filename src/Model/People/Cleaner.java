@@ -14,16 +14,28 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * Takarító. Ő szedi fel a szemetet a parkból.
+ */
 public class Cleaner extends Employee {
     private Road whatSheCleans;
     public String name;
 
+    /**
+     * Új takarító létrehozása.
+     * @param startingPos kezdőpozíció
+     * @param salary fizetés.
+     */
     public Cleaner(Position startingPos, int salary)
     {
         super(startingPos,salary);
         name = getRandomName();
     }
 
+    /**
+     * Egy út feltakarítása.
+     * @param b az út.
+     */
     public void clean(Road b )
     {
         whatSheCleans =b;
@@ -31,6 +43,10 @@ public class Cleaner extends Employee {
         System.out.println("Lets clean!");
     }
 
+    /**
+     * A tevékenységeket, statisztikákat állító metódus, mely másodpercenként fut.
+     * @param minutesPerSecond ennyi perc telik le egy másodperc alatt.
+     */
     public void roundHasPassed(int minutesPerSecond)
     {
         //System.out.println(toString());
@@ -47,6 +63,11 @@ public class Cleaner extends Employee {
         }
     }
 
+    /**
+     * Egy új cél keresése.
+     * @param rnd random szám generátor.
+     * @param pg a park, amiben ő van.
+     */
     @Override
     public void findGoal(Random rnd, Playground pg) {
         for(Block b :pg.getBuildedObjectList()){
@@ -68,6 +89,10 @@ public class Cleaner extends Employee {
         }
     }
 
+    /**
+     * meghívódik az útkereső által, ha megérkezett a takarító.
+     * @param minutesPerSecond ennyi perc telik le egy másodperc alatt.
+     */
     @Override
     public void arrived(int minutesPerSecond) {
         if(goal instanceof Road){
@@ -102,6 +127,9 @@ public class Cleaner extends Employee {
         return spriteManagerMap.get(direction);
     }
 
+    /**
+     * a négy különböző írányu sprite beállítása.
+     */
     static{
         spriteManagerMap=new HashMap<>();
         String imgPath="graphics/cleaner.png";

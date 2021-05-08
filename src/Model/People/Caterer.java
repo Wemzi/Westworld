@@ -9,9 +9,17 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Étteremben dolgozó alkalmazott.
+ */
 public class Caterer extends Employee {
     public ServiceArea workPlace;
 
+    /**
+     * konstruktor az alkalmazottunkhoz.
+     * @param startingPos kezdőpozíció
+     * @param salary fizetés
+     */
     @Deprecated
     public Caterer(Position startingPos, int salary)
     {
@@ -24,11 +32,19 @@ public class Caterer extends Employee {
         this.workPlace=workPlace;
     }
 
+    /**
+     * Kiszolgáló metódus.
+     * @param v a látogató
+     */
     public void serve(Visitor v )
     {
         //v.eat(workPlace);
     }
 
+    /**
+     * A statisztikáiért, állapotáért felelős metódus, melyet másodpercenként hívunk.
+     * @param minutesPerSecond ennyi perc telik el egy másodperc alatt.
+     */
     public void roundHasPassed(int minutesPerSecond)
     {
         if(currentActivityLength == 0)
@@ -47,6 +63,10 @@ public class Caterer extends Employee {
     @Override
     protected Color getColor(){return Color.gray;};
 
+    /**
+     * A típusát reprezentáló sztringet ad vissza.
+     * @return
+     */
     @Override
     public String getPersonClass() {
         return "Caterer";

@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
+/**
+ * Látogató osztály. Ők hozzák a zsozsót.
+ */
 public class Visitor extends Person {
     private int happiness;
     private int hunger;
@@ -21,8 +24,10 @@ public class Visitor extends Person {
     private int credit;
     private VisitorState state;
 
-
-    // TODO: cyclical waiting at a game for example
+    /**
+     * Konstruktor, melyben beállítódnak véletlenszerűen az adattagok.
+     * @param startingPos kezdőpozíció.
+     */
     public Visitor(Position startingPos) {
         super(startingPos);
         Random rnd = new Random();
@@ -37,6 +42,9 @@ public class Visitor extends Person {
         state = VisitorState.DOESNT_KNOW;
     }
 
+    /**
+     * A játék elkezdése.
+     */
     public void startPlaying() {
         changePlayfulness(-60);
         happiness += 20;
@@ -46,16 +54,26 @@ public class Visitor extends Person {
         state = VisitorState.DOING_SOMETHING;
     }
 
+    /**
+     * A játék befejezése.
+     */
     public void finishedPlaying() {
         state=VisitorState.DOESNT_KNOW;
         currentActivityLength=0;
     }
 
+    /**
+     * Evés elkezdése.
+     */
     public void startEating(){
         state=VisitorState.EATING;
         direction=Direction.NONE;
         credit += 3;
     }
+
+    /**
+     * Evés befejezése.
+     */
     public void finishedEating(){
         hunger = 0;
         happiness += 5;
@@ -64,23 +82,40 @@ public class Visitor extends Person {
         currentActivityLength=0;
 
     }
+
+    /**
+     * Wc elkezdése.
+     */
     public void startToilet(){
         state=VisitorState.DOING_SOMETHING;
         direction=Direction.NONE;
         credit += 1;
     }
+
+    /**
+     * Wc befejezése.
+     */
     public void finishedToilet(){
         currentActivityLength = 0;
         state = VisitorState.DOESNT_KNOW;
     }
 
+    /**
+     * Szemét eldobása.
+     * @param there ide dobja a szemetet.
+     * @return ahova a szemetet dobta.
+     */
     public Road throwGarbage(Road there) {
         there.setGarbage(there.getGarbage() + 2);
         return there;
     }
 
 
-
+    /**
+     * Egy új cél keresése.
+     * @param rnd random szám
+     * @param pg a park, ahol vannak
+     */
     @Override
     public void findGoal(Random rnd, Playground pg) {
         if(isMoving || isBusy()){return;}
@@ -127,7 +162,10 @@ public class Visitor extends Person {
         }
     }
 
-
+    /**
+     * Ha megérkezett a látogató, meghívódik.
+     * @param minutesPerSecond Ennyi perc telik el másodpercenként.
+     */
     @Override
     public void arrived(int minutesPerSecond){
         System.out.println(name + " megérkezett!");
@@ -139,16 +177,6 @@ public class Visitor extends Person {
         if(Objects.isNull(goal) || !(goal instanceof Queueable)){return;}
         ((Queueable) goal).addVisitor(this);
         state=VisitorState.WAITING_IN_QUEUE;
-
-        /*
-        if(getState().equals(VisitorState.WANNA_TOILET) &&  goal != null){
-            System.out.println("kaksizna!");}
-        else if(getState().equals(VisitorState.WANNA_PLAY) && goal != null) {
-            System.out.println("játékra vár!");
-        }
-        else if(getState().equals(VisitorState.WANNA_EAT) && goal != null){
-            System.out.println("evett!");
-        }*/
         goal=null;
 
     }
@@ -162,7 +190,10 @@ public class Visitor extends Person {
         }
     }
 
-
+    /**
+     * A tevékenységeket, statisztikákat állító metódus, mely másodpercenként fut.
+     * @param minutesPerSecond ennyi perc telik le egy másodperc alatt.
+     */
     @Override
     public void roundHasPassed(int minutesPerSecond) {
         System.out.println(toString());
@@ -273,7 +304,9 @@ public class Visitor extends Person {
                 '}';
     }
 
-
+    /**
+     * A négy oldali sprite beállítása.
+     */
     //drawing
     private static final HashMap<Direction,SpriteManager> spriteManagerMap;
 
