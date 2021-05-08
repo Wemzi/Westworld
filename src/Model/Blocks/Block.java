@@ -27,6 +27,9 @@ public abstract class Block {
     protected int buildingTime;
     protected int currentActivityTime;
 
+    /**
+     * Default constructor for Block class
+     */
     public Block()
     {
         state = BlockState.FREE;
@@ -37,11 +40,24 @@ public abstract class Block {
         popularityIncrease = 0;
     }
 
+    /**
+     * Contsructor for Block class
+     * @param p position of block
+     */
     public Block(Position p){
         this();
         pos=p;
     }
 
+    /**
+     * Constructor for block class
+     * @param buildingCost cost of the building
+     * @param upkeepCost daily cost of the block
+     * @param popularityIncrease how much it increases the popularity
+     * @param state the state of the block
+     * @param size the size of the block
+     * @param pos the position of the block
+     */
     public Block(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state, Position size, Position pos) {
         this.buildingCost = buildingCost;
         this.upkeepCost = upkeepCost;
@@ -52,23 +68,39 @@ public abstract class Block {
         condition=MAX_CONDITION;
     }
 
+    /**
+     * Constructor for Block class, with pre defined size and position
+     * @param buildingCost cost of the building
+     * @param upkeepCost daily cost of the block
+     * @param popularityIncrease how much it increases the popularity
+     * @param state state of the block
+     */
     public Block(int buildingCost, int upkeepCost, double popularityIncrease, BlockState state) {
         this(buildingCost,upkeepCost,popularityIncrease,state,new Position(1,1,false),new Position(0,0,true));
     }
 
-
+    /**
+     * Building an object in the game.
+     */
     public void build(){
         setupSprites();
         state=BlockState.UNDER_CONSTRUCTION;
         currentActivityTime= GameEngine.TIME_1x*5;
     }
 
+    /**
+     * Building an object instantly for dev purposes.
+     */
     public void buildInstantly(){
         build();
         currentActivityTime=0;
         roundHasPassed(GameEngine.TIME_1x);
     }
 
+    /**
+     * Method of Block which is ran every second by GameEngine. This helps automatic state changing, cooldowns, etc.
+     * @param minutesPerSecond
+     */
     public void roundHasPassed(int minutesPerSecond){
         decreaseCurrentActivityTime(minutesPerSecond);
 
@@ -81,12 +113,18 @@ public abstract class Block {
         if(getState()==BlockState.FREE && needRepair()){setState(BlockState.NOT_OPERABLE);}
     }
 
+    /**
+     * this method is called when the repair is finished, and we need to set the condition and state back to normal.
+     */
     protected void repairFinished(){
         condition=MAX_CONDITION;
         setState(BlockState.FREE);
         currentActivityTime=0;
     }
 
+    /**
+     * this method is called when the building is finished, and we need to set the state back to normal.
+     */
     protected void constructionFinished(){setState(BlockState.FREE);}
 
     protected void decreaseCurrentActivityTime(int value){
@@ -99,13 +137,24 @@ public abstract class Block {
         }
     }
 
+    /**
+     * Methods called on the start of the day, and end of the day by GameEngine.
+     */
     public void startDay(){}
     public void endDay(){}
 
+    /**
+     * Get the position of a Block.
+     * @return
+     */
     public Position getPos() {
         return pos;
     }
 
+    /**
+     * get the size of the Block.
+     * @return
+     */
     public Position getSize(){return size;}
 
     public BlockState getState() {
@@ -162,10 +211,18 @@ public abstract class Block {
                 '}';
     }
 
+    /**
+     * @return a string representing the block's type.
+     */
     public String getName(){
         return "Block";
     }
 
+    /**
+     *
+     * @param o other Object to compare to.
+     * @return if the two objects are equal.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -182,12 +239,18 @@ public abstract class Block {
                 this.size == block.size;
     }
 
+    /**
+     * generate an unique code for the Blocks.
+     * @return
+     */
     @Override
     public int hashCode() {
         return Objects.hash(this.buildingTime,this.buildingCost,this.size,this.pos,this.size,this.upkeepCost,this.condition,this.popularityIncrease,this.state);
     }
 
-    //painting
+    /**
+     * Method to get the color of the block. It gets replaced if the texture is found.
+     */
     abstract public Color getColor();
     abstract protected SpriteManager getSpriteManager();
 
@@ -203,11 +266,16 @@ public abstract class Block {
 
     }
 
+    /**
+     * Get correct image, and resize it.
+     */
     private void setupSprites(){
         if(!workingPicMap.containsKey(getSize()) && !Objects.isNull(workingPic)){
             workingPicMap.put(getSize(),SpriteManager.resize(workingPic,getSize()));}
     }
-
+    /**
+     * Paint the object.
+     */
     public void paint(Graphics2D gr){
         switch (state){
             default:
@@ -234,6 +302,9 @@ public abstract class Block {
         drawBorder(gr);
     }
 
+    /**
+     * Method to draw the borders of the Object.
+     */
     protected void drawBorder(Graphics2D gr){
         gr.setColor(Color.BLACK);
         gr.drawRect(pos.getX_asPixel(),pos.getY_asPixel(),size.getX_asPixel(),size.getY_asPixel());

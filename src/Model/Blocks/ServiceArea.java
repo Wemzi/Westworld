@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
 
+/**
+ * Szolgáltatásokat tartalmazó blokk, jelenleg büfé és mosdó lehetséges.
+ */
 public class ServiceArea extends Block implements Queueable{
     private int menuCost;
     private final ArrayDeque<Visitor> queue;
@@ -25,7 +28,11 @@ public class ServiceArea extends Block implements Queueable{
     private int cooldownTime;
     private static final HashMap<ServiceType,SpriteManager> spriteManagerMap=new HashMap<>();
 
-
+    /**
+     * A szolgáltatás típusát megadva egy olyan konstruált példányt kapunk, melynek be van állítva minden adattagja.
+     * @param type a szolgáltatás típusa.
+     * @param pos a pozíciója.
+     */
     public ServiceArea(ServiceType type, Position pos) {
         this.type=type;
         if(type==ServiceType.BUFFET)
@@ -63,7 +70,16 @@ public class ServiceArea extends Block implements Queueable{
         else throw new RuntimeException("Invalid type of service!");
     }
 
+    /**
+     * Munkás hozzáadása, menüből használjuk.
+     * @param o munkás.
+     */
     public void addWorker(Caterer o){workers.add(o);}
+
+    /**
+     * Látogató hozzáadása.
+     * @param v a látogató
+     */
     public void addVisitor(Visitor v){queue.add(v);}
 
     @Override
@@ -83,6 +99,9 @@ public class ServiceArea extends Block implements Queueable{
         return capacity;
     }
 
+    /**
+     * @return azon látogatókat, akik éppen itt tesznek-vesznek.
+     */
     public ArrayDeque<Visitor> getVisitorsUsingThisService() {
         return visitorsUsingThisService;
     }
@@ -102,6 +121,9 @@ public class ServiceArea extends Block implements Queueable{
         }
     }
 
+    /**
+     * Típustól függően a szolgáltatás végrehajtása. Pl. kiszolgálás.
+     */
     private void startService(){
         Visitor v = queue.pollFirst();
         visitorsUsingThisService.add(v);
@@ -114,6 +136,9 @@ public class ServiceArea extends Block implements Queueable{
         setState(BlockState.USED);
     }
 
+    /**
+     * A szolgáltatás megállítása. Pl. kiszolgáltuk a vevőt.
+     */
     private void serviceFinished(){
         Visitor v=visitorsUsingThisService.pollFirst();
         if(getType()==ServiceType.TOILET){
@@ -124,11 +149,18 @@ public class ServiceArea extends Block implements Queueable{
         setState(BlockState.FREE);
     }
 
+    /**
+     * @return Egy szolgáltatás mindig használható, kivéve akkor, ha büfé, és nincsenek benne dolgozók.
+     */
     private boolean isOperable(){
         if(getType()==ServiceType.BUFFET && workers.size()==0){return false;}
         return true;
     }
 
+    /**
+     * A szolgátatási terület állapotát, statisztikát állító metódus, ami minden másodpercben meghívódik a GameEngine által.
+     * @param minutesPerSecond ennyi perc telik el egy másodperc alatt ( idősebességfüggő)
+     */
     @Override
     public void roundHasPassed(int minutesPerSecond)
     {
@@ -147,6 +179,11 @@ public class ServiceArea extends Block implements Queueable{
         if (getState()==BlockState.FREE && isOperable() && !needRepair() && queue.size()>0 && visitorsUsingThisService.size()<capacity){startService();}
     }
 
+    /**
+     * Új munkás felvétele.
+     * @param r "konyhásnéni"
+     * @param pg a park, ahova hozzá szeretnénk adni.
+     */
     public void hire(Caterer r , Playground pg){
         if(getType() != ServiceType.BUFFET){throw new IllegalStateException("Only buffets can hire caterers!");}
         pg.hire(r);
@@ -175,6 +212,9 @@ public class ServiceArea extends Block implements Queueable{
         }
     }
 
+    /**
+     * Megkeresi a típusnak megfelelő spriteot, és be is állítja azt.
+     */
     private void setupSprites(){
         if(spriteManagerMap.containsKey(type)){return;}
         switch (this.type) {

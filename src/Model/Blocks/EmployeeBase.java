@@ -21,11 +21,21 @@ public class EmployeeBase extends Block {
             this.pos=p;
         }
 
+    /**
+     * Új szerelő felvétele.
+     * @param r szerelő, akit fel szeretnénk venni.
+     * @param pg Az a park, ahova felvennénk.
+     */
         public void hire(Repairman r ,Playground pg){
             pg.hire(r);
             r.setPosition(this.getPos());
         }
 
+    /**
+     * Új takarító felvétele.
+     * @param r takarító, akit fel szeretnénk venni.
+     * @param pg Az a park, ahova felvennénk.
+     */
         public void hire(Cleaner r , Playground pg){
             pg.hire(r);
             r.setPosition(this.getPos());
