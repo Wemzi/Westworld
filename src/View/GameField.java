@@ -39,13 +39,22 @@ public class GameField extends JPanel {
         makeBackgroundImage();
     }
 
+    /**
+     * Kikapcsolja az egér mutatótól függő animációt.
+     */
     public void disableMouseFollowing() {
         mouseFollowing=false;
     }
 
-    public void enableMouseFollowing(Block size) {
+    /**
+     * Bekapcsolja az egér mutatótól függő animációt.
+     * Az animáció lényege, hogy kirajzolja a megépítendő blockot oda, ahol az egérmutató éppen áll.
+     * Amennyiben nem lehet arra a területre ezt a blockot megépíteni, akor az animáció ezt egyértelműen jelzi.
+     * @param block - a megépítendő Block
+     */
+    public void enableMouseFollowing(Block block) {
         this.mouseFollowing =true;
-        toBuild =size;
+        toBuild =block;
     }
 
     private static void paintBlocks(Graphics2D gr,GameEngine gameEngine){
@@ -54,17 +63,15 @@ public class GameField extends JPanel {
                 if(b!=null){
                     if(b instanceof FreePlace){continue;}
                     b.paint(gr);
-                    /*
-                    if(b instanceof Road && ((Road) b).isHasGarbageCan()){
-                        gr.setColor(Color.GREEN);
-                        gr.fillRect(b.pos.getX_asPixel(),b.pos.getY_asPixel(),b.size.getX_asPixel()/4,b.size.getY_asPixel()/4);
-
-                    }*/
-                    drawBlockLabel(b,gr);
                 }
         }
     }
 
+    /**
+     * Megadja a Blockot befoglaló téglalapot. Kvázi a Block keretét.
+     * @param block - aminek a kerete kell
+     * @return  A Blockot befoglaló legkisebb téglalap
+     */
     public static Rectangle getBlockAsRectangle(Block block){
         return new Rectangle(block.pos.getX_asPixel(),block.pos.getY_asPixel(),block.size.getX_asPixel(),block.size.getY_asPixel());
     }
@@ -91,11 +98,11 @@ public class GameField extends JPanel {
 
     private void makeBackgroundImage(){
         SpriteManager sp=new StaticSpriteManager("graphics/grass.png",new Position(1,1,false));
-        background = new BufferedImage(scaler.getBoxSize()*MainWindow2.NUM_OF_COLS, scaler.getBoxSize()*MainWindow2.NUM_OF_ROWS, BufferedImage.TYPE_INT_ARGB);
+        background = new BufferedImage(scaler.getBoxSize()* GameWindow.NUM_OF_COLS, scaler.getBoxSize()* GameWindow.NUM_OF_ROWS, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D bgGraphics = background.createGraphics();
-        for (int i = 0; i < MainWindow2.NUM_OF_COLS; i++) {
-            for (int j = 0; j < MainWindow2.NUM_OF_ROWS; j++) {
+        for (int i = 0; i < GameWindow.NUM_OF_COLS; i++) {
+            for (int j = 0; j < GameWindow.NUM_OF_ROWS; j++) {
                 bgGraphics.drawImage(sp.nextSprite(), i*scaler.getBoxSize(), j*scaler.getBoxSize(), null);
             }
         }
@@ -106,7 +113,6 @@ public class GameField extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D gr = (Graphics2D) g;
-        //gr.setBackground(new Color(24, 83, 24));
         drawBackground(gr);
         paintBlocks(gr,engine);
         paintVisitors(gr,engine);
@@ -129,16 +135,12 @@ public class GameField extends JPanel {
         }
     }
 
-
-    private static void drawBlockLabel(Block block, Graphics2D gr){
-
-        /*
-        if(block instanceof Queueable && block.getState() == BlockState.FREE || block.getState()==BlockState.USED){
-            centerString(gr,getBlockAsRectangle(block),"Q:"+((Queueable) block).getQueue().size());
-        }*/
-
-    }
-
+    /**Egy téglalap közepére iír egy Stringet
+     *
+     * @param g - amivel ír
+     * @param r - a téglalap, aminek a közepére lesz igazítva a szöveg
+     * @param s - a beírandó szöveg
+     */
     public static void centerString(Graphics g, Rectangle r, String s) {
         FontRenderContext frc =
                 new FontRenderContext(null, true, true);

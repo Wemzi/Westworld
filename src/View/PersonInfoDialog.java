@@ -13,13 +13,21 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class VisitorInfoDialog extends JDialog implements LiveDataPanel{
+/**
+ * Emberek adatainak megjelenítésére képes Dialog.
+ * Képes az adatok folyamatos frissülését nyomon követni.
+ */
+public class PersonInfoDialog extends JDialog implements LiveDataPanel{
+    private final JPanel mainPanel;
+    private final GameWindow owner;
+    private final Person person;
 
-        private JPanel mainPanel;
-        private MainWindow2 owner;
-        private Person person;
-
-        public VisitorInfoDialog(MainWindow2 owner, Person person) {
+    /**
+     *
+     * @param owner - A szülő, amely kéri a Dialog megjelenítését
+     * @param person - Akinek az adatait meg kell jeleníteni
+     */
+    public PersonInfoDialog(GameWindow owner, Person person) {
             super(owner, person.getPersonClass());
             this.owner=owner;
             this.person=person;
@@ -29,7 +37,6 @@ public class VisitorInfoDialog extends JDialog implements LiveDataPanel{
             mainPanel.setBorder(new EmptyBorder(20,20,20,20));
 
             createContent(mainPanel,person,owner.engine);
-
 
             add(mainPanel);
             pack();

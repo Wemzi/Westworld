@@ -33,7 +33,7 @@ abstract public class Person {
      * @return az emberek méretét.
      */
     public static Position getPersonSize(){
-        return new Position(0.5,0.5);
+        return new Position(Position.scaler.getBoxSize()/2,Position.scaler.getBoxSize()/2,true);
     }
 
     protected Person(Position startingCoord)

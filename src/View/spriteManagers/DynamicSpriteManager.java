@@ -9,12 +9,22 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Több fázisú spritok kezelésére szolgál.
+ * Minden sprite külön fájlban van.
+ */
 public class DynamicSpriteManager extends SpriteManager {
     private final LinkedList<BufferedImage> sprites;
     private int actualSpriteIndex;
     private final int timePeriod;
     private int timeCounter;
 
+    /**
+     *
+     * @param spritePathes - a képeket tartalmzó fájlok elérési útja. Sorrendben.
+     * @param blockSize - a kép kívánt mérete
+     * @param timePeriod - a fázisváltások közti idő
+     */
     public DynamicSpriteManager(List<String> spritePathes, Position blockSize,int timePeriod) {
         this.actualSpriteIndex =0;
         this.sprites = new LinkedList<>();

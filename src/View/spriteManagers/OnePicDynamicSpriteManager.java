@@ -10,12 +10,23 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Több fázisú spritok kezelésére szolgál.
+ * Minden sprite egy fájlban van.
+ */
 public class OnePicDynamicSpriteManager extends SpriteManager {
     final private List<BufferedImage> sprites;
     private int actualSpriteIndex = 0;
     private final int timePeriod;
     private int timeCounter;
 
+    /**
+     *
+     * @param imgPath - a kép fájl elérési útja
+     * @param blockSize  - a kép kívánt mérete
+     * @param rectangles - a kép részleteket befoglaló téglalapok sorrendben
+     * @param timePeriod - a fázisváltások közti idő
+     */
     public OnePicDynamicSpriteManager(String imgPath, Position blockSize, List<Rectangle> rectangles, int timePeriod) {
         this.sprites= new LinkedList<>();
         try {

@@ -9,6 +9,11 @@ import java.awt.image.BufferedImage;
 public class OneColorSpriteManager extends SpriteManager {
     private final BufferedImage img;
 
+    /**
+     * Egyszínű block képét létrehozó osztály
+     * @param c - block színe
+     * @param blockSize  - a kép kívánt mérete
+     */
     public OneColorSpriteManager(Color c, Position blockSize) {
         img = new BufferedImage(blockSize.getX_asPixel(), blockSize.getY_asPixel(), ColorSpace.TYPE_RGB);
         Graphics2D graphics = img.createGraphics();

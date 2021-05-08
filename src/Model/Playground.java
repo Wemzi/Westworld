@@ -9,8 +9,8 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Random;
 
-import static View.MainWindow2.NUM_OF_COLS;
-import static View.MainWindow2.NUM_OF_ROWS;
+import static View.GameWindow.NUM_OF_COLS;
+import static View.GameWindow.NUM_OF_ROWS;
 
 
 /**

@@ -2,9 +2,8 @@ import View.WelcomeScreen;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Udv Westworldben! :)");
+        System.out.println("Welcome to Westworld!");
         WelcomeScreen welcomeScreen= new WelcomeScreen("Westworld");
-        //MainWindow2 w=new MainWindow2();
-        //w.setVisible(true);
+        welcomeScreen.setVisible(true);
     }
 }

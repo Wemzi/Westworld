@@ -6,6 +6,10 @@ package Model;
 public class Scaler {
     private int boxSize;
 
+    /**
+     * Minden box egy négyzet, így elegendő egyetlen szám megadása
+     * @param boxSize - a játék legkisebb alapegységének, egy box (tile, mező) mérete pixelben
+     */
     public Scaler(int boxSize) {
         this.boxSize = boxSize;
     }
@@ -14,6 +18,9 @@ public class Scaler {
         return boxSize;
     }
 
+    /**
+     * @param boxSize -  játék legkisebb alapegységének, egy box (tile, mező) mérete pixelben
+     */
     public void setBoxSize(int boxSize) {
         this.boxSize = boxSize;
     }

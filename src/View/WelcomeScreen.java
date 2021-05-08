@@ -13,12 +13,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * A játék kezdőképernyője.
+ */
 public class WelcomeScreen extends JFrame {
     private BufferedImage background;
     private BufferedImage exitButtonImg;
     private BufferedImage newGameImg;
-    private Rectangle exitButtonArea;
-    private Rectangle newGameButtonArea;
+    private final Rectangle exitButtonArea;
+    private final Rectangle newGameButtonArea;
 
     public WelcomeScreen(String title) {
         super(title);
@@ -44,7 +47,7 @@ public class WelcomeScreen extends JFrame {
             background = img;
         }
         exitButtonArea=new Rectangle(3*width/5,3*height/5,exitButtonImg.getWidth(),exitButtonImg.getHeight());
-        newGameButtonArea=new Rectangle(1*width/5,3*height/5,newGameImg.getWidth(),newGameImg.getHeight());
+        newGameButtonArea=new Rectangle(width/5,3*height/5,newGameImg.getWidth(),newGameImg.getHeight());
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -55,7 +58,7 @@ public class WelcomeScreen extends JFrame {
                     exitGame();
                 }else if(newGameButtonArea.contains(e.getPoint())){
                     System.err.println("User clicked on the new game button :)");
-                    MainWindow2 w=new MainWindow2();
+                    GameWindow w=new GameWindow();
                     w.setVisible(true);
                     w.requestFocus(FocusEvent.Cause.ACTIVATION);
                     dispose();
@@ -66,8 +69,6 @@ public class WelcomeScreen extends JFrame {
         setPreferredSize(new Dimension(width,height));
         setUndecorated(true);
         pack();
-        setVisible(true);
-        requestFocus();
     }
 
     private void exitGame(){

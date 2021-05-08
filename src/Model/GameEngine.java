@@ -5,8 +5,8 @@ import Model.People.*;
 
 import java.util.*;
 
-import static View.MainWindow2.NUM_OF_COLS;
-import static View.MainWindow2.NUM_OF_ROWS;
+import static View.GameWindow.NUM_OF_COLS;
+import static View.GameWindow.NUM_OF_ROWS;
 
 /**
  * GameEngine osztály felel a legtöbb számítás elvégzésében,

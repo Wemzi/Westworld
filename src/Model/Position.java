@@ -7,19 +7,9 @@ import java.util.Objects;
  * Nem azonos a Coord -al. Az a kattintott pixelt jelöli. pl.: (201,54)
  */
 public final class Position {
-    private int x;
-    private int y;
-    private int boxSize;
+    private final int x;
+    private final int y;
     public static Scaler scaler = new Scaler(40);
-
-    /**
-     *
-     * @deprecated Add meg 3. parméterben, hogy pixelben méred-e
-     */
-    @Deprecated
-    public Position(int x, int y) {
-        this(x, y,false);
-    }
 
     public Position(int x, int y, boolean in_pixel) {
         if(in_pixel){
@@ -29,20 +19,8 @@ public final class Position {
             this.x = indexToPixel(x);
             this.y = indexToPixel(y);
         }
-        boxSize= scaler.getBoxSize();
     }
 
-    /**
-     *
-     * @param x idex of rows
-     * @param y index of cols
-     * @apiNote Measured in indices and not in pixels
-     */
-    public Position(double x, double y){
-        boxSize= scaler.getBoxSize();
-        this.x= (int) (boxSize*x);
-        this.y= (int) (boxSize*y);
-    }
 
     public int getX_asIndex() {
         return pixelToIndex(x);
@@ -60,13 +38,18 @@ public final class Position {
         return y;
     }
 
+    /**
+     * @implNote Egy Position pixelben mért értékéhez képest megadja a balra fel lévő legközelebbi rácspontot.
+     * @param from egy pixelben megadással létrehozott Position
+     * @return Annak a Blocknak a bal felső pixele, melyben a paraméter benne van.
+     */
     public static Position useMagicGravity(Position from){
         return new Position(indexToPixel(pixelToIndex(from.x)) , indexToPixel(pixelToIndex(from.y)),true);
     }
 
     //Conversions
-    public static int pixelToIndex(int coord){return coord/ scaler.getBoxSize();}
-    public static int indexToPixel(int index){return index*scaler.getBoxSize();}
+    private static int pixelToIndex(int coord){return coord/ scaler.getBoxSize();}
+    private static int indexToPixel(int index){return index*scaler.getBoxSize();}
 
     @Override
     public boolean equals(Object o) {

@@ -9,14 +9,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MenuCreator {
-    private final MainWindow2 parent;
+    private final GameWindow parent;
     private final JMenu m;
 
-    public MenuCreator(JMenu m,MainWindow2 parent) {
+    /**
+     *
+     * @param m A Jmenu, amiben a menü kialakításra fog kerülni
+     * @param parent Az ablak, amelynek a menüjét kell létrehozni
+     */
+    public MenuCreator(JMenu m, GameWindow parent) {
         this.parent = parent;
         this.m = m;
     }
 
+    /**
+     * Feltölti a construktorban kapott JMenu -t almenükkel.
+     */
     void inflate(){createMenus(m);}
 
     private void createGameMenuItems(JMenu menu){

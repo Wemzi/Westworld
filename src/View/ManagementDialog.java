@@ -8,6 +8,12 @@ import java.awt.*;
 
 public class ManagementDialog extends JDialog {
 
+    /**
+     * A park általános manageléséhez szükséges felületet biztosítja.
+     * Megjelenít alapvető információkat a parkról.
+     * @param owner - a dialog megjelenítését kérő ablak
+     * @param engine - a játék motor, ahonnan az adatoknak származni kell
+     */
     public ManagementDialog(Frame owner, GameEngine engine) {
         super(owner);
         setTitle("Management Dialog");
@@ -16,7 +22,6 @@ public class ManagementDialog extends JDialog {
         mainPanel.setBorder(new EmptyBorder(20,20,20,20));
 
         JLabel salaryTitle=new JLabel("Salaries");
-        //salaryTitle.setFont(salaryTitle.getFont().deriveFont(Font.ITALIC));
         mainPanel.add(salaryTitle);
         mainPanel.add(new JLabel("Caterer salaries: "+engine.getCatererSalaries()));
         mainPanel.add(new JLabel("Operator salaries: "+engine.getOperatorSalaries()));
@@ -29,8 +34,6 @@ public class ManagementDialog extends JDialog {
         mainPanel.add(new JLabel("Number of games: "+engine.getPg().getBuildedGameList().size()));
         mainPanel.add(new JLabel("Number of service areas: "+engine.getPg().getBuildedServiceList().size()));
         mainPanel.add(new JLabel("Number of employees: "+engine.getPg().getEmployees().size()));
-
-
 
         add(mainPanel);
         pack();

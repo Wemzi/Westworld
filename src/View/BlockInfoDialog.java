@@ -15,11 +15,16 @@ import java.util.List;
 import java.util.*;
 
 public class BlockInfoDialog extends JDialog implements LiveDataPanel{
-    private JPanel mainPanel;
-    private MainWindow2 owner;
-    private Block block;
+    private final JPanel mainPanel;
+    private final GameWindow owner;
+    private final Block block;
 
-    public BlockInfoDialog(MainWindow2 owner, Block block) {
+    /**
+     *
+     * @param owner - Az a view, aki kéri a Dialog létrejöttét.
+     * @param block - Az a Block, amelynek az adatait meg kell jeleníteni
+     */
+    public BlockInfoDialog(GameWindow owner, Block block) {
         super(owner, block.getName());
         this.owner=owner;
         this.block=block;
@@ -29,7 +34,6 @@ public class BlockInfoDialog extends JDialog implements LiveDataPanel{
         mainPanel.setBorder(new EmptyBorder(20,20,20,20));
 
         createContent(mainPanel,block,owner.engine);
-
 
         add(mainPanel);
         pack();
@@ -74,7 +78,6 @@ public class BlockInfoDialog extends JDialog implements LiveDataPanel{
         if(block instanceof ServiceArea && ((ServiceArea) block).getType()==ServiceType.BUFFET){panel.add(addCatererModificationRow((ServiceArea) block,engine));}
         if(block instanceof EmployeeBase){
             panel.add(createEmployeePanel("Cleaner",engine,new Cleaner(block.getPos(),10)));
-            //panel.add(createEmployeePanel("Operator",engine,new Operator(block.getPos(),10,null)));
             panel.add(createEmployeePanel("Repairman",engine,new Repairman(block.getPos(),10)));
         }
     }

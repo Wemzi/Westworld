@@ -19,7 +19,7 @@ import java.util.LinkedList;
  *
  * @author Gabor
  */
-public class MainWindow2 extends JFrame{
+public class GameWindow extends JFrame{
     //private static int BOX_SIZE=40;//hany pixel szeles legyen egy elem a matrixban
     public static final int NUM_OF_COLS =25;//oszlopok szama
     public static final int NUM_OF_ROWS =12;//sorok szama
@@ -44,13 +44,13 @@ public class MainWindow2 extends JFrame{
     private final JButton startDayButton;
 
     
-    public MainWindow2() {
+    public GameWindow() {
         scaler= new Scaler(40);
         setScaler(calculateBoxSize());
         Position.scaler=scaler;
         engine=new GameEngine();
         field=new GameField(engine,scaler);
-        liveDataPanels=new LinkedList<LiveDataPanel>();
+        liveDataPanels=new LinkedList<>();
         timer = getTimer();
 
 
@@ -108,7 +108,7 @@ public class MainWindow2 extends JFrame{
         new MenuCreator(buildMenu,this).inflate();
 
         //management dialog
-        final MainWindow2 owner=this;
+        final GameWindow owner=this;
         JMenu managementMenuItem = new JMenu("Management");
         managementMenuItem.addMouseListener(new MouseAdapter() {
             @Override
@@ -340,7 +340,7 @@ public class MainWindow2 extends JFrame{
                 if(person.getPosition().getX_asIndex() == clickedHere.getX_asIndex() &&
                         person.getPosition().getY_asIndex() == clickedHere.getY_asIndex()
                 ){
-                    VisitorInfoDialog infoDialog= new VisitorInfoDialog(this,person);
+                    PersonInfoDialog infoDialog= new PersonInfoDialog(this,person);
                     infoDialog.addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosing(WindowEvent e) {
