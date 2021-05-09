@@ -203,25 +203,26 @@ public class Playground {
 
     private boolean isPath(int i, int j, boolean[][] visited, Position start, Position destination, Person visitor) {
         if (isSafe(i, j)
-                && (blocks[i][j] instanceof Road
-                || blocks[i][j] instanceof Game
-                && blocks[i][j].getPos().getX_asIndex() == destination.getX_asIndex()
-                && blocks[i][j].getPos().getY_asIndex() == destination.getY_asIndex()
-                || blocks[i][j] instanceof ServiceArea
-                && blocks[i][j].getPos().getX_asIndex() == destination.getX_asIndex()
-                && blocks[i][j].getPos().getY_asIndex() == destination.getY_asIndex()
-                || blocks[i][j] instanceof EmployeeBase
-                && blocks[i][j].getPos().getX_asIndex() == destination.getX_asIndex()
-                && blocks[i][j].getPos().getY_asIndex() == destination.getY_asIndex()
-                || blocks[i][j] instanceof Game
-                && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
-                && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex()
-                || blocks[i][j] instanceof ServiceArea
-                && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
-                && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex()
-                || blocks[i][j] instanceof EmployeeBase
-                && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
-                && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex())
+                && (    (blocks[i][j] instanceof Road && blocks[i][j].getState() != BlockState.UNDER_CONSTRUCTION)
+                        || blocks[i][j] instanceof Game
+                            && blocks[i][j].getPos().getX_asIndex() == destination.getX_asIndex()
+                            && blocks[i][j].getPos().getY_asIndex() == destination.getY_asIndex()
+                        || blocks[i][j] instanceof ServiceArea
+                            && blocks[i][j].getPos().getX_asIndex() == destination.getX_asIndex()
+                            && blocks[i][j].getPos().getY_asIndex() == destination.getY_asIndex()
+                        || blocks[i][j] instanceof EmployeeBase
+                            && blocks[i][j].getPos().getX_asIndex() == destination.getX_asIndex()
+                            && blocks[i][j].getPos().getY_asIndex() == destination.getY_asIndex()
+                        || blocks[i][j] instanceof Game
+                            && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
+                            && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex()
+                        || blocks[i][j] instanceof ServiceArea
+                            && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
+                            && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex()
+                        || blocks[i][j] instanceof EmployeeBase
+                            && blocks[i][j].getPos().getX_asIndex() == start.getX_asIndex()
+                            && blocks[i][j].getPos().getY_asIndex() == start.getY_asIndex()
+                    )
                 && !visited[i][j]) {
 
             visited[i][j] = true;
