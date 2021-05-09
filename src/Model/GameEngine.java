@@ -302,7 +302,7 @@ public class GameEngine {
                     v.roundHasPassed(minutesPerSecond);
 
                     int throwgarbage = Math.abs(rnd.nextInt() % 100);
-                    if (throwgarbage > 95 && !pg.isGarbageCanNearby(v.getPosition())) {
+                    if (pg.getHours() < 20 && throwgarbage > 95 && !pg.isGarbageCanNearby(v.getPosition())) {
                         Block possibleroad = pg.getBlockByPosition(v.getPosition());
                         if (possibleroad instanceof Road) {
                             ((Road) possibleroad).setGarbage(((Road) possibleroad).getGarbage() + 15);
@@ -415,7 +415,6 @@ public class GameEngine {
         int money = pg.getMoney();
         for (Block b : pg.getBuildedObjectList()) {
             money -= b.getUpkeepCost();
-            b.setCondition(b.getCondition() - 1);
         }
         money -= getSalaries();
         pg.setMoney(money);
