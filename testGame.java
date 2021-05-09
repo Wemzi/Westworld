@@ -137,27 +137,21 @@ public class testGame {
 
     @Test
     public void hireCleaner(){
-        //init
         Position p =new Position(0,0,true);
 
-        //before hire
         assertEquals(0, pg.getCleaners().size());
 
-        //hire
+
         Employee e =new Cleaner(p,1000);
         pg.hire(e);
 
-        //after hire
         assertEquals(1, pg.getCleaners().size());
         assertEquals(e, pg.getCleaners().get(0));
     }
 
     @Test
     public void fireCleaner(){
-        //init
         Position p =new Position(0,0,true);
-
-        //before hire
         assertEquals(0, pg.getCleaners().size());
 
         //hire

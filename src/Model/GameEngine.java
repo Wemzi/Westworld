@@ -196,7 +196,7 @@ public class GameEngine {
      * megfelelő teléséért és a blockok / visitorok roundHasPassed metódus meghívásáért.
      */
     public void startDay() {
-        if (!(pg.getHours() == 8)) return;
+       // if (!(pg.getHours() == 8)) return;
 
         isBuildingPeriod = false;
         pg.getBuildedObjectList().forEach(Block::startDay);
@@ -302,7 +302,7 @@ public class GameEngine {
                     v.roundHasPassed(minutesPerSecond);
 
                     int throwgarbage = Math.abs(rnd.nextInt() % 100);
-                    if (throwgarbage > 93 && !pg.isGarbageCanNearby(v.getPosition())) {
+                    if (pg.getHours() < 20 && throwgarbage > 95 && !pg.isGarbageCanNearby(v.getPosition())) {
                         Block possibleroad = pg.getBlockByPosition(v.getPosition());
                         if (possibleroad instanceof Road) {
                             ((Road) possibleroad).setGarbage(((Road) possibleroad).getGarbage() + 15);
@@ -340,7 +340,7 @@ public class GameEngine {
                     pg.setMinutes(0);
                 }
 
-                if (pg.getVisitors().size() == 0) {
+                if (pg.getVisitors().size() == 0 && pg.getHours() > 18 ) {
                     pg.setMinutes(0);
                     pg.setHours(8);
                     pg.setDays(pg.getDays() + 1);
@@ -415,7 +415,6 @@ public class GameEngine {
         int money = pg.getMoney();
         for (Block b : pg.getBuildedObjectList()) {
             money -= b.getUpkeepCost();
-            b.setCondition(b.getCondition() - 1);
         }
         money -= getSalaries();
         pg.setMoney(money);

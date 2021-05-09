@@ -70,6 +70,7 @@ public class Cleaner extends Employee {
      */
     @Override
     public void findGoal(Random rnd, Playground pg) {
+        if(goal != null) return;
         for(Block b :pg.getBuildedObjectList()){
             if(b instanceof Road && ((Road) b).getGarbageLevel() != Road.GarbageLevel.NONE && ! isBusy())
             {
@@ -78,6 +79,7 @@ public class Cleaner extends Employee {
                 return;
             }
         }
+        if((pg.getBlockByPosition(getPosition()) instanceof EmployeeBase)) return;
         for(Block b :pg.getBuildedEmployeeBases())
         {
             if(b instanceof EmployeeBase && !isBusy() && !(pg.getBlockByPosition(getPosition()) instanceof EmployeeBase))
